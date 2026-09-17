@@ -1,0 +1,30 @@
+project:
+  type: default
+  render:
+    - informe_completo.qmd
+    - resumen_web.qmd
+  output-dir: _output
+
+format:
+  docx:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    reference-doc: reference.docx
+    fig-width: 8
+    fig-height: 4.5
+  html:
+    toc: true
+    toc-depth: 2
+    toc-location: left
+    theme: cosmo
+    embed-resources: true
+    code-fold: false
+    fig-width: 9
+    fig-height: 5
+
+execute:
+  echo: false
+  warning: false
+  message: false
+  freeze: auto

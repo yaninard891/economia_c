@@ -1,0 +1,721 @@
+ANIO;SECT_ACTIV;NIVEL_EDUC;INV_PF
+2015;Alimentos y bebidas;Doctorado;19
+2015;Alimentos y bebidas;Maestria;68
+2015;Alimentos y bebidas;Universitario;350
+2015;Alimentos y bebidas;Otros;46
+2015;Aparatos eléctricos e instrumental médico;Doctorado;18
+2015;Aparatos eléctricos e instrumental médico;Maestria;29
+2015;Aparatos eléctricos e instrumental médico;Universitario;181
+2015;Aparatos eléctricos e instrumental médico;Otros;44
+2015;Automotriz;Doctorado;6
+2015;Automotriz;Maestria;35
+2015;Automotriz;Universitario;226
+2015;Automotriz;Otros;106
+2015;Intermediación financiera;Doctorado;0
+2015;Intermediación financiera;Maestria;16
+2015;Intermediación financiera;Universitario;76
+2015;Intermediación financiera;Otros;4
+2015;Maquinaria y equipo;Doctorado;9
+2015;Maquinaria y equipo;Maestria;46
+2015;Maquinaria y equipo;Universitario;225
+2015;Maquinaria y equipo;Otros;94
+2015;Otras actividades agropecuarias;Doctorado;14
+2015;Otras actividades agropecuarias;Maestria;20
+2015;Otras actividades agropecuarias;Universitario;49
+2015;Otras actividades agropecuarias;Otros;6
+2015;Otros productos manufactureros;Doctorado;13
+2015;Otros productos manufactureros;Maestria;18
+2015;Otros productos manufactureros;Universitario;111
+2015;Otros productos manufactureros;Otros;36
+2015;Otros servicios empresariales;Doctorado;76
+2015;Otros servicios empresariales;Maestria;118
+2015;Otros servicios empresariales;Universitario;208
+2015;Otros servicios empresariales;Otros;42
+2015;Petróleo, gas y minería;Doctorado;4
+2015;Petróleo, gas y minería;Maestria;10
+2015;Petróleo, gas y minería;Universitario;38
+2015;Petróleo, gas y minería;Otros;1
+2015;Producción de semillas;Doctorado;29
+2015;Producción de semillas;Maestria;55
+2015;Producción de semillas;Universitario;134
+2015;Producción de semillas;Otros;18
+2015;Productos de caucho y plástico;Doctorado;9
+2015;Productos de caucho y plástico;Maestria;4
+2015;Productos de caucho y plástico;Universitario;70
+2015;Productos de caucho y plástico;Otros;30
+2015;Productos farmacéuticos;Doctorado;162
+2015;Productos farmacéuticos;Maestria;119
+2015;Productos farmacéuticos;Universitario;461
+2015;Productos farmacéuticos;Otros;79
+2015;Productos químicos;Doctorado;65
+2015;Productos químicos;Maestria;51
+2015;Productos químicos;Universitario;302
+2015;Productos químicos;Otros;125
+2015;Servicios agropecuarios;Doctorado;5
+2015;Servicios agropecuarios;Maestria;15
+2015;Servicios agropecuarios;Universitario;21
+2015;Servicios agropecuarios;Otros;9
+2015;Servicios de I+D;Doctorado;110
+2015;Servicios de I+D;Maestria;188
+2015;Servicios de I+D;Universitario;413
+2015;Servicios de I+D;Otros;52
+2015;Siderurgia y metalurgia;Doctorado;19
+2015;Siderurgia y metalurgia;Maestria;21
+2015;Siderurgia y metalurgia;Universitario;192
+2015;Siderurgia y metalurgia;Otros;16
+2015;Software y servicios informáticos;Doctorado;44
+2015;Software y servicios informáticos;Maestria;68
+2015;Software y servicios informáticos;Universitario;535
+2015;Software y servicios informáticos;Otros;141
+2015;Suministro de electricidad, gas y agua;Doctorado;4
+2015;Suministro de electricidad, gas y agua;Maestria;4
+2015;Suministro de electricidad, gas y agua;Universitario;83
+2015;Suministro de electricidad, gas y agua;Otros;6
+2016;Alimentos y bebidas;Doctorado;21
+2016;Alimentos y bebidas;Maestria;40
+2016;Alimentos y bebidas;Universitario;249
+2016;Alimentos y bebidas;Otros;32
+2016;Aparatos eléctricos e instrumental médico;Doctorado;22
+2016;Aparatos eléctricos e instrumental médico;Maestria;35
+2016;Aparatos eléctricos e instrumental médico;Universitario;149
+2016;Aparatos eléctricos e instrumental médico;Otros;51
+2016;Automotriz;Doctorado;3
+2016;Automotriz;Maestria;26
+2016;Automotriz;Universitario;186
+2016;Automotriz;Otros;116
+2016;Intermediación financiera;Doctorado;1
+2016;Intermediación financiera;Maestria;16
+2016;Intermediación financiera;Universitario;67
+2016;Intermediación financiera;Otros;1
+2016;Maquinaria y equipo;Doctorado;9
+2016;Maquinaria y equipo;Maestria;31
+2016;Maquinaria y equipo;Universitario;250
+2016;Maquinaria y equipo;Otros;126
+2016;Otras actividades agropecuarias;Doctorado;10
+2016;Otras actividades agropecuarias;Maestria;17
+2016;Otras actividades agropecuarias;Universitario;51
+2016;Otras actividades agropecuarias;Otros;6
+2016;Otros productos manufactureros;Doctorado;11
+2016;Otros productos manufactureros;Maestria;25
+2016;Otros productos manufactureros;Universitario;103
+2016;Otros productos manufactureros;Otros;33
+2016;Otros servicios empresariales;Doctorado;59
+2016;Otros servicios empresariales;Maestria;84
+2016;Otros servicios empresariales;Universitario;235
+2016;Otros servicios empresariales;Otros;38
+2016;Petróleo, gas y minería;Doctorado;4
+2016;Petróleo, gas y minería;Maestria;5
+2016;Petróleo, gas y minería;Universitario;50
+2016;Petróleo, gas y minería;Otros;3
+2016;Producción de semillas;Doctorado;55
+2016;Producción de semillas;Maestria;50
+2016;Producción de semillas;Universitario;123
+2016;Producción de semillas;Otros;22
+2016;Productos de caucho y plástico;Doctorado;7
+2016;Productos de caucho y plástico;Maestria;5
+2016;Productos de caucho y plástico;Universitario;57
+2016;Productos de caucho y plástico;Otros;29
+2016;Productos farmacéuticos;Doctorado;150
+2016;Productos farmacéuticos;Maestria;132
+2016;Productos farmacéuticos;Universitario;468
+2016;Productos farmacéuticos;Otros;125
+2016;Productos químicos;Doctorado;61
+2016;Productos químicos;Maestria;52
+2016;Productos químicos;Universitario;364
+2016;Productos químicos;Otros;63
+2016;Servicios agropecuarios;Doctorado;5
+2016;Servicios agropecuarios;Maestria;11
+2016;Servicios agropecuarios;Universitario;25
+2016;Servicios agropecuarios;Otros;0
+2016;Servicios de I+D;Doctorado;178
+2016;Servicios de I+D;Maestria;111
+2016;Servicios de I+D;Universitario;351
+2016;Servicios de I+D;Otros;79
+2016;Siderurgia y metalurgia;Doctorado;17
+2016;Siderurgia y metalurgia;Maestria;22
+2016;Siderurgia y metalurgia;Universitario;171
+2016;Siderurgia y metalurgia;Otros;34
+2016;Software y servicios informáticos;Doctorado;38
+2016;Software y servicios informáticos;Maestria;88
+2016;Software y servicios informáticos;Universitario;644
+2016;Software y servicios informáticos;Otros;155
+2016;Suministro de electricidad, gas y agua;Doctorado;2
+2016;Suministro de electricidad, gas y agua;Maestria;3
+2016;Suministro de electricidad, gas y agua;Universitario;79
+2016;Suministro de electricidad, gas y agua;Otros;6
+2017;Alimentos y bebidas;Doctorado;21
+2017;Alimentos y bebidas;Maestria;43
+2017;Alimentos y bebidas;Universitario;248
+2017;Alimentos y bebidas;Otros;40
+2017;Aparatos eléctricos e instrumental médico;Doctorado;17
+2017;Aparatos eléctricos e instrumental médico;Maestria;29
+2017;Aparatos eléctricos e instrumental médico;Universitario;155
+2017;Aparatos eléctricos e instrumental médico;Otros;60
+2017;Automotriz;Doctorado;3
+2017;Automotriz;Maestria;24
+2017;Automotriz;Universitario;134
+2017;Automotriz;Otros;99
+2017;Intermediación financiera;Doctorado;0
+2017;Intermediación financiera;Maestria;9
+2017;Intermediación financiera;Universitario;203
+2017;Intermediación financiera;Otros;36
+2017;Maquinaria y equipo;Doctorado;7
+2017;Maquinaria y equipo;Maestria;24
+2017;Maquinaria y equipo;Universitario;271
+2017;Maquinaria y equipo;Otros;128
+2017;Otras actividades agropecuarias;Doctorado;8
+2017;Otras actividades agropecuarias;Maestria;26
+2017;Otras actividades agropecuarias;Universitario;45
+2017;Otras actividades agropecuarias;Otros;3
+2017;Otros productos manufactureros;Doctorado;13
+2017;Otros productos manufactureros;Maestria;27
+2017;Otros productos manufactureros;Universitario;127
+2017;Otros productos manufactureros;Otros;46
+2017;Otros servicios empresariales;Doctorado;74
+2017;Otros servicios empresariales;Maestria;42
+2017;Otros servicios empresariales;Universitario;219
+2017;Otros servicios empresariales;Otros;35
+2017;Petróleo, gas y minería;Doctorado;4
+2017;Petróleo, gas y minería;Maestria;8
+2017;Petróleo, gas y minería;Universitario;40
+2017;Petróleo, gas y minería;Otros;4
+2017;Producción de semillas;Doctorado;49
+2017;Producción de semillas;Maestria;56
+2017;Producción de semillas;Universitario;108
+2017;Producción de semillas;Otros;37
+2017;Productos de caucho y plástico;Doctorado;6
+2017;Productos de caucho y plástico;Maestria;6
+2017;Productos de caucho y plástico;Universitario;61
+2017;Productos de caucho y plástico;Otros;24
+2017;Productos farmacéuticos;Doctorado;128
+2017;Productos farmacéuticos;Maestria;104
+2017;Productos farmacéuticos;Universitario;649
+2017;Productos farmacéuticos;Otros;129
+2017;Productos químicos;Doctorado;60
+2017;Productos químicos;Maestria;49
+2017;Productos químicos;Universitario;344
+2017;Productos químicos;Otros;43
+2017;Servicios agropecuarios;Doctorado;7
+2017;Servicios agropecuarios;Maestria;14
+2017;Servicios agropecuarios;Universitario;32
+2017;Servicios agropecuarios;Otros;3
+2017;Servicios de I+D;Doctorado;124
+2017;Servicios de I+D;Maestria;124
+2017;Servicios de I+D;Universitario;485
+2017;Servicios de I+D;Otros;128
+2017;Siderurgia y metalurgia;Doctorado;9
+2017;Siderurgia y metalurgia;Maestria;15
+2017;Siderurgia y metalurgia;Universitario;189
+2017;Siderurgia y metalurgia;Otros;89
+2017;Software y servicios informáticos;Doctorado;52
+2017;Software y servicios informáticos;Maestria;87
+2017;Software y servicios informáticos;Universitario;948
+2017;Software y servicios informáticos;Otros;227
+2017;Suministro de electricidad, gas y agua;Doctorado;1
+2017;Suministro de electricidad, gas y agua;Maestria;3
+2017;Suministro de electricidad, gas y agua;Universitario;71
+2017;Suministro de electricidad, gas y agua;Otros;4
+2018;Alimentos y bebidas;Doctorado;24
+2018;Alimentos y bebidas;Maestria;37
+2018;Alimentos y bebidas;Universitario;290
+2018;Alimentos y bebidas;Otros;47
+2018;Aparatos eléctricos e instrumental médico;Doctorado;16
+2018;Aparatos eléctricos e instrumental médico;Maestria;20
+2018;Aparatos eléctricos e instrumental médico;Universitario;176
+2018;Aparatos eléctricos e instrumental médico;Otros;49
+2018;Automotriz;Doctorado;3
+2018;Automotriz;Maestria;22
+2018;Automotriz;Universitario;371
+2018;Automotriz;Otros;116
+2018;Intermediación financiera;Doctorado;0
+2018;Intermediación financiera;Maestria;10
+2018;Intermediación financiera;Universitario;229
+2018;Intermediación financiera;Otros;40
+2018;Maquinaria y equipo;Doctorado;7
+2018;Maquinaria y equipo;Maestria;17
+2018;Maquinaria y equipo;Universitario;260
+2018;Maquinaria y equipo;Otros;96
+2018;Otras actividades agropecuarias;Doctorado;6
+2018;Otras actividades agropecuarias;Maestria;17
+2018;Otras actividades agropecuarias;Universitario;58
+2018;Otras actividades agropecuarias;Otros;3
+2018;Otros productos manufactureros;Doctorado;10
+2018;Otros productos manufactureros;Maestria;22
+2018;Otros productos manufactureros;Universitario;136
+2018;Otros productos manufactureros;Otros;45
+2018;Otros servicios empresariales;Doctorado;76
+2018;Otros servicios empresariales;Maestria;58
+2018;Otros servicios empresariales;Universitario;930
+2018;Otros servicios empresariales;Otros;57
+2018;Petróleo, gas y minería;Doctorado;5
+2018;Petróleo, gas y minería;Maestria;7
+2018;Petróleo, gas y minería;Universitario;66
+2018;Petróleo, gas y minería;Otros;11
+2018;Producción de semillas;Doctorado;49
+2018;Producción de semillas;Maestria;49
+2018;Producción de semillas;Universitario;111
+2018;Producción de semillas;Otros;51
+2018;Productos de caucho y plástico;Doctorado;5
+2018;Productos de caucho y plástico;Maestria;5
+2018;Productos de caucho y plástico;Universitario;60
+2018;Productos de caucho y plástico;Otros;31
+2018;Productos farmacéuticos;Doctorado;120
+2018;Productos farmacéuticos;Maestria;78
+2018;Productos farmacéuticos;Universitario;654
+2018;Productos farmacéuticos;Otros;157
+2018;Productos químicos;Doctorado;48
+2018;Productos químicos;Maestria;55
+2018;Productos químicos;Universitario;325
+2018;Productos químicos;Otros;65
+2018;Servicios agropecuarios;Doctorado;15
+2018;Servicios agropecuarios;Maestria;17
+2018;Servicios agropecuarios;Universitario;47
+2018;Servicios agropecuarios;Otros;17
+2018;Servicios de I+D;Doctorado;183
+2018;Servicios de I+D;Maestria;121
+2018;Servicios de I+D;Universitario;562
+2018;Servicios de I+D;Otros;113
+2018;Siderurgia y metalurgia;Doctorado;17
+2018;Siderurgia y metalurgia;Maestria;17
+2018;Siderurgia y metalurgia;Universitario;181
+2018;Siderurgia y metalurgia;Otros;62
+2018;Software y servicios informáticos;Doctorado;67
+2018;Software y servicios informáticos;Maestria;86
+2018;Software y servicios informáticos;Universitario;1552
+2018;Software y servicios informáticos;Otros;514
+2018;Suministro de electricidad, gas y agua;Doctorado;2
+2018;Suministro de electricidad, gas y agua;Maestria;3
+2018;Suministro de electricidad, gas y agua;Universitario;77
+2018;Suministro de electricidad, gas y agua;Otros;2
+2019;Alimentos y bebidas;Doctorado;29
+2019;Alimentos y bebidas;Maestria;50
+2019;Alimentos y bebidas;Universitario;270
+2019;Alimentos y bebidas;Otros;70
+2019;Aparatos eléctricos e instrumental médico;Doctorado;11
+2019;Aparatos eléctricos e instrumental médico;Maestria;10
+2019;Aparatos eléctricos e instrumental médico;Universitario;165
+2019;Aparatos eléctricos e instrumental médico;Otros;34
+2019;Automotriz;Doctorado;2
+2019;Automotriz;Maestria;15
+2019;Automotriz;Universitario;304
+2019;Automotriz;Otros;116
+2019;Intermediación financiera;Doctorado;0
+2019;Intermediación financiera;Maestria;8
+2019;Intermediación financiera;Universitario;176
+2019;Intermediación financiera;Otros;43
+2019;Maquinaria y equipo;Doctorado;8
+2019;Maquinaria y equipo;Maestria;30
+2019;Maquinaria y equipo;Universitario;298
+2019;Maquinaria y equipo;Otros;93
+2019;Otras actividades agropecuarias;Doctorado;19
+2019;Otras actividades agropecuarias;Maestria;11
+2019;Otras actividades agropecuarias;Universitario;71
+2019;Otras actividades agropecuarias;Otros;7
+2019;Otros productos manufactureros;Doctorado;10
+2019;Otros productos manufactureros;Maestria;34
+2019;Otros productos manufactureros;Universitario;135
+2019;Otros productos manufactureros;Otros;45
+2019;Otros servicios empresariales;Doctorado;102
+2019;Otros servicios empresariales;Maestria;126
+2019;Otros servicios empresariales;Universitario;565
+2019;Otros servicios empresariales;Otros;44
+2019;Petróleo, gas y minería;Doctorado;2
+2019;Petróleo, gas y minería;Maestria;4
+2019;Petróleo, gas y minería;Universitario;49
+2019;Petróleo, gas y minería;Otros;8
+2019;Producción de semillas;Doctorado;39
+2019;Producción de semillas;Maestria;48
+2019;Producción de semillas;Universitario;127
+2019;Producción de semillas;Otros;17
+2019;Productos de caucho y plástico;Doctorado;9
+2019;Productos de caucho y plástico;Maestria;5
+2019;Productos de caucho y plástico;Universitario;53
+2019;Productos de caucho y plástico;Otros;19
+2019;Productos farmacéuticos;Doctorado;162
+2019;Productos farmacéuticos;Maestria;101
+2019;Productos farmacéuticos;Universitario;693
+2019;Productos farmacéuticos;Otros;136
+2019;Productos químicos;Doctorado;46
+2019;Productos químicos;Maestria;28
+2019;Productos químicos;Universitario;267
+2019;Productos químicos;Otros;50
+2019;Servicios agropecuarios;Doctorado;15
+2019;Servicios agropecuarios;Maestria;17
+2019;Servicios agropecuarios;Universitario;64
+2019;Servicios agropecuarios;Otros;23
+2019;Servicios de I+D;Doctorado;223
+2019;Servicios de I+D;Maestria;120
+2019;Servicios de I+D;Universitario;761
+2019;Servicios de I+D;Otros;75
+2019;Siderurgia y metalurgia;Doctorado;14
+2019;Siderurgia y metalurgia;Maestria;14
+2019;Siderurgia y metalurgia;Universitario;194
+2019;Siderurgia y metalurgia;Otros;55
+2019;Software y servicios informáticos;Doctorado;30
+2019;Software y servicios informáticos;Maestria;130
+2019;Software y servicios informáticos;Universitario;1534
+2019;Software y servicios informáticos;Otros;582
+2019;Suministro de electricidad, gas y agua;Doctorado;1
+2019;Suministro de electricidad, gas y agua;Maestria;3
+2019;Suministro de electricidad, gas y agua;Universitario;74
+2019;Suministro de electricidad, gas y agua;Otros;2
+2020;Alimentos y bebidas;Doctorado;16
+2020;Alimentos y bebidas;Maestria;58
+2020;Alimentos y bebidas;Universitario;262
+2020;Alimentos y bebidas;Otros;48
+2020;Aparatos eléctricos e instrumental médico;Doctorado;22
+2020;Aparatos eléctricos e instrumental médico;Maestria;16
+2020;Aparatos eléctricos e instrumental médico;Universitario;215
+2020;Aparatos eléctricos e instrumental médico;Otros;40
+2020;Automotriz;Doctorado;8
+2020;Automotriz;Maestria;10
+2020;Automotriz;Universitario;437
+2020;Automotriz;Otros;49
+2020;Intermediación financiera;Doctorado;1
+2020;Intermediación financiera;Maestria;11
+2020;Intermediación financiera;Universitario;194
+2020;Intermediación financiera;Otros;35
+2020;Maquinaria y equipo;Doctorado;7
+2020;Maquinaria y equipo;Maestria;24
+2020;Maquinaria y equipo;Universitario;328
+2020;Maquinaria y equipo;Otros;116
+2020;Otras actividades agropecuarias;Doctorado;16
+2020;Otras actividades agropecuarias;Maestria;11
+2020;Otras actividades agropecuarias;Universitario;81
+2020;Otras actividades agropecuarias;Otros;6
+2020;Otros productos manufactureros;Doctorado;10
+2020;Otros productos manufactureros;Maestria;22
+2020;Otros productos manufactureros;Universitario;119
+2020;Otros productos manufactureros;Otros;26
+2020;Otros servicios empresariales;Doctorado;137
+2020;Otros servicios empresariales;Maestria;250
+2020;Otros servicios empresariales;Universitario;940
+2020;Otros servicios empresariales;Otros;49
+2020;Petróleo, gas y minería;Doctorado;13
+2020;Petróleo, gas y minería;Maestria;8
+2020;Petróleo, gas y minería;Universitario;27
+2020;Petróleo, gas y minería;Otros;10
+2020;Producción de semillas;Doctorado;40
+2020;Producción de semillas;Maestria;57
+2020;Producción de semillas;Universitario;190
+2020;Producción de semillas;Otros;18
+2020;Productos de caucho y plástico;Doctorado;0
+2020;Productos de caucho y plástico;Maestria;3
+2020;Productos de caucho y plástico;Universitario;25
+2020;Productos de caucho y plástico;Otros;18
+2020;Productos farmacéuticos;Doctorado;159
+2020;Productos farmacéuticos;Maestria;93
+2020;Productos farmacéuticos;Universitario;746
+2020;Productos farmacéuticos;Otros;95
+2020;Productos químicos;Doctorado;59
+2020;Productos químicos;Maestria;20
+2020;Productos químicos;Universitario;280
+2020;Productos químicos;Otros;52
+2020;Servicios agropecuarios;Doctorado;13
+2020;Servicios agropecuarios;Maestria;18
+2020;Servicios agropecuarios;Universitario;60
+2020;Servicios agropecuarios;Otros;19
+2020;Servicios de I+D;Doctorado;260
+2020;Servicios de I+D;Maestria;97
+2020;Servicios de I+D;Universitario;649
+2020;Servicios de I+D;Otros;45
+2020;Siderurgia y metalurgia;Doctorado;18
+2020;Siderurgia y metalurgia;Maestria;14
+2020;Siderurgia y metalurgia;Universitario;200
+2020;Siderurgia y metalurgia;Otros;43
+2020;Software y servicios informáticos;Doctorado;33
+2020;Software y servicios informáticos;Maestria;155
+2020;Software y servicios informáticos;Universitario;1701
+2020;Software y servicios informáticos;Otros;569
+2020;Suministro de electricidad, gas y agua;Doctorado;1
+2020;Suministro de electricidad, gas y agua;Maestria;2
+2020;Suministro de electricidad, gas y agua;Universitario;77
+2020;Suministro de electricidad, gas y agua;Otros;3
+2021;Alimentos y bebidas;Doctorado;21
+2021;Alimentos y bebidas;Maestria;58
+2021;Alimentos y bebidas;Universitario;309
+2021;Alimentos y bebidas;Otros;62
+2021;Aparatos eléctricos e instrumental médico;Doctorado;18
+2021;Aparatos eléctricos e instrumental médico;Maestria;19
+2021;Aparatos eléctricos e instrumental médico;Universitario;290
+2021;Aparatos eléctricos e instrumental médico;Otros;62
+2021;Automotriz;Doctorado;1
+2021;Automotriz;Maestria;16
+2021;Automotriz;Universitario;230
+2021;Automotriz;Otros;77
+2021;Intermediación financiera;Doctorado;0
+2021;Intermediación financiera;Maestria;10
+2021;Intermediación financiera;Universitario;181
+2021;Intermediación financiera;Otros;39
+2021;Maquinaria y equipo;Doctorado;11
+2021;Maquinaria y equipo;Maestria;28
+2021;Maquinaria y equipo;Universitario;394
+2021;Maquinaria y equipo;Otros;148
+2021;Otras actividades agropecuarias;Doctorado;31
+2021;Otras actividades agropecuarias;Maestria;16
+2021;Otras actividades agropecuarias;Universitario;64
+2021;Otras actividades agropecuarias;Otros;9
+2021;Otros productos manufactureros;Doctorado;13
+2021;Otros productos manufactureros;Maestria;40
+2021;Otros productos manufactureros;Universitario;179
+2021;Otros productos manufactureros;Otros;41
+2021;Otros servicios empresariales;Doctorado;144
+2021;Otros servicios empresariales;Maestria;188
+2021;Otros servicios empresariales;Universitario;751
+2021;Otros servicios empresariales;Otros;73
+2021;Petróleo, gas y minería;Doctorado;8
+2021;Petróleo, gas y minería;Maestria;12
+2021;Petróleo, gas y minería;Universitario;39
+2021;Petróleo, gas y minería;Otros;5
+2021;Producción de semillas;Doctorado;39
+2021;Producción de semillas;Maestria;54
+2021;Producción de semillas;Universitario;165
+2021;Producción de semillas;Otros;23
+2021;Productos de caucho y plástico;Doctorado;4
+2021;Productos de caucho y plástico;Maestria;6
+2021;Productos de caucho y plástico;Universitario;59
+2021;Productos de caucho y plástico;Otros;35
+2021;Productos farmacéuticos;Doctorado;145
+2021;Productos farmacéuticos;Maestria;89
+2021;Productos farmacéuticos;Universitario;773
+2021;Productos farmacéuticos;Otros;93
+2021;Productos químicos;Doctorado;79
+2021;Productos químicos;Maestria;25
+2021;Productos químicos;Universitario;329
+2021;Productos químicos;Otros;47
+2021;Servicios agropecuarios;Doctorado;13
+2021;Servicios agropecuarios;Maestria;16
+2021;Servicios agropecuarios;Universitario;52
+2021;Servicios agropecuarios;Otros;5
+2021;Servicios de I+D;Doctorado;262
+2021;Servicios de I+D;Maestria;119
+2021;Servicios de I+D;Universitario;649
+2021;Servicios de I+D;Otros;64
+2021;Siderurgia y metalurgia;Doctorado;11
+2021;Siderurgia y metalurgia;Maestria;14
+2021;Siderurgia y metalurgia;Universitario;213
+2021;Siderurgia y metalurgia;Otros;65
+2021;Software y servicios informáticos;Doctorado;43
+2021;Software y servicios informáticos;Maestria;140
+2021;Software y servicios informáticos;Universitario;1642
+2021;Software y servicios informáticos;Otros;583
+2021;Suministro de electricidad, gas y agua;Doctorado;1
+2021;Suministro de electricidad, gas y agua;Maestria;3
+2021;Suministro de electricidad, gas y agua;Universitario;77
+2021;Suministro de electricidad, gas y agua;Otros;2
+2022;Alimentos y bebidas;Doctorado;41
+2022;Alimentos y bebidas;Maestria;41
+2022;Alimentos y bebidas;Universitario;347
+2022;Alimentos y bebidas;Otros;71
+2022;Aparatos eléctricos e instrumental médico;Doctorado;22
+2022;Aparatos eléctricos e instrumental médico;Maestria;17
+2022;Aparatos eléctricos e instrumental médico;Universitario;315
+2022;Aparatos eléctricos e instrumental médico;Otros;76
+2022;Automotriz;Doctorado;2
+2022;Automotriz;Maestria;24
+2022;Automotriz;Universitario;283
+2022;Automotriz;Otros;82
+2022;Intermediación financiera;Doctorado;0
+2022;Intermediación financiera;Maestria;9
+2022;Intermediación financiera;Universitario;185
+2022;Intermediación financiera;Otros;36
+2022;Maquinaria y equipo;Doctorado;12
+2022;Maquinaria y equipo;Maestria;28
+2022;Maquinaria y equipo;Universitario;433
+2022;Maquinaria y equipo;Otros;153
+2022;Otras actividades agropecuarias;Doctorado;20
+2022;Otras actividades agropecuarias;Maestria;3
+2022;Otras actividades agropecuarias;Universitario;46
+2022;Otras actividades agropecuarias;Otros;4
+2022;Otros productos manufactureros;Doctorado;11
+2022;Otros productos manufactureros;Maestria;19
+2022;Otros productos manufactureros;Universitario;194
+2022;Otros productos manufactureros;Otros;53
+2022;Otros servicios empresariales;Doctorado;145
+2022;Otros servicios empresariales;Maestria;169
+2022;Otros servicios empresariales;Universitario;867
+2022;Otros servicios empresariales;Otros;76
+2022;Petróleo, gas y minería;Doctorado;7
+2022;Petróleo, gas y minería;Maestria;13
+2022;Petróleo, gas y minería;Universitario;35
+2022;Petróleo, gas y minería;Otros;2
+2022;Producción de semillas;Doctorado;40
+2022;Producción de semillas;Maestria;50
+2022;Producción de semillas;Universitario;130
+2022;Producción de semillas;Otros;27
+2022;Productos de caucho y plástico;Doctorado;6
+2022;Productos de caucho y plástico;Maestria;7
+2022;Productos de caucho y plástico;Universitario;66
+2022;Productos de caucho y plástico;Otros;25
+2022;Productos farmacéuticos;Doctorado;163
+2022;Productos farmacéuticos;Maestria;116
+2022;Productos farmacéuticos;Universitario;921
+2022;Productos farmacéuticos;Otros;153
+2022;Productos químicos;Doctorado;93
+2022;Productos químicos;Maestria;37
+2022;Productos químicos;Universitario;356
+2022;Productos químicos;Otros;66
+2022;Servicios agropecuarios;Doctorado;15
+2022;Servicios agropecuarios;Maestria;23
+2022;Servicios agropecuarios;Universitario;49
+2022;Servicios agropecuarios;Otros;3
+2022;Servicios de I+D;Doctorado;367
+2022;Servicios de I+D;Maestria;137
+2022;Servicios de I+D;Universitario;785
+2022;Servicios de I+D;Otros;65
+2022;Siderurgia y metalurgia;Doctorado;9
+2022;Siderurgia y metalurgia;Maestria;17
+2022;Siderurgia y metalurgia;Universitario;255
+2022;Siderurgia y metalurgia;Otros;76
+2022;Software y servicios informáticos;Doctorado;30
+2022;Software y servicios informáticos;Maestria;131
+2022;Software y servicios informáticos;Universitario;1636
+2022;Software y servicios informáticos;Otros;456
+2022;Suministro de electricidad, gas y agua;Doctorado;1
+2022;Suministro de electricidad, gas y agua;Maestria;3
+2022;Suministro de electricidad, gas y agua;Universitario;72
+2022;Suministro de electricidad, gas y agua;Otros;3
+2023;Alimentos y bebidas;Doctorado;23
+2023;Alimentos y bebidas;Maestria;41
+2023;Alimentos y bebidas;Universitario;335
+2023;Alimentos y bebidas;Otros;58
+2023;Aparatos eléctricos e instrumental médico;Doctorado;20
+2023;Aparatos eléctricos e instrumental médico;Maestria;12
+2023;Aparatos eléctricos e instrumental médico;Universitario;319
+2023;Aparatos eléctricos e instrumental médico;Otros;67
+2023;Automotriz;Doctorado;3
+2023;Automotriz;Maestria;16
+2023;Automotriz;Universitario;235
+2023;Automotriz;Otros;76
+2023;Intermediación financiera;Doctorado;0
+2023;Intermediación financiera;Maestria;4
+2023;Intermediación financiera;Universitario;184
+2023;Intermediación financiera;Otros;39
+2023;Maquinaria y equipo;Doctorado;11
+2023;Maquinaria y equipo;Maestria;23
+2023;Maquinaria y equipo;Universitario;451
+2023;Maquinaria y equipo;Otros;165
+2023;Otras actividades agropecuarias;Doctorado;19
+2023;Otras actividades agropecuarias;Maestria;2
+2023;Otras actividades agropecuarias;Universitario;50
+2023;Otras actividades agropecuarias;Otros;2
+2023;Otros productos manufactureros;Doctorado;8
+2023;Otros productos manufactureros;Maestria;18
+2023;Otros productos manufactureros;Universitario;184
+2023;Otros productos manufactureros;Otros;62
+2023;Otros servicios empresariales;Doctorado;123
+2023;Otros servicios empresariales;Maestria;139
+2023;Otros servicios empresariales;Universitario;708
+2023;Otros servicios empresariales;Otros;89
+2023;Petróleo, gas y minería;Doctorado;5
+2023;Petróleo, gas y minería;Maestria;12
+2023;Petróleo, gas y minería;Universitario;24
+2023;Petróleo, gas y minería;Otros;1
+2023;Producción de semillas;Doctorado;37
+2023;Producción de semillas;Maestria;39
+2023;Producción de semillas;Universitario;165
+2023;Producción de semillas;Otros;17
+2023;Productos de caucho y plástico;Doctorado;6
+2023;Productos de caucho y plástico;Maestria;8
+2023;Productos de caucho y plástico;Universitario;79
+2023;Productos de caucho y plástico;Otros;17
+2023;Productos farmacéuticos;Doctorado;204
+2023;Productos farmacéuticos;Maestria;112
+2023;Productos farmacéuticos;Universitario;988
+2023;Productos farmacéuticos;Otros;128
+2023;Productos químicos;Doctorado;100
+2023;Productos químicos;Maestria;26
+2023;Productos químicos;Universitario;307
+2023;Productos químicos;Otros;82
+2023;Servicios agropecuarios;Doctorado;36
+2023;Servicios agropecuarios;Maestria;17
+2023;Servicios agropecuarios;Universitario;45
+2023;Servicios agropecuarios;Otros;4
+2023;Servicios de I+D;Doctorado;432
+2023;Servicios de I+D;Maestria;154
+2023;Servicios de I+D;Universitario;795
+2023;Servicios de I+D;Otros;64
+2023;Siderurgia y metalurgia;Doctorado;9
+2023;Siderurgia y metalurgia;Maestria;12
+2023;Siderurgia y metalurgia;Universitario;260
+2023;Siderurgia y metalurgia;Otros;66
+2023;Software y servicios informáticos;Doctorado;40
+2023;Software y servicios informáticos;Maestria;113
+2023;Software y servicios informáticos;Universitario;1395
+2023;Software y servicios informáticos;Otros;337
+2023;Suministro de electricidad, gas y agua;Doctorado;1
+2023;Suministro de electricidad, gas y agua;Maestria;8
+2023;Suministro de electricidad, gas y agua;Universitario;15
+2023;Suministro de electricidad, gas y agua;Otros;2
+2024;Alimentos y bebidas;Doctorado;20
+2024;Alimentos y bebidas;Maestria;36
+2024;Alimentos y bebidas;Universitario;311
+2024;Alimentos y bebidas;Otros;49
+2024;Aparatos eléctricos e instrumental médico;Doctorado;10
+2024;Aparatos eléctricos e instrumental médico;Maestria;14
+2024;Aparatos eléctricos e instrumental médico;Universitario;251
+2024;Aparatos eléctricos e instrumental médico;Otros;42
+2024;Automotriz;Doctorado;3
+2024;Automotriz;Maestria;15
+2024;Automotriz;Universitario;203
+2024;Automotriz;Otros;73
+2024;Intermediación financiera;Doctorado;0
+2024;Intermediación financiera;Maestria;8
+2024;Intermediación financiera;Universitario;217
+2024;Intermediación financiera;Otros;7
+2024;Maquinaria y equipo;Doctorado;10
+2024;Maquinaria y equipo;Maestria;22
+2024;Maquinaria y equipo;Universitario;397
+2024;Maquinaria y equipo;Otros;104
+2024;Otras actividades agropecuarias;Doctorado;6
+2024;Otras actividades agropecuarias;Maestria;1
+2024;Otras actividades agropecuarias;Universitario;20
+2024;Otras actividades agropecuarias;Otros;2
+2024;Otros productos manufactureros;Doctorado;6
+2024;Otros productos manufactureros;Maestria;12
+2024;Otros productos manufactureros;Universitario;175
+2024;Otros productos manufactureros;Otros;42
+2024;Otros servicios empresariales;Doctorado;69
+2024;Otros servicios empresariales;Maestria;60
+2024;Otros servicios empresariales;Universitario;463
+2024;Otros servicios empresariales;Otros;90
+2024;Petróleo, gas y minería;Doctorado;5
+2024;Petróleo, gas y minería;Maestria;8
+2024;Petróleo, gas y minería;Universitario;26
+2024;Petróleo, gas y minería;Otros;0
+2024;Producción de semillas;Doctorado;30
+2024;Producción de semillas;Maestria;41
+2024;Producción de semillas;Universitario;154
+2024;Producción de semillas;Otros;5
+2024;Productos de caucho y plástico;Doctorado;2
+2024;Productos de caucho y plástico;Maestria;4
+2024;Productos de caucho y plástico;Universitario;65
+2024;Productos de caucho y plástico;Otros;12
+2024;Productos farmacéuticos;Doctorado;193
+2024;Productos farmacéuticos;Maestria;99
+2024;Productos farmacéuticos;Universitario;964
+2024;Productos farmacéuticos;Otros;143
+2024;Productos químicos;Doctorado;75
+2024;Productos químicos;Maestria;21
+2024;Productos químicos;Universitario;281
+2024;Productos químicos;Otros;60
+2024;Servicios agropecuarios;Doctorado;30
+2024;Servicios agropecuarios;Maestria;16
+2024;Servicios agropecuarios;Universitario;27
+2024;Servicios agropecuarios;Otros;7
+2024;Servicios de I+D;Doctorado;460
+2024;Servicios de I+D;Maestria;170
+2024;Servicios de I+D;Universitario;756
+2024;Servicios de I+D;Otros;71
+2024;Siderurgia y metalurgia;Doctorado;9
+2024;Siderurgia y metalurgia;Maestria;7
+2024;Siderurgia y metalurgia;Universitario;231
+2024;Siderurgia y metalurgia;Otros;55
+2024;Software y servicios informáticos;Doctorado;24
+2024;Software y servicios informáticos;Maestria;194
+2024;Software y servicios informáticos;Universitario;1332
+2024;Software y servicios informáticos;Otros;284
+2024;Suministro de electricidad, gas y agua;Doctorado;0
+2024;Suministro de electricidad, gas y agua;Maestria;10
+2024;Suministro de electricidad, gas y agua;Universitario;16
+2024;Suministro de electricidad, gas y agua;Otros;2

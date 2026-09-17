@@ -1,0 +1,414 @@
+---
+title: "La Economía del Conocimiento en La Rioja"
+subtitle: "Diagnóstico y perspectivas (2019-2025)"
+author: "Elaboración propia"
+date: today
+date-format: "MMMM YYYY"
+lang: es
+format:
+  docx:
+    toc: false
+    number-sections: false
+    reference-doc: reference.docx
+    fig-width: 6.5
+    fig-height: 3.5
+  html:
+    toc: true
+    toc-depth: 2
+    toc-location: left
+    toc-title: "Contenido"
+    number-sections: false
+    theme: cosmo
+    css: estilos_web.css
+    embed-resources: true
+    fig-width: 7
+    fig-height: 4
+bibliography: referencias.bib
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{python}
+#| echo: false
+#| include: false
+import os, sys, re
+from pathlib import Path
+
+raiz = Path.cwd()
+if raiz.name == "informe":
+    raiz = raiz.parent
+if str(raiz) not in sys.path:
+    sys.path.insert(0, str(raiz))
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+FIG = Path("figuras")
+FIG.mkdir(exist_ok=True)
+
+_modulos_ok = {}
+
+try:
+    from src.empresas_ec import (
+        cargar_provincia, serie_empresas, serie_ec,
+        detalle_ramas, benchmark_provincias, LEY_27_506,
+    )
+    _modulos_ok["empresas"] = True
+except Exception as e:
+    print(f"[warn] empresas_ec: {e}", file=sys.stderr)
+    _modulos_ok["empresas"] = False
+
+try:
+    from src.visualizaciones_empresas import (
+        fig_empresas_serie, fig_empleo_ec_serie,
+        fig_empleo_ec_participacion, fig_elasticidad,
+        fig_intensidad_empresarial,
+    )
+    _modulos_ok["vis_emp"] = True
+except Exception as e:
+    print(f"[warn] visualizaciones_empresas: {e}", file=sys.stderr)
+    _modulos_ok["vis_emp"] = False
+
+try:
+    from src.regional import (
+        cargar_empleo, cargar_salario, cargar_ipc_noa,
+        serie_provincia, serie_nacional, serie_noa,
+        salario_real_propio, ratio_salarial,
+    )
+    _modulos_ok["regional"] = True
+except Exception as e:
+    print(f"[warn] regional: {e}", file=sys.stderr)
+    _modulos_ok["regional"] = False
+
+try:
+    from src.visualizaciones import (
+        fig_empleo_comparado, fig_salario_real_propio,
+        fig_ratio_salarial, guardar,
+    )
+    _modulos_ok["vis"] = True
+except Exception as e:
+    print(f"[warn] visualizaciones: {e}", file=sys.stderr)
+    _modulos_ok["vis"] = False
+
+RUTA_EMP = Path("../data/raw/provinciales_serie_empresas3_2.xlsx")
+if not RUTA_EMP.exists():
+    RUTA_EMP = Path("data/raw/provinciales_serie_empresas3_2.xlsx")
+
+RUTA_EMPLEO = Path("../data/raw/provinciales_serie_empleo_trimestral_4dig_7.xlsx")
+if not RUTA_EMPLEO.exists():
+    RUTA_EMPLEO = Path("data/raw/provinciales_serie_empleo_trimestral_4dig_7.xlsx")
+
+# ---------------------------------------------------------------------------
+# 1. EMPRESAS EC
+# ---------------------------------------------------------------------------
+_df_lr = _serie_tot = _serie_ec = _det_2024 = None
+if _modulos_ok.get("empresas"):
+    try:
+        _df_lr     = cargar_provincia(RUTA_EMP, "La Rioja")
+        _serie_tot = serie_empresas(_df_lr)
+        _serie_ec  = serie_ec(_df_lr, "ley_27_506")
+        _det_2024  = detalle_ramas(_df_lr, 2024, "ley_27_506")
+    except Exception as e:
+        print(f"[warn] carga empresas: {e}", file=sys.stderr)
+
+# ---------------------------------------------------------------------------
+# 2. EMPLEO LR / NOA / NACIÓN
+# ---------------------------------------------------------------------------
+_emp_lr = _emp_nac = _emp_noa = None
+if _modulos_ok.get("regional"):
+    try:
+        _emp_lr  = serie_provincia("La Rioja", "empleo")
+        _emp_nac = serie_nacional("empleo")
+        _emp_noa = serie_noa("empleo")
+    except Exception as e:
+        print(f"[warn] series empleo: {e}", file=sys.stderr)
+
+# ---------------------------------------------------------------------------
+# 3. SALARIO REAL
+# ---------------------------------------------------------------------------
+_real = None
+if _modulos_ok.get("regional"):
+    try:
+        _real = salario_real_propio()
+    except Exception as e:
+        print(f"[warn] salario_real_propio: {e}", file=sys.stderr)
+
+# ---------------------------------------------------------------------------
+# 4. EMPLEO EC
+# ---------------------------------------------------------------------------
+def _parsear_empleo_prov(ruta, hoja):
+    raw = pd.read_excel(ruta, sheet_name=hoja, header=None, engine="openpyxl")
+    header_row = None
+    for i in range(min(20, len(raw))):
+        vals = raw.iloc[i].astype(str).str.strip().str.lower().tolist()
+        if "ramas" in vals and any("descrip" in v for v in vals):
+            header_row = i
+            break
+    df = raw.iloc[header_row + 1:].copy()
+    df.columns = [str(c).strip() for c in raw.iloc[header_row]]
+    df = df.rename(columns={df.columns[0]: "rama", df.columns[1]: "descripcion"})
+    df["rama"] = df["rama"].astype(str).str.strip()
+    df = df[df["rama"].str.fullmatch(r"\d{3,4}")].copy()
+
+    cols = [c for c in df.columns if re.search(r"trim", str(c), re.I)]
+    tidy = df.melt(id_vars=["rama", "descripcion"], value_vars=cols,
+                   var_name="periodo", value_name="empleo")
+
+    def _split(s):
+        m = re.search(r"(\d)\s*[°º]?\s*Trim\s*(\d{4})", str(s), re.I)
+        return pd.Series([int(m.group(2)), int(m.group(1))]) if m else pd.Series([pd.NA, pd.NA])
+    tidy[["anio", "trimestre"]] = tidy["periodo"].apply(_split)
+
+    def _int(v):
+        if pd.isna(v): return pd.NA
+        s = str(v).strip()
+        if s.lower() in {"s.d.", "sd", "", "nan", "-"}: return pd.NA
+        try: return int(float(s))
+        except ValueError: return pd.NA
+    tidy["empleo"] = tidy["empleo"].map(_int).astype("Int64")
+    tidy = tidy.dropna(subset=["anio", "trimestre"])
+    tidy["anio"] = tidy["anio"].astype(int)
+    tidy["trimestre"] = tidy["trimestre"].astype(int)
+    return tidy.reset_index(drop=True)
+
+_empleo_ec_anual = _comp = _elasticidad = None
+if _modulos_ok.get("empresas") and RUTA_EMPLEO.exists():
+    try:
+        _emp     = _parsear_empleo_prov(RUTA_EMPLEO, "La Rioja")
+        _emp_ec  = _emp[_emp["rama"].isin(LEY_27_506)].copy()
+        _emp_ec_q = _emp_ec.groupby(["anio","trimestre"], as_index=False)["empleo"].sum(min_count=1)
+        _empleo_ec_anual = (_emp_ec_q.groupby("anio", as_index=False)["empleo"]
+                            .mean().rename(columns={"empleo": "empleo_ec_prom"}))
+        _tot_q = _emp.groupby(["anio","trimestre"], as_index=False)["empleo"].sum(min_count=1)
+        _empleo_tot_anual = (_tot_q.groupby("anio", as_index=False)["empleo"]
+                             .mean().rename(columns={"empleo": "empleo_total_prom"}))
+        _comp = (_empleo_ec_anual.merge(_empleo_tot_anual, on="anio", how="outer")
+                 .assign(share_ec_pct=lambda d: (d["empleo_ec_prom"]/d["empleo_total_prom"]*100).round(2)))
+        _emp_ec_anual = serie_ec(_df_lr, "ley_27_506")
+        _elasticidad = (_comp[["anio","empleo_ec_prom"]]
+                        .merge(_emp_ec_anual, on="anio", how="inner").query("anio >= 2022"))
+    except Exception as e:
+        print(f"[warn] empleo EC: {e}", file=sys.stderr)
+
+# ---------------------------------------------------------------------------
+# 5. INTENSIDAD EMPRESARIAL
+# ---------------------------------------------------------------------------
+_intensidades = pd.DataFrame([
+    ("Santiago del Estero", 27.20), ("Jujuy", 27.88), ("La Rioja", 30.11),
+    ("Tucumán", 35.08), ("Catamarca", 35.18), ("Salta", 36.59),
+    ("Córdoba", 40.44), ("Santa Fé", 43.02), ("CABA", 69.75),
+], columns=["provincia", "intensidad_permil"])
+```
+
+# Resumen
+
+La Rioja enfrenta una **década de divergencia económica**: el VAB provincial representa hoy 0,19% del total nacional, la mitad de lo que representaba en 1993, y el empleo registrado volvió en 2026 a ubicarse por debajo de la media nacional por primera vez desde 2019. En el mismo período, el sector de la **Economía del Conocimiento (EC)** —definido según la Ley 27.506— se consolidó como un segmento de **baja masa crítica pero densidad relativa comparable a la del NOA**.
+
+Los hallazgos centrales son tres:
+
+1. **Masa crítica limitada.** Con **98 empresas** (3,0% del total provincial) y **623 empleos** (2,2% del empleo privado formal) en 2024, La Rioja es la última de las 9 jurisdicciones relevadas en volumen absoluto. Sin embargo, su intensidad empresarial (30,1‰) supera a Jujuy y Santiago del Estero.
+
+2. **Consolidación intra-sectorial.** Entre 2022 y 2025, las empresas EC cayeron −3,5% mientras el empleo lo hizo solo −1,7% (elasticidad 0,50). Las firmas que sobreviven absorben relativamente más trabajadores.
+
+3. **Especialización incipiente.** La estructura del sector se desplazó desde publicidad hacia software y servicios informáticos: las actividades de Informática n.c.p. y Consultoría pasaron de representar 49,8% del ingreso sectorial en 2022 a 77,1% en 2025.
+
+El límite del sector no es su orientación productiva, sino el **tamaño absoluto del entramado empresarial provincial**. Con 3.255 empresas totales, el techo estructural del sector es bajo, incluso cuando su densidad relativa sea competitiva.
+
+# Análisis
+
+## Contexto macroeconómico
+
+En 2025, La Rioja aportó USD 163,4 millones al VAB nacional —0,19%, la participación más baja desde el inicio de la serie comparable en 1993. La caída interanual fue de **−25,7%**, en un año en que el país creció +9,3%.
+
+```{python}
+#| echo: false
+#| include: false
+if _modulos_ok.get("vis"):
+    try:
+        _fig, _ = fig_empleo_comparado()
+        guardar(_fig, FIG / "B1_empleo_comp.png")
+    except Exception as e:
+        print(f"[warn] fig_empleo_comparado: {e}", file=sys.stderr)
+```
+
+![Empleo registrado privado formal: La Rioja, NOA y Nación. Índice base enero 2019 = 100, serie desestacionalizada. Fuente: SIPA–OEDE.](figuras/B1_empleo_comp.png){#fig-empleo-comp fig-align="center"}
+
+El empleo registrado siguió una trayectoria en tres fases: caída y piso en 2020 (índice 87), recuperación hasta el pico de 111,4 en 2024, y reversión en 2025–2026. En el cuarto trimestre de 2025 la provincia registró **28.442 puestos** formales.
+
+## Salario real
+
+```{python}
+#| echo: false
+#| include: false
+if _modulos_ok.get("vis"):
+    try:
+        _fig, _ = fig_salario_real_propio()
+        guardar(_fig, FIG / "B2_salario_real.png")
+    except Exception as e:
+        print(f"[warn] fig_salario_real_propio: {e}", file=sys.stderr)
+```
+
+![Salario real de La Rioja deflactado por IPC NOA (base 2017 = 100). Fuente: SIPA–OEDE, INDEC.](figuras/B2_salario_real.png){#fig-salario-real fig-align="center"}
+
+El salario real acumuló una caída del **−35,3%** entre 2017 y 2024, con un piso de 64,7 puntos. La recuperación de 2025 llegó a 79,8, todavía **20 puntos por debajo** del punto de partida. En términos relativos, el salario promedio riojano pasó de representar el 72% del nacional en 2019 al **59% en 2026**.
+
+## Empresas EC
+
+```{python}
+#| echo: false
+#| include: false
+if _serie_tot is not None and _modulos_ok.get("vis_emp"):
+    try:
+        fig_empresas_serie(_serie_tot, _serie_ec,
+                           FIG / "B3_empresas_serie.png",
+                           anio_ini=2019, anio_fin=2025)
+    except Exception as e:
+        print(f"[warn] fig_empresas_serie: {e}", file=sys.stderr)
+```
+
+![Empresas totales (gris) y empresas EC Ley 27.506 (turquesa) en La Rioja. Fuente: SIPA–OEDE.](figuras/B3_empresas_serie.png){#fig-empresas-serie fig-align="center"}
+
+En 2024 la provincia registró **3.255 empresas privadas**, de las cuales **98** corresponden a actividades promovidas por la Ley 27.506. El sector creció +14,0% entre 2022 y 2024, y retrocedió a 83 empresas en 2025 (−15,3%). La composición por rama muestra un claro predominio de servicios profesionales técnicos (arquitectura e ingeniería: 31 empresas) y telecomunicaciones (19), con ausencia total de las ramas de industria 4.0 y de instrumental médico y óptico.
+
+## Empleo EC
+
+```{python}
+#| echo: false
+#| include: false
+if _comp is not None and _modulos_ok.get("vis_emp"):
+    try:
+        fig_empleo_ec_participacion(_comp, FIG / "B4_empleo_ec_part.png",
+                                    anio_ini=2019, anio_fin=2025)
+    except Exception as e:
+        print(f"[warn] fig_empleo_ec_participacion: {e}", file=sys.stderr)
+```
+
+![Empleo EC (barras) y participación en el empleo provincial (línea). Fuente: SIPA–OEDE, Ley 27.506.](figuras/B4_empleo_ec_part.png){#fig-empleo-ec fig-align="center"}
+
+El empleo EC promedia **623 puestos en 2024**, equivalente al **2,22%** del empleo privado formal provincial. La serie se mantiene estable en el rango 570-675 puestos desde 2019, con una participación sobre el empleo provincial que oscila en la banda 2,1%-2,3%. Con 98 empresas y 623 empleos, el sector promedia **6,4 empleados por firma**, muy por debajo del promedio provincial.
+
+## Elasticidad y dinámica
+
+```{python}
+#| echo: false
+#| include: false
+if _elasticidad is not None and _modulos_ok.get("vis_emp"):
+    try:
+        fig_elasticidad(_elasticidad, FIG / "B5_elasticidad.png", anio_ini=2022)
+    except Exception as e:
+        print(f"[warn] fig_elasticidad: {e}", file=sys.stderr)
+```
+
+![Elasticidad: empresas EC vs. empleo EC (índice 2022 = 100). Fuente: SIPA–OEDE.](figuras/B5_elasticidad.png){#fig-elasticidad fig-align="center"}
+
+Entre 2022 y 2025 las empresas EC cayeron **−3,5%** mientras el empleo bajó solo **−1,7%**. La **elasticidad de 0,50** indica que por cada punto porcentual de caída en el número de firmas, el empleo cae medio punto. El proceso sugiere consolidación intra-sectorial: menos firmas, cada una relativamente más grande en empleo.
+
+## Posicionamiento nacional
+
+```{python}
+#| echo: false
+#| include: false
+if _modulos_ok.get("vis_emp"):
+    try:
+        fig_intensidad_empresarial(_intensidades, FIG / "B6_intensidad.png",
+                                   prov_destacada="La Rioja")
+    except Exception as e:
+        print(f"[warn] fig_intensidad_empresarial: {e}", file=sys.stderr)
+```
+
+![Intensidad empresarial EC por provincia: empresas EC por cada 1.000 empresas totales. Fuente: SIPA–OEDE, 2024.](figuras/B6_intensidad.png){#fig-intensidad fig-align="center"}
+
+En términos absolutos La Rioja es la **última de las 9 jurisdicciones** en cantidad de empresas EC. Al normalizar por el tamaño de cada economía provincial, la intensidad riojana (**30,1‰**) supera a Jujuy (27,9‰) y Santiago del Estero (27,2‰), y queda próxima a Tucumán (35,1‰) y Catamarca (35,2‰). La Rioja ocupa el **7° puesto** en este indicador.
+
+# Discusión
+
+## ¿Por qué cae el sector en 2025?
+
+La caída de −15,3% en empresas EC entre 2024 y 2025 coincide con una contracción del empleo total provincial del orden del 9%. El sector EC no es inmune al ciclo económico provincial, pero su caída es **más pronunciada que el promedio**. Tres factores pueden contribuir:
+
+1. **Vulnerabilidad de las firmas unipersonales.** Con un promedio de 6,4 empleados por empresa, el sector está dominado por profesionales independientes (arquitectos, consultores, publicistas) cuya continuidad depende directamente de la demanda de servicios profesionales. En recesión, estos servicios son los primeros en recortarse.
+
+2. **Efecto composición en la publicidad.** La rama 7430 (Publicidad), que representaba 31,5% del ingreso EC en 2022, cayó a 13,8% en 2025 y desapareció del registro de empresas en 2025. Este colapso no fue compensado por el crecimiento de software y consultoría.
+
+3. **Pérdida de contribuyentes.** El número de contribuyentes del sector cayó −26,2% entre 2022 y 2025 (de 1.138 a 840). La recaudación se concentra cada vez más en pocas firmas: las tres ramas principales representan el **95,3%** del impuesto sectorial.
+
+## ¿Cómo se compara con las otras provincias del NOA?
+
+La Rioja es la única del NOA, junto con Catamarca y Jujuy, que no creció en el período 2022-2025. **Salta (+4,2%) y Santiago del Estero (+1,9%) sí crecieron**. La diferencia no parece atribuible al tamaño (Santiago tiene 6.360 empresas totales, apenas 2× La Rioja) sino a factores idiosincráticos:
+
+- **Salta** desarrolló un polo tecnológico vinculado a la minería y al sector energético.
+- **Santiago del Estero** se benefició del crecimiento general del empleo público provincial y de la instalación de centros de servicios.
+- **La Rioja** mantiene una estructura productiva más concentrada en el sector primario y en la industria tradicional.
+
+## El límite estructural
+
+El hallazgo más importante del análisis es que **el límite del sector EC riojano no es su orientación productiva, sino el tamaño absoluto del entramado empresarial provincial**. Con 3.255 empresas totales —menos de la mitad que Tucumán (12.086) y un cuarto de Salta (10.412)— el sector EC tiene un techo estructural bajo independientemente de su densidad relativa.
+
+Esto tiene una implicancia de política importante: **no se puede expandir el sector EC sin expandir primero el tejido empresarial general**. Las políticas de promoción sectorial pueden mejorar la densidad relativa, pero su impacto absoluto está limitado por el tamaño del denominador.
+
+## La paradoja fiscal
+
+Los ingresos brutos del sector EC en términos reales se multiplicaron por **3,16** entre 2022 y 2025, mientras el número de contribuyentes cayó **−26,2%**. Esto significa que el sector factura mucho más, pero con muchas menos firmas. Dos lecturas posibles:
+
+- **Positiva:** las firmas sobrevivientes ganaron escala y productividad.
+- **Negativa:** el sector se está concentrando, con dependencia creciente de tres o cuatro contribuyentes principales. La salida de cualquiera de ellos tendría un impacto fiscal significativo.
+
+Los datos sugieren que ambas dinámicas operan simultáneamente.
+
+# Conclusión
+
+La Economía del Conocimiento en La Rioja es un **sector pequeño, estable y relativamente denso**. No es una historia de éxito —la provincia es la última de las 9 jurisdicciones relevadas en volumen absoluto y el sector cayó −3,5% entre 2022 y 2025— pero tampoco es una historia de fracaso. Su densidad empresarial (30,1‰) es competitiva dentro del NOA y la elasticidad de 0,50 muestra capacidad de consolidación.
+
+## Tres observaciones finales
+
+1. **El problema no es la EC, es el tamaño.** Con 3.255 empresas totales, el techo del sector EC está estructuralmente acotado. Cualquier política de promoción sectorial tendrá un impacto limitado si no se acompaña de políticas de desarrollo empresarial general.
+
+2. **El sector se está especializando.** El desplazamiento desde publicidad hacia software y servicios informáticos es una señal positiva: las actividades de mayor valor agregado ganan peso. Pero también concentra el riesgo: las tres ramas principales representan el 95,3% del impuesto sectorial.
+
+3. **La ventana de oportunidad existe pero es estrecha.** La Rioja tiene infraestructura digital razonable (fibra óptica casi triplicada en 4 años) y una densidad EC comparable a la del NOA. Lo que falta es **masa crítica**: un número mínimo de firmas que permita el desarrollo de un ecosistema.
+
+## Líneas de acción sugeridas
+
+1. **Focalizar la promoción en las tres ramas con mayor peso** (software, telecomunicaciones, servicios profesionales técnicos) en lugar de intentar cubrir todo el perímetro de la Ley 27.506. La especialización es más efectiva que la dispersión.
+
+2. **Articular con el sistema universitario local** (UNLaR) para generar derrames de conocimiento y retención de graduados en la provincia. El limitado tamaño del sector es también un límite para la retención de talento.
+
+3. **Reforzar la conectividad** en los departamentos del interior, no solo en la capital. La expansión de fibra óptica de los últimos cuatro años es una base, pero la cobertura efectiva sigue concentrada.
+
+4. **Establecer un sistema de monitoreo continuo** del sector, con indicadores anuales públicos. La calidad del diagnóstico depende críticamente de la disponibilidad de datos. El hueco de 2023 en la serie de empresas es un recordatorio de esta fragilidad.
+
+# Anexo — Fuentes y definiciones
+
+## Fuentes utilizadas
+
+| Fuente | Serie | Cobertura |
+|---|---|---|
+| SIPA–OEDE (STEySS) | Empleo registrado privado formal | 1996–2026 |
+| SIPA–OEDE (STEySS) | Empresas privadas por rama | 1996–2025 |
+| SIPA–OEDE (STEySS) | Empleo por rama 4 dígitos CIIU | 1996–2025 |
+| INDEC | IPC NOA | 2017–2026 |
+| INDEC (OPEX) | VAB provincial | 1993–2025 |
+| DGIP La Rioja | Ingresos brutos por actividad | 2018–2025 |
+
+## Definiciones clave
+
+**Economía del Conocimiento (Ley 27.506).** Conjunto de actividades promovidas por la Ley 27.506 y su modificatoria 27.570. La ley usa códigos CLAE 2018 (6 dígitos); para compatibilizar con la fuente provincial (CIIU rev. 3 a 4 dígitos) se aplicó una tabla de correspondencia manual. Excluye servicios jurídicos y contables, seguridad privada y agencias de empleo temporario.
+
+**Intensidad empresarial EC.** Cociente entre empresas EC y empresas totales de la provincia, expresado por cada 1.000 empresas totales (‰). Permite comparar densidad neutralizando el tamaño absoluto.
+
+**Elasticidad empleo-empresas.** Cociente entre la variación porcentual del empleo EC y la variación porcentual de las empresas EC. Valores menores a 1 indican que el empleo cae menos que las empresas (consolidación).
+
+## Limitaciones
+
+1. **Hueco de 2023.** El archivo provincial de OEDE no publica datos para ese año. La serie salta de 2022 a 2024.
+2. **2025 preliminar.** Las cifras de 2025 pueden estar sujetas a revisión.
+3. **Conversión CLAE–CIIU rev. 3.** La correspondencia no es 1 a 1. El mapeo prioriza minimizar falsos positivos.
+4. **VAB sin apertura sectorial.** OPEX no desagrega la contribución de la EC al producto provincial.
+
+# Referencias {#sec-referencias}
+
+::: {#refs}
+:::

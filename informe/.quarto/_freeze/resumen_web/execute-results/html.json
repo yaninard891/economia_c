@@ -1,0 +1,12 @@
+{
+  "hash": "3cba95743e7f757b59d26dbbdcee5a78",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Economía del Conocimiento en La Rioja\"\nsubtitle: \"Los cinco indicadores que importan\"\nauthor: \"Yanina\"\ndate: today\ndate-format: \"MMMM YYYY\"\nlang: es\nformat:\n  html:\n    toc: false\n    embed-resources: true\n    theme: cosmo\n    css: estilos_web.css\n---\n\n\n<div class=\"titular\">\nLa Economía del Conocimiento en La Rioja paga <strong>47% más</strong>\nque el promedio provincial, pero emplea apenas al <strong>6,3%</strong>\ndel sector privado formal.\n</div>\n\n## 1. La EC paga más\n\nUn puesto de EC remunera **$1,91 M** contra **$1,30 M** del promedio\nprovincial. En el núcleo TIC la brecha es aún mayor: **$2,29 M**, un\n76% por encima del promedio.\n\n## 2. El tejido empresarial crece\n\nDe **37 a 67 empresas** en 5 años (×1,81). La contracara: los\ncontribuyentes locales del régimen DGIP cayeron 26% entre 2022 y 2025.\n\n## 3. El ingreso público se multiplicó por 3\n\nÍndice real **100 → 316** entre 2022 y 2025 (+216%). La recaudación\nnominal pasó de $58,99 M a $1.940,91 M.\n\n## 4. El ciclo de empleo riojano\n\n::: {#96909bd0 .cell execution_count=2}\n\n::: {.cell-output .cell-output-display execution_count=2}\n![Empleo privado formal desestacionalizado. Índice ene-2019 = 100. Fuente: SIPA-OEDE.](resumen_web_files/figure-html/cell-3-output-1.png){width=992 height=557}\n:::\n\n::: {.cell-output .cell-output-display}\n![](resumen_web_files/figure-html/cell-3-output-2.png){width=992 height=557}\n:::\n:::\n\n\nLa Rioja tuvo un **boom 2023–2024** (índice 111) y un **bust\n2025–2026** (98,3). Hoy está por debajo de la Nación.\n\n## 5. La Rioja pierde peso en el producto nacional\n\nDe **0,36%** en 1993 a **0,19%** en 2025. En 2025 cayó 25,7% mientras\nel país creció 9,3%.\n\n---\n\n<div class=\"pie\">\nFuentes: SIPA-OEDE, INDEC, DGIP La Rioja.\nAnálisis propio. El informe completo está disponible en formato Word.\n</div>\n\n",
+    "supporting": [
+      "resumen_web_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

@@ -1,0 +1,73 @@
+---
+title: "Economía del Conocimiento en La Rioja"
+subtitle: "Los cinco indicadores que importan"
+author: "Yanina"
+date: today
+date-format: "MMMM YYYY"
+lang: es
+format:
+  html:
+    toc: false
+    embed-resources: true
+    theme: cosmo
+    css: estilos_web.css
+---
+
+```{python}
+#| echo: false
+#| include: false
+import os, sys
+from pathlib import Path
+if Path.cwd().name == "informe":
+    os.chdir("..")
+sys.path.insert(0, str(Path.cwd()))
+
+import pandas as pd
+```
+
+<div class="titular">
+La Economía del Conocimiento en La Rioja paga <strong>47% más</strong>
+que el promedio provincial, pero emplea apenas al <strong>6,3%</strong>
+del sector privado formal.
+</div>
+
+## 1. La EC paga más
+
+Un puesto de EC remunera **$1,91 M** contra **$1,30 M** del promedio
+provincial. En el núcleo TIC la brecha es aún mayor: **$2,29 M**, un
+76% por encima del promedio.
+
+## 2. El tejido empresarial crece
+
+De **37 a 67 empresas** en 5 años (×1,81). La contracara: los
+contribuyentes locales del régimen DGIP cayeron 26% entre 2022 y 2025.
+
+## 3. El ingreso público se multiplicó por 3
+
+Índice real **100 → 316** entre 2022 y 2025 (+216%). La recaudación
+nominal pasó de $58,99 M a $1.940,91 M.
+
+## 4. El ciclo de empleo riojano
+
+```{python}
+#| echo: false
+#| fig-cap: "Empleo privado formal desestacionalizado. Índice ene-2019 = 100. Fuente: SIPA-OEDE."
+from src.visualizaciones import fig_empleo_zoom
+fig, _ = fig_empleo_zoom()
+fig
+```
+
+La Rioja tuvo un **boom 2023–2024** (índice 111) y un **bust
+2025–2026** (98,3). Hoy está por debajo de la Nación.
+
+## 5. La Rioja pierde peso en el producto nacional
+
+De **0,36%** en 1993 a **0,19%** en 2025. En 2025 cayó 25,7% mientras
+el país creció 9,3%.
+
+---
+
+<div class="pie">
+Fuentes: SIPA-OEDE, INDEC, DGIP La Rioja.
+Análisis propio. El informe completo está disponible en formato Word.
+</div>

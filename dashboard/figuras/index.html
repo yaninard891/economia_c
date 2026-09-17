@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Economía del Conocimiento en La Rioja | 2022-2025</title>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #0B1D35;
+            color: #FFFFFF;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0B1D35 0%, #1A3A5C 100%);
+            padding: 30px 40px;
+            border-bottom: 3px solid #4ECDC4;
+        }
+        .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
+        .header h2 { font-size: 16px; color: #8EAFC4; font-weight: 400; margin-top: 5px; }
+        .header .institucional { font-size: 12px; color: #5A8BA8; margin-top: 10px; }
+
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .kpi-card {
+            background: linear-gradient(135deg, #112840 0%, #1A3A5C 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid #4ECDC4;
+        }
+        .kpi-card .number { font-size: 32px; font-weight: 700; color: #4ECDC4; }
+        .kpi-card .label { font-size: 13px; color: #8EAFC4; margin-top: 5px; }
+        .kpi-card .sub { font-size: 12px; color: #5A8BA8; margin-top: 8px; }
+        .kpi-card .sub span { color: #4ECDC4; font-weight: 600; }
+        .kpi-card .sub span.neg { color: #FF6B6B; }
+        .kpi-card .kpi-source {
+            font-size: 10px;
+            color: #5A8BA8;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #1A3A5C;
+            font-style: italic;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .chart-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .chart-box {
+            background: #112840;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .chart-box h3 {
+            font-size: 15px;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #1A3A5C;
+            padding-bottom: 10px;
+        }
+        .chart-container { width: 100%; height: 320px; }
+        .chart-container-tall { width: 100%; height: 420px; }
+
+        .chart-source {
+            font-size: 10px;
+            color: #5A8BA8;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #1A3A5C;
+            font-style: italic;
+            letter-spacing: 0.2px;
+        }
+
+        .info-card {
+            background: #112840;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .info-card h3 {
+            font-size: 15px;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #1A3A5C;
+            padding-bottom: 10px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #0B1D35;
+        }
+        .info-item .key { color: #8EAFC4; font-size: 13px; }
+        .info-item .value { color: #4ECDC4; font-weight: 600; font-size: 14px; text-align: right; }
+
+        .highlight-box {
+            background: #1A3A5C;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+        .highlight-box .alert { color: #FF6B6B; font-size: 12px; line-height: 1.5; }
+        .highlight-box .positive { color: #4ECDC4; font-size: 12px; line-height: 1.5; }
+
+        .transform-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        .transform-item .arrow-up { color: #4ECDC4; font-size: 20px; }
+        .transform-item .arrow-down { color: #FF6B6B; font-size: 20px; }
+        .transform-item .detail { font-size: 13px; color: #8EAFC4; margin-top: 3px; }
+        .transform-item .pct { font-size: 18px; font-weight: 700; min-width: 20px; }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #5A8BA8;
+            font-size: 11px;
+            line-height: 1.6;
+            border-top: 1px solid #1A3A5C;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .chart-row-3 { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 800px) {
+            .chart-row { grid-template-columns: 1fr; }
+            .kpi-row { grid-template-columns: 1fr; }
+            .header { padding: 25px 20px; }
+            .header h1 { font-size: 22px; }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>ECONOMÍA DEL CONOCIMIENTO EN LA RIOJA</h1>
+    <h2>Período 2022-2025</h2>
+    <div class="institucional"></div>
+</div>
+
+<div class="container">
+
+    <!-- ============ KPI ============ -->
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <div class="number">$40.925 M</div>
+            <div class="label">Ingresos del sector 2025</div>
+            <div class="sub"><span>+132,9%</span> crecimiento real acumulado vs. 2022</div>
+            <div class="kpi-source">Fuente: DGIP La Rioja (IIBB)</div>
+        </div>
+        <div class="kpi-card">
+            <div class="number">98</div>
+            <div class="label">Empresas EC Ley 27.506 (2024)</div>
+            <div class="sub"><span>3,0%</span> del total provincial (3.255 empresas)<br>
+                <span class="neg">−15,3%</span> en 2025 (83 empresas)</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE · Ley 27.506</div>
+        </div>
+        <div class="kpi-card">
+            <div class="number">623</div>
+            <div class="label">Empleo EC promedio 2024</div>
+            <div class="sub"><span>2,22%</span> del empleo provincial (28.008 puestos)<br>
+                <span>~6,4</span> empleados por empresa</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE · Ley 27.506</div>
+        </div>
+        <div class="kpi-card">
+            <div class="number">$1.641.175</div>
+            <div class="label">Salario promedio EC 2025</div>
+            <div class="sub"><span>+25,5%</span> sobre el promedio provincial</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE</div>
+        </div>
+    </div>
+
+    <!-- ============ ESTRUCTURA EC ============ -->
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Estructura del sector EC 2025 — Distribución por actividad</h3>
+            <div id="chart-donut" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    Las actividades de Informática n.c.p. y Consultores en
+                    Informática y suministros de programas informáticos
+                    concentran el 77,1% del ingreso total del sector.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), 2025</div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Participación de Ingresos EC por actividad 2022 - 2025</h3>
+            <div style="padding: 10px;">
+
+                <div class="transform-item">
+                    <span class="arrow-up pct" style="color:#4ECDC4;">▲</span>
+                    <div>
+                        <div style="font-size:16px; font-weight:700;">Consultores informática</div>
+                        <div class="detail">
+                            6,1% → 33,6%
+                            <span style="color:#4ECDC4; font-weight:600;">(+27,5 pp)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transform-item">
+                    <span class="arrow-down pct" style="color:#FF6B6B;">▼</span>
+                    <div>
+                        <div style="font-size:16px; font-weight:700;">Publicidad</div>
+                        <div class="detail">
+                            31,5% → 13,8%
+                            <span style="color:#FF6B6B; font-weight:600;">(-17,7 pp)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transform-item">
+                    <span class="arrow-up pct" style="color:#4ECDC4;">●</span>
+                    <div>
+                        <div style="font-size:16px; font-weight:700;">
+                            Servicios de informática y consultores en informática
+                        </div>
+                        <div class="detail">
+                            49,8% (2022) → 77,1% (2025)
+                            <span style="color:#4ECDC4; font-weight:600;">(+27,3 pp)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top:20px;">
+                    <div class="positive">
+                        Los servicios informáticos desplazaron a la publicidad
+                        como motor del sector. La EC de La Rioja se especializa
+                        en actividades de mayor valor agregado.
+                    </div>
+                </div>
+
+                <div id="chart-transform" class="chart-container"
+                     style="height:160px; margin-top:10px;"></div>
+
+            </div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), 2022-2025</div>
+        </div>
+
+    </div>
+
+    <!-- ============ INGRESOS Y SALARIOS ============ -->
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Ingresos reales del sector EC ($ millones, base=2022)</h3>
+            <div id="chart-ingresos" class="chart-container"></div>
+            <div class="highlight-box">
+                <div class="positive">
+                    Los ingresos declarados por el sector de la Economía
+                    del Conocimiento registraron un crecimiento real acumulado
+                    del 132,9% y la recaudación de 217% entre 2022 y 2025.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), deflactado por IPC NOA (INDEC)</div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Remuneración promedio por rama EC vs. promedio provincial (dic-2025)</h3>
+            <div id="chart-salarios" class="chart-container"></div>
+            <div class="highlight-box">
+                <div class="positive">
+                    En diciembre de 2025, las ramas de Informática n.c.p.
+                    ($3.108.543), telecomunicaciones ($2.764.135) y
+                    Consultores en Informática ($1.726.147) superaron
+                    ampliamente la remuneración promedio general de la
+                    provincia, duplicando la referencia local.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: SIPA-OEDE, diciembre 2025</div>
+        </div>
+
+    </div>
+
+    <!-- ============ EMPRESAS EC — LEY 27.506 ============ -->
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Empresas EC Ley 27.506 — La Rioja (2022-2025)</h3>
+            <div id="chart-empresas" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    En 2024 la provincia registró <strong>98 empresas</strong>
+                    promovidas por la Ley 27.506, equivalente al 3,0% del total
+                    provincial (3.255 empresas). El sector creció +14,0% entre
+                    2022 y 2024, y retrocedió a 83 empresas en 2025 (−15,3%).
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS), <em>provinciales_serie_empresas3_2</em>.
+                Definición: Ley 27.506. La fuente no publica datos para 2023.
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Contribuyentes por régimen de tributación (2022-2025)</h3>
+            <div id="chart-contribuyentes" class="chart-container"></div>
+            <div class="highlight-box">
+                <div class="positive">
+                    Las firmas inscriptas bajo el régimen de Convenio
+                    Multilateral crecieron de 1.752 a 2.075 en el período,
+                    elevando su participación en el padrón del 60,6% al 71,2%.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), 2022-2025</div>
+        </div>
+
+    </div>
+
+    <!-- ============ EMPLEO EC: ELASTICIDAD Y PARTICIPACIÓN ============ -->
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Elasticidad: empresas EC vs. empleo EC (índice 2022 = 100)</h3>
+            <div id="chart-elasticidad" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    Entre 2022 y 2025 el número de empresas EC cayó
+                    <strong>−3,5%</strong> mientras que el empleo del sector
+                    bajó solo <strong>−1,7%</strong>. La <strong>elasticidad
+                    de 0,50</strong> indica que por cada punto porcentual que
+                    se pierde en empresas, el empleo cae medio punto. El sector
+                    no se desarma: se <strong>consolida</strong> — las firmas
+                    que sobreviven absorben más trabajadores.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS). Definición: Ley 27.506.
+                Promedio anual de trimestres con dato.
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Empleo EC y participación en el empleo total provincial (2019-2025)</h3>
+            <div id="chart-empleo-share" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    El empleo EC se mantiene estable en torno a los
+                    <strong>620-670 puestos</strong>. Su participación en el
+                    empleo formal provincial pasó de <strong>2,29%</strong> en
+                    2019 a <strong>2,34%</strong> en 2025, con un pico de
+                    2,29% y una caída al 2,06% en 2023 (por el boom del empleo
+                    total provincial, no por caída del sector).
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS). Definición: Ley 27.506.
+                Promedio anual de trimestres con dato.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============ INTENSIDAD EMPRESARIAL EC ============ -->
+    <div class="chart-row">
+        <div class="chart-box" style="grid-column: 1 / -1;">
+            <h3>Intensidad empresarial EC — Empresas EC por 1.000 empresas totales (2024)</h3>
+            <div id="chart-intensidad" class="chart-container-tall"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    La Rioja registra una densidad de <strong>30,1‰</strong>,
+                    por encima de Jujuy (27,9‰) y Santiago del Estero (27,2‰),
+                    y en línea con Tucumán (35,1‰) y Catamarca (35,2‰).
+                    En volumen absoluto es la última de las 9 jurisdicciones,
+                    pero <strong>en términos relativos al tamaño de su economía
+                    ocupa el 7° lugar</strong>. El límite del sector no es la
+                    orientación productiva, sino el tamaño total del entramado
+                    empresarial provincial.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS), <em>provinciales_serie_empresas3_2</em>.
+                Definición: Ley 27.506. Intensidad = (empresas EC / empresas totales) × 1.000.
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ I+D / EXPORTACIONES / CONECTIVIDAD ============ -->
+    <div class="chart-row-3">
+
+        <div class="info-card">
+            <h3>Ciencia y Tecnología — I+D</h3>
+            <div class="info-item">
+                <span class="key">Inversión I+D 2024</span>
+                <span class="value">$9.076 M</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Crecimiento vs. 2022</span>
+                <span class="value">+425%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Investigadores EJC 2024</span>
+                <span class="value">274</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Pico histórico (2013)</span>
+                <span class="value">549</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Variación vs. pico</span>
+                <span class="value" style="color:#FF6B6B;">-50,1%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Personal técnico</span>
+                <span class="value">214</span>
+            </div>
+            <div class="highlight-box">
+                <div class="positive">
+                    La tasa se ubicó en 16 investigadores cada 10.000
+                    habitantes de la PEA en 2024, ubicándose por debajo
+                    del promedio nacional de aproximadamente 25.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: MINCyT</div>
+        </div>
+
+        <div class="info-card">
+            <h3>Inserción exportadora (2024)</h3>
+            <div class="info-item">
+                <span class="key">Exportaciones totales</span>
+                <span class="value">USD 219 M</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Baja tecnología</span>
+                <span class="value">95,9%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Alta tecnología</span>
+                <span class="value">3,7%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Var. Interanual Total de exportaciones</span>
+                <span class="value">9,5%</span>
+            </div>
+            <div class="highlight-box" style="margin-top:40px;">
+                <div class="positive">
+                    Las exportaciones de alta tecnología ascendieron a
+                    USD 8 millones, representando el 3,7% de la canasta
+                    exportadora total y mostrando una leve mejora respecto
+                    al 3,2% de 2022.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: INDEC, 2024</div>
+        </div>
+
+        <div class="info-card">
+            <h3>Conectividad digital (Q1-2026)</h3>
+            <div class="info-item">
+                <span class="key">Accesos fijos totales</span>
+                <span class="value">92.160</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Fibra óptica</span>
+                <span class="value">27.564</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Crecimiento Acum. FO</span>
+                <span class="value">+188,7%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Cobertura del Servicio</span>
+                <span class="value">24 acc. c/100 hab.</span>
+            </div>
+            <div class="info-item">
+                <span class="key">FO sobre total</span>
+                <span class="value">29,9%</span>
+            </div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    La fibra óptica casi se triplicó en 4 años.
+                    Esta expansión representa el soporte físico indispensable
+                    para que las empresas tecnológicas puedan operar,
+                    exportar y potenciar el ecosistema digital de la provincia.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: ENACOM, Q1-2026</div>
+        </div>
+
+    </div>
+
+    <!-- ============ EMPLEO ============ -->
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Empleo privado registrado — Promedio anual (puestos)</h3>
+            <div id="chart-empleo" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    En mayo de 2026, el stock de empleo se ubicó en
+                    30.325 puestos, lo que representa una caída interanual
+                    del 1,7% respecto a mayo de 2025 (30.835 puestos).
+                </div>
+            </div>
+            <div class="chart-source">Fuente: SIPA-OEDE, 2022-2026</div>
+        </div>
+
+        <div class="info-card">
+            <h3>Empleo por sector — Promedio 2025</h3>
+            <div class="info-item">
+                <span class="key">Industria</span>
+                <span class="value">8.444 (29,9%)</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Servicios</span>
+                <span class="value">7.950 (28,2%)</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Comercio</span>
+                <span class="value">6.402 (22,7%)</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Agricultura</span>
+                <span class="value">3.790 (13,4%)</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Construcción</span>
+                <span class="value" style="color:#FF6B6B;">896 (3,2%)</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Electricidad</span>
+                <span class="value">604 (2,1%)</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Minería</span>
+                <span class="value">109 (0,4%)</span>
+            </div>
+            <div class="info-item"
+                 style="border-top:2px solid #4ECDC4; margin-top:5px; padding-top:10px;">
+                <span class="key" style="font-weight:700; color:#FFFFFF;">TOTAL</span>
+                <span class="value">28.985</span>
+            </div>
+            <div class="highlight-box">
+                <div class="alert">
+                    ⚠ Construcción: -62% vs. 2022 (de 2.361 a 896 puestos)
+                </div>
+            </div>
+            <div class="chart-source">Fuente: SIPA-OEDE, promedio 2025</div>
+        </div>
+
+    </div>
+
+    <!-- ============ CONTEXTO MACRO: VAB ============ -->
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>La Rioja en el producto nacional (VAB, 2022–2025)</h3>
+            <div id="chart-vab" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="alert">
+                    ⚠ En 2025 el VAB provincial cayó −25,7% mientras el país
+                    creció +9,3%. La participación en el VAB nacional bajó
+                    de 0,30% a 0,19%.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: INDEC-OPEX, 2022-2025</div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Empleo privado formal: La Rioja, NOA y Nación (índice 2022=100)</h3>
+            <div id="chart-empleo-comp" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    La Rioja tuvo un boom 2023–2024 (índice 113) y un bust
+                    2025–2026. Hoy está por debajo de la Nación por primera
+                    vez desde 2019.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: SIPA-OEDE, serie desestacionalizada</div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    Fuentes: DGIP La Rioja (IIBB), OEDE-MTEySS (SIPA),
+    MINCyT, INDEC, ENACOM · Datos actualizados al Q1-2026
+    según disponibilidad de cada fuente
+</div>
+
+<script>
+
+    Highcharts.setOptions({
+        chart: {
+            backgroundColor: "transparent",
+            style: { fontFamily: "Segoe UI, sans-serif" }
+        },
+        title: { style: { color: "#FFFFFF", fontSize: "14px" } },
+        subtitle: { style: { color: "#8EAFC4" } },
+        xAxis: {
+            labels: { style: { color: "#8EAFC4" } },
+            gridLineColor: "#1A3A5C",
+            lineColor: "#1A3A5C"
+        },
+        yAxis: {
+            labels: { style: { color: "#8EAFC4" } },
+            gridLineColor: "#1A3A5C",
+            title: { style: { color: "#8EAFC4" } }
+        },
+        legend: {
+            itemStyle: { color: "#8EAFC4" },
+            itemHoverStyle: { color: "#FFFFFF" }
+        },
+        tooltip: {
+            backgroundColor: "#1A3A5C",
+            style: { color: "#FFFFFF" },
+            borderColor: "#4ECDC4"
+        },
+        credits: { enabled: false }
+    });
+
+
+    // ==========================================================
+    // DONUT — estructura por actividad
+    // ==========================================================
+    Highcharts.chart("chart-donut", {
+
+        chart: { type: "pie" },
+        title: { text: "" },
+        subtitle: {
+            text: "Top 2 IT concentran 77,1% del ingreso",
+            align: "center"
+        },
+        plotOptions: {
+            pie: {
+                innerSize: "55%",
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.name}: {point.percentage:.1f}%",
+                    style: {
+                        color: "#8EAFC4",
+                        fontSize: "11px",
+                        textOutline: "none"
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Participación",
+            data: [
+                { name: "Informática n.c.p.", y: 43.5, color: "#4ECDC4" },
+                { name: "Consultores informática", y: 33.6, color: "#2A9D8F" },
+                { name: "Publicidad", y: 13.8, color: "#6CB4D9" },
+                { name: "I+D Cs. médicas", y: 3.0, color: "#A8D8EA" },
+                { name: "Reparación equipos", y: 2.5, color: "#1A6B8A" },
+                { name: "Otros", y: 3.6, color: "#0D2B4B" }
+            ]
+        }]
+    });
+
+
+    // ==========================================================
+    // INGRESOS REALES
+    // ==========================================================
+    Highcharts.chart("chart-ingresos", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: { categories: ["2022", "2023", "2024", "2025"] },
+        yAxis: { title: { text: "$ millones (base dic-2022)" } },
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    format: "${point.y:,.0f} M",
+                    style: {
+                        color: "#4ECDC4",
+                        textOutline: "none",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        },
+        legend: { enabled: false },
+        series: [{
+            name: "Ingreso real",
+            data: [1694, 2342, 3051, 3945],
+            color: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [[0, "#4ECDC4"], [1, "#1A6B8A"]]
+            }
+        }]
+    });
+
+
+    // ==========================================================
+    // SALARIOS POR RAMA
+    // ==========================================================
+    Highcharts.chart("chart-salarios", {
+
+        chart: { type: "bar" },
+        title: { text: "" },
+        xAxis: {
+            categories: [
+                "Informática n.c.p.",
+                "Telecomunicaciones",
+                "Consultores inform.",
+                "Publicidad",
+                "Contenidos audiovisuales",
+                "Farmacéutica"
+            ]
+        },
+        yAxis: {
+            title: { text: "" },
+            plotLines: [{
+                value: 1308235,
+                color: "#FF6B6B",
+                width: 2,
+                dashStyle: "Dash",
+                label: {
+                    text: "Prom. provincial $1.308.235",
+                    style: { color: "#FF6B6B", fontSize: "11px" }
+                }
+            }]
+        },
+        legend: { enabled: false },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true,
+                    format: "${point.y:,.0f}",
+                    style: {
+                        color: "#8EAFC4",
+                        textOutline: "none",
+                        fontSize: "11px"
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Salario dic-2025",
+            data: [3108543, 2764135, 1726147, 885187, 683117, 679922],
+            color: "#4ECDC4"
+        }]
+    });
+
+
+    // ==========================================================
+    // EMPRESAS EC — LEY 27.506
+    // ==========================================================
+    Highcharts.chart("chart-empresas", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: {
+            categories: ["2022", "2023", "2024", "2025"],
+            labels: { style: { color: "#8EAFC4" } }
+        },
+        yAxis: {
+            title: { text: "Cantidad de empresas" },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                    textOutline: "none"
+                },
+                formatter: function () {
+                    return this.total === null ? "" : this.total;
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: "normal",
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        color: "#1A1A1A",
+                        textOutline: "none",
+                        fontWeight: "bold",
+                        fontSize: "10px"
+                    },
+                    formatter: function () {
+                        return this.y === null ? "" : this.y;
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "Servicios profesionales técnicos",
+                data: [30, null, 36, 28],
+                color: "#4ECDC4"
+            },
+            {
+                name: "Software e informática",
+                data: [25, null, 28, 25],
+                color: "#2A9D8F"
+            },
+            {
+                name: "Telecomunicaciones",
+                data: [19, null, 19, 17],
+                color: "#6CB4D9"
+            },
+            {
+                name: "Audiovisual",
+                data: [7, null, 9, 9],
+                color: "#A8D8EA"
+            },
+            {
+                name: "Farmacéutica / Biotecnología",
+                data: [5, null, 6, 4],
+                color: "#1A6B8A"
+            }
+        ],
+        subtitle: {
+            text: "2023: sin datos en la fuente (SIPA-OEDE).",
+            align: "left"
+        }
+    });
+
+
+    // ==========================================================
+    // ELASTICIDAD — Empresas EC vs Empleo EC (2022 = 100)
+    // ==========================================================
+    Highcharts.chart("chart-elasticidad", {
+
+        chart: { type: "spline" },
+        title: { text: "" },
+        xAxis: { categories: ["2022", "2023", "2024", "2025"] },
+        yAxis: {
+            title: { text: "Índice (2022 = 100)" },
+            min: 85,
+            max: 120,
+            plotLines: [{
+                value: 100,
+                color: "#8EAFC4",
+                width: 1,
+                dashStyle: "Dash",
+                label: {
+                    text: "base 100",
+                    style: { color: "#8EAFC4", fontSize: "10px" }
+                }
+            }]
+        },
+        legend: { enabled: true },
+        tooltip: { shared: true },
+        plotOptions: {
+            spline: {
+                marker: { enabled: true, radius: 6 },
+                dataLabels: {
+                    enabled: true,
+                    style: { textOutline: "none", fontSize: "10px" },
+                    formatter: function () {
+                        return this.y.toFixed(1);
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "Empresas EC",
+                data: [100, 102.3, 114.0, 96.5],
+                color: "#4ECDC4",
+                lineWidth: 3
+            },
+            {
+                name: "Empleo EC",
+                data: [100, 104.6, 96.7, 98.2],
+                color: "#6CB4D9",
+                lineWidth: 2,
+                dashStyle: "ShortDash"
+            }
+        ]
+    });
+
+
+    // ==========================================================
+    // EMPLEO EC Y PARTICIPACIÓN EN EL EMPLEO TOTAL
+    // ==========================================================
+    Highcharts.chart("chart-empleo-share", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: {
+            categories: ["2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+        },
+        yAxis: [
+            {
+                title: { text: "Empleo EC (puestos)", style: { color: "#4ECDC4" } },
+                labels: { style: { color: "#4ECDC4" } },
+                gridLineColor: "#1A3A5C"
+            },
+            {
+                title: { text: "Participación EC (%)", style: { color: "#FF6B6B" } },
+                labels: { style: { color: "#FF6B6B" }, format: "{value}%" },
+                opposite: true,
+                gridLineWidth: 0,
+                min: 0,
+                max: 3
+            }
+        ],
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.0f}",
+                    style: {
+                        color: "#4ECDC4",
+                        textOutline: "none",
+                        fontWeight: "bold",
+                        fontSize: "10px"
+                    }
+                }
+            }
+        },
+        legend: { enabled: true },
+        tooltip: { shared: true },
+        series: [
+            {
+                name: "Empleo EC",
+                type: "column",
+                yAxis: 0,
+                data: [617, 572, 587, 644, 674, 623, 633],
+                color: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                    stops: [[0, "#4ECDC4"], [1, "#1A6B8A"]]
+                }
+            },
+            {
+                name: "Participación EC (%)",
+                type: "spline",
+                yAxis: 1,
+                data: [2.29, 2.25, 2.24, 2.14, 2.06, 2.22, 2.34],
+                color: "#FF6B6B",
+                marker: { enabled: true, radius: 5 },
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.2f}%",
+                    style: {
+                        color: "#FF6B6B",
+                        textOutline: "none",
+                        fontSize: "10px",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        ]
+    });
+
+
+    // ==========================================================
+    // INTENSIDAD EMPRESARIAL EC (‰) — 2024
+    // ==========================================================
+    Highcharts.chart("chart-intensidad", {
+
+        chart: { type: "bar" },
+        title: { text: "" },
+        xAxis: {
+            categories: [
+                "Santiago del Estero",
+                "Jujuy",
+                "La Rioja",
+                "Tucumán",
+                "Catamarca",
+                "Salta",
+                "Córdoba",
+                "Santa Fe",
+                "CABA"
+            ],
+            labels: { style: { color: "#8EAFC4" } }
+        },
+        yAxis: {
+            title: {
+                text: "Empresas EC por cada 1.000 empresas totales",
+                style: { color: "#8EAFC4" }
+            },
+            labels: {
+                style: { color: "#8EAFC4" },
+                format: "{value}‰"
+            }
+        },
+        legend: { enabled: false },
+        tooltip: {
+            formatter: function () {
+                return `<b>${this.x}</b><br/>${this.y.toFixed(2)}‰`;
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 3,
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.1f}‰",
+                    style: {
+                        color: "#FFFFFF",
+                        textOutline: "none",
+                        fontWeight: "bold",
+                        fontSize: "11px"
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Intensidad EC",
+            data: [
+                { y: 27.20, color: "#8EAFC4" },
+                { y: 27.88, color: "#8EAFC4" },
+                { y: 30.11, color: "#4ECDC4" },
+                { y: 35.08, color: "#8EAFC4" },
+                { y: 35.18, color: "#8EAFC4" },
+                { y: 36.59, color: "#8EAFC4" },
+                { y: 40.44, color: "#8EAFC4" },
+                { y: 43.02, color: "#8EAFC4" },
+                { y: 69.75, color: "#8EAFC4" }
+            ]
+        }]
+    });
+
+
+    // ==========================================================
+    // CONTRIBUYENTES POR RÉGIMEN
+    // ==========================================================
+    Highcharts.chart("chart-contribuyentes", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: { categories: ["2022", "2023", "2024", "2025"] },
+        yAxis: {
+            title: { text: "Contribuyentes" },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                    textOutline: "none"
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: "normal",
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        color: "#1A1A1A",
+                        textOutline: "none",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "Locales",
+                data: [1138, 1060, 844, 840],
+                color: "#A8D8EA"
+            },
+            {
+                name: "Multilateral",
+                data: [1752, 1911, 1947, 2075],
+                color: "#6CB4D9"
+            }
+        ]
+    });
+
+
+    // ==========================================================
+    // EMPLEO PROMEDIO ANUAL
+    // ==========================================================
+    Highcharts.chart("chart-empleo", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: { categories: ["2022", "2023", "2024", "2025", "2026*"] },
+        yAxis: {
+            title: { text: "Puestos de trabajo" },
+            min: 25000
+        },
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:,.0f}",
+                    style: {
+                        color: "#4ECDC4",
+                        textOutline: "none",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        },
+        legend: { enabled: false },
+        series: [{
+            name: "Empleo promedio",
+            data: [30718, 33047, 29986, 28985, 31459],
+            color: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [[0, "#6CB4D9"], [1, "#1A6B8A"]]
+            }
+        }],
+        subtitle: {
+            text: "* 2026: promedio ene-may. Mayo 2026: 30.325 puestos (-1,7% i.a.)"
+        }
+    });
+
+
+    // ==========================================================
+    // TRANSFORMACIÓN — consultores vs publicidad
+    // ==========================================================
+    Highcharts.chart("chart-transform", {
+
+        chart: { type: "bar", height: 160 },
+        title: { text: "" },
+        xAxis: {
+            categories: ["Consultores inform.", "Publicidad"],
+            labels: { style: { fontSize: "11px" } }
+        },
+        yAxis: {
+            title: { text: "" },
+            labels: { format: "{value}%" }
+        },
+        legend: { enabled: true },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y}%",
+                    style: {
+                        color: "#FFFFFF",
+                        textOutline: "none"
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "2022",
+                data: [6.1, 31.5],
+                color: "#1A6B8A"
+            },
+            {
+                name: "2025",
+                data: [33.6, 13.8],
+                color: "#4ECDC4"
+            }
+        ]
+    });
+
+
+    // ==========================================================
+    // CONTEXTO MACRO — VAB La Rioja + share nacional
+    // ==========================================================
+    Highcharts.chart("chart-vab", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: { categories: ["2022", "2023", "2024", "2025"] },
+        yAxis: [
+            {
+                title: { text: "VAB (millones USD)", style: { color: "#4ECDC4" } },
+                labels: { style: { color: "#4ECDC4" } },
+                gridLineColor: "#1A3A5C"
+            },
+            {
+                title: { text: "% del VAB nacional", style: { color: "#FF6B6B" } },
+                labels: { style: { color: "#FF6B6B" }, format: "{value}%" },
+                opposite: true,
+                gridLineWidth: 0,
+                max: 0.5
+            }
+        ],
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    format: "${point.y:,.0f} M",
+                    style: {
+                        color: "#4ECDC4",
+                        textOutline: "none",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        },
+        legend: { enabled: true },
+        tooltip: { shared: true },
+        series: [
+            {
+                name: "VAB (USD M)",
+                type: "column",
+                yAxis: 0,
+                data: [187, 199, 220, 163],
+                color: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                    stops: [[0, "#4ECDC4"], [1, "#1A6B8A"]]
+                }
+            },
+            {
+                name: "% nacional",
+                type: "spline",
+                yAxis: 1,
+                data: [0.211, 0.297, 0.276, 0.188],
+                color: "#FF6B6B",
+                marker: { enabled: true, radius: 6 },
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.2f}%",
+                    style: {
+                        color: "#FF6B6B",
+                        textOutline: "none",
+                        fontSize: "10px",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        ]
+    });
+
+
+    // ==========================================================
+    // EMPLEO COMPARADO — LR vs NOA vs Nación (base ene-2022 = 100)
+    // ==========================================================
+    Highcharts.chart("chart-empleo-comp", {
+
+        chart: { type: "spline" },
+        title: { text: "" },
+        xAxis: { categories: ["2022", "2023", "2024", "2025", "2026*"] },
+        yAxis: {
+            title: { text: "Índice (ene-2022 = 100)" },
+            min: 90,
+            max: 118,
+            plotLines: [{
+                value: 100,
+                color: "#8EAFC4",
+                width: 1,
+                dashStyle: "Dash",
+                label: {
+                    text: "base 100",
+                    style: { color: "#8EAFC4", fontSize: "10px" }
+                }
+            }]
+        },
+        legend: { enabled: true },
+        plotOptions: {
+            spline: {
+                marker: { enabled: true, radius: 5 },
+                dataLabels: { enabled: false }
+            }
+        },
+        series: [
+            {
+                name: "La Rioja",
+                data: [100, 112.3, 112.9, 101.4, 99.6],
+                color: "#4ECDC4",
+                lineWidth: 3
+            },
+            {
+                name: "NOA",
+                data: [100, 104.5, 104.6, 103.3, 100.3],
+                color: "#6CB4D9",
+                lineWidth: 2
+            },
+            {
+                name: "Nación",
+                data: [100, 104.3, 104.7, 103.6, 102.0],
+                color: "#8EAFC4",
+                lineWidth: 2,
+                dashStyle: "ShortDash"
+            }
+        ],
+        subtitle: {
+            text: "* 2026: último dato disponible (enero). Fuente: SIPA-OEDE."
+        }
+    });
+
+</script>
+
+</body>
+</html>

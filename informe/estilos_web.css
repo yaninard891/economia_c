@@ -1,0 +1,36 @@
+body { max-width: 900px; margin: auto; }
+
+.titular {
+  font-size: 1.4rem;
+  line-height: 1.5;
+  padding: 1.2rem 1.5rem;
+  border-left: 4px solid #1f4e79;
+  background: #f4f6f7;
+  margin: 1.5rem 0 2.5rem 0;
+  color: #2c3e50;
+}
+
+.titular strong { color: #1f4e79; }
+
+.pie {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #d5dbdb;
+  font-size: 0.85rem;
+  color: #566573;
+}
+
+h2 {
+  margin-top: 2.5rem;
+  color: #1f4e79;
+  border-bottom: 1px solid #e5e8e8;
+  padding-bottom: 0.3rem;
+}
+
+figure img { width: 100%; height: auto; }
+figcaption {
+  font-size: 0.85rem;
+  color: #566573;
+  text-align: left;
+  margin-top: 0.4rem;
+}
