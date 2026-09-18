@@ -1,7 +1,8 @@
 """
-Análisis de empleo del sector EC (Ley 27.506) en La Rioja
-==========================================================
+Análisis de empleo del sector EC (AFIP-DGIP) en La Rioja
+========================================================
 Fuente: SIPA-OEDE, provinciales_serie_empleo_trimestral_4dig_7.xlsx
+Definición: 8 códigos CIIU equivalentes a actividades AFIP-DGIP
 """
 
 import os
@@ -15,7 +16,7 @@ if Path.cwd().name == "notebooks":
     os.chdir(Path.cwd().parent)
 sys.path.insert(0, str(Path.cwd()))
 
-from src.empresas_ec import LEY_27_506, cargar_provincia, serie_ec
+from src.empresas_ec import CIIU_EC, cargar_ec, serie_ec
 
 
 def parsear_hoja_empleo(ruta: Path, hoja: str) -> pd.DataFrame:
@@ -65,12 +66,11 @@ def parsear_hoja_empleo(ruta: Path, hoja: str) -> pd.DataFrame:
 
 
 RUTA_EMPLEO = Path("data/raw/provinciales_serie_empleo_trimestral_4dig_7.xlsx")
-RUTA_EMPRESAS = Path("data/raw/provinciales_serie_empresas3_2.xlsx")
 PROV = "La Rioja"
 OUT = Path("data/processed/empleo_ec_rioja.xlsx")
 
 print("=" * 74)
-print(f"  Empleo del sector EC (Ley 27.506) — {PROV}")
+print(f"  Empleo del sector EC (AFIP-DGIP) — {PROV}")
 print("=" * 74)
 
 df = parsear_hoja_empleo(RUTA_EMPLEO, PROV)
@@ -78,10 +78,18 @@ print(f"Filas tidy:      {len(df):,}")
 print(f"Ramas distintas: {df['rama'].nunique()}")
 print(f"Años:            {df['anio'].min()}–{df['anio'].max()}")
 
-df_ec = df[df["rama"].isin(LEY_27_506)].copy()
-print(f"\nRamas EC con datos: {df_ec['rama'].nunique()} de {len(LEY_27_506)}")
+# --- Filtrado por CIIU EC (definición AFIP-DGIP) ---
+df["rama"] = df["rama"].astype(int)
+df_ec = df[df["rama"].isin(CIIU_EC.keys())].copy()
 
-# === FIX: sumar por trimestre, después promediar ===
+# CIIU presentes vs ausentes (útil para documentar)
+presentes = set(df_ec["rama"].unique())
+ausentes = set(CIIU_EC.keys()) - presentes
+print(f"\nRamas EC con datos: {df_ec['rama'].nunique()} de {len(CIIU_EC)}")
+if ausentes:
+    print(f"Ramas EC SIN datos en SIPA: {sorted(ausentes)}")
+
+# === Sumar por trimestre, después promediar ===
 df_ec_q = (df_ec
     .groupby(["anio", "trimestre"], as_index=False)["empleo"]
     .sum(min_count=1))
@@ -108,29 +116,36 @@ comp = (empleo_ec_anual
 print(f"\n=== Empleo EC vs Total provincial ===")
 print(comp.query("anio >= 2019").to_string(index=False))
 
-df_emp = cargar_provincia(RUTA_EMPRESAS, PROV)
-emp_ec_anual = serie_ec(df_emp, "ley_27_506")
+# --- Empresas EC desde el CSV curado (AFIP-DGIP) ---
+df_emp = cargar_ec()
+emp_ec_anual = serie_ec(df_emp)   # columnas: anio, total_ec
 
 elasticidad = (comp[["anio", "empleo_ec_prom"]]
                .merge(emp_ec_anual, on="anio", how="inner")
                .query("anio >= 2022"))
 
-print(f"\n=== Elasticidad empleo vs empresas EC ===")
+print(f"\n=== Empresas EC vs Empleo EC ===")
 print(elasticidad.to_string(index=False))
 
+# --- Variaciones y elasticidad 2022 → 2025 ---
 p, u = 2022, 2025
 try:
-    var_emp = (elasticidad.loc[elasticidad["anio"] == u, "empresas_ec"].iloc[0] /
-               elasticidad.loc[elasticidad["anio"] == p, "empresas_ec"].iloc[0] - 1) * 100
-    var_emp_emp = (elasticidad.loc[elasticidad["anio"] == u, "empleo_ec_prom"].iloc[0] /
-                   elasticidad.loc[elasticidad["anio"] == p, "empleo_ec_prom"].iloc[0] - 1) * 100
+    emp_p = elasticidad.loc[elasticidad["anio"] == p, "total_ec"].iloc[0]
+    emp_u = elasticidad.loc[elasticidad["anio"] == u, "total_ec"].iloc[0]
+    eec_p = elasticidad.loc[elasticidad["anio"] == p, "empleo_ec_prom"].iloc[0]
+    eec_u = elasticidad.loc[elasticidad["anio"] == u, "empleo_ec_prom"].iloc[0]
+
+    var_emp = (emp_u / emp_p - 1) * 100
+    var_eec = (eec_u / eec_p - 1) * 100
+
     print(f"\n  Var. empresas 2022→2025: {var_emp:+.1f}%")
-    print(f"  Var. empleo   2022→2025: {var_emp_emp:+.1f}%")
+    print(f"  Var. empleo   2022→2025: {var_eec:+.1f}%")
     if var_emp != 0:
-        print(f"  Elasticidad:             {var_emp_emp / var_emp:.2f}")
+        print(f"  Elasticidad:             {var_eec / var_emp:.2f}")
 except Exception as e:
     print(f"  (no se pudo calcular: {e})")
 
+# --- Exportar ---
 OUT.parent.mkdir(parents=True, exist_ok=True)
 with pd.ExcelWriter(OUT, engine="openpyxl") as w:
     empleo_ec_anual.to_excel(w, sheet_name="Empleo_EC_anual", index=False)

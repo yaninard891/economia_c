@@ -124,6 +124,16 @@
         }
         .highlight-box .alert { color: #FF6B6B; font-size: 12px; line-height: 1.5; }
         .highlight-box .positive { color: #4ECDC4; font-size: 12px; line-height: 1.5; }
+        .highlight-box .nota {
+            color: #8EAFC4;
+            font-size: 11px;
+            line-height: 1.55;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #0B1D35;
+        }
+        .highlight-box .nota strong { color: #FFFFFF; }
+        .highlight-box .nota em { color: #A8D8EA; font-style: italic; }
 
         .transform-item {
             display: flex;
@@ -179,11 +189,11 @@
             <div class="kpi-source">Fuente: DGIP La Rioja (IIBB)</div>
         </div>
         <div class="kpi-card">
-            <div class="number">98</div>
-            <div class="label">Empresas EC Ley 27.506 (2024)</div>
-            <div class="sub"><span>3,0%</span> del total provincial (3.255 empresas)<br>
-                <span class="neg">−15,3%</span> en 2025 (83 empresas)</div>
-            <div class="kpi-source">Fuente: SIPA-OEDE · Ley 27.506</div>
+            <div class="number">102</div>
+            <div class="label">Empresas EC activas (2024)</div>
+            <div class="sub"><span>3,13%</span> del total provincial (3.255 empresas)<br>
+                <span class="neg">−17,6%</span> en 2025 (84 empresas)</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE · Def. AFIP-DGIP</div>
         </div>
         <div class="kpi-card">
             <div class="number">623</div>
@@ -305,23 +315,33 @@
 
     </div>
 
-    <!-- ============ EMPRESAS EC — LEY 27.506 ============ -->
+    <!-- ============ EMPRESAS EC — DEFINICIÓN AFIP-DGIP ============ -->
     <div class="chart-row">
 
         <div class="chart-box">
-            <h3>Empresas EC Ley 27.506 — La Rioja (2022-2025)</h3>
+            <h3>Empresas EC por bloque — Definición AFIP-DGIP (2019-2025)</h3>
             <div id="chart-empresas" class="chart-container"></div>
             <div class="highlight-box" style="margin-top:20px;">
                 <div class="positive">
-                    En 2024 la provincia registró <strong>98 empresas</strong>
-                    promovidas por la Ley 27.506, equivalente al 3,0% del total
-                    provincial (3.255 empresas). El sector creció +14,0% entre
-                    2022 y 2024, y retrocedió a 83 empresas en 2025 (−15,3%).
+                    El total de empresas EC pasó de 70 (2019) a 102 (2024),
+                    un crecimiento de <strong>+45,7%</strong>. En 2025 se
+                    observa una caída del <strong>−17,6%</strong>, con 84
+                    empresas.
+                </div>
+                <div class="nota">
+                    <strong>Definición AFIP-DGIP:</strong> actividades que
+                    generan el impuesto DGIP tecnológico, mapeadas a CIIU
+                    Rev. 3 a 4 dígitos: 7210, 7220, 7250, 7290, 7300, 7421,
+                    7430, 7499. Los bloques <em>Ingeniería y geología</em>
+                    (7421) y <em>Servicios profesionales</em> (7499) son
+                    proxies: el SIPA no permite aislar la actividad EC
+                    específica. El conteo es un <strong>techo superior</strong>.
+                    Excluye 9220 (agencias de noticias). 2023 sin datos.
                 </div>
             </div>
             <div class="chart-source">
                 Fuente: SIPA-OEDE (STEySS), <em>provinciales_serie_empresas3_2</em>.
-                Definición: Ley 27.506. La fuente no publica datos para 2023.
+                Definición: AFIP-DGIP. La fuente no publica datos para 2023.
             </div>
         </div>
 
@@ -353,8 +373,7 @@
                     bajó solo <strong>−1,7%</strong>. La <strong>elasticidad
                     de 0,50</strong> indica que por cada punto porcentual que
                     se pierde en empresas, el empleo cae medio punto. El sector
-                    no se desarma: se <strong>consolida</strong> — las firmas
-                    que sobreviven absorben más trabajadores.
+                    no se desarma: se <strong>consolida</strong>.
                 </div>
             </div>
             <div class="chart-source">
@@ -769,14 +788,14 @@
 
 
     // ==========================================================
-    // EMPRESAS EC — LEY 27.506
+    // EMPRESAS EC — DEFINICIÓN AFIP-DGIP (2019-2025)
     // ==========================================================
     Highcharts.chart("chart-empresas", {
 
         chart: { type: "column" },
         title: { text: "" },
         xAxis: {
-            categories: ["2022", "2023", "2024", "2025"],
+            categories: ["2019", "2020", "2021", "2022", "2024", "2025"],
             labels: { style: { color: "#8EAFC4" } }
         },
         yAxis: {
@@ -805,35 +824,30 @@
                         fontSize: "10px"
                     },
                     formatter: function () {
-                        return this.y === null ? "" : this.y;
+                        return this.y === null || this.y === 0 ? "" : this.y;
                     }
                 }
             }
         },
         series: [
             {
-                name: "Servicios profesionales técnicos",
-                data: [30, null, 36, 28],
+                name: "Software y SI",
+                data: [6, 11, 17, 25, 28, 25],
                 color: "#4ECDC4"
             },
             {
-                name: "Software e informática",
-                data: [25, null, 28, 25],
+                name: "Ingeniería y geología (proxy)",
+                data: [29, 22, 25, 26, 31, 28],
                 color: "#2A9D8F"
             },
             {
-                name: "Telecomunicaciones",
-                data: [19, null, 19, 17],
+                name: "Servicios profesionales (proxy)",
+                data: [29, 32, 28, 40, 38, 31],
                 color: "#6CB4D9"
             },
             {
-                name: "Audiovisual",
-                data: [7, null, 9, 9],
-                color: "#A8D8EA"
-            },
-            {
-                name: "Farmacéutica / Biotecnología",
-                data: [5, null, 6, 4],
+                name: "Publicidad",
+                data: [6, 0, 4, 4, 5, 0],
                 color: "#1A6B8A"
             }
         ],

@@ -1,266 +1,405 @@
 """
-src/empresas_ec.py
-==================
-Análisis de empresas de Economía del Conocimiento (EC) para una provincia,
-a partir de `provinciales_serie_empresas3_2.xlsx`
-(SIPA - Observatorio de Empleo y Dinámica Empresarial, STEySS).
+Módulo de Empresas de Economía del Conocimiento (EC) para La Rioja.
 
-Definición única y oficial: Ley 27.506 de Economía del Conocimiento
-(mapeada de CLAE 2018 a CIIU rev. 3, que es la clasificación que usa el Excel).
+Definición AFIP-DGIP
+--------------------
+Usa los CIIU Rev. 3 equivalentes a las actividades AFIP/ARCA que generan
+el impuesto DGIP tecnológico en La Rioja:
+
+    620104  → 7220  Consultores en informática y suministros de programas
+    620300  → 7210  Consultores en equipo de informática
+    620900  → 7290  Servicios de informática n.c.p.
+    711002  → 7421  Servicios geológicos y de prospección         [proxy]
+    7210xx  → 7300  I+D experimental                              [proxy]
+    731009  → 7430  Servicios de publicidad n.c.p.
+    741000  → 7499  Servicios de diseño especializado             [proxy]
+    749001  → 7499  Servicios de traducción e interpretación      [proxy]
+    951100  → 7250  Reparación y mantenimiento de eq. informáticos
+
+Advertencia
+-----------
+Los códigos 7421 y 7499 incluyen actividades NO-EC porque el SIPA no
+desagrega a 6 dígitos:
+
+    7421 → arquitectura + ingeniería civil + agrimensura + geología
+    7499 → diseño + traducción + cobranzas + eventos + gestión
+
+El conteo resultante debe leerse como "techo superior" (upper bound)
+de la EC riojana, no como conteo exacto.
+
+Uso
+---
+    from src.empresas_ec import (
+        cargar_ec, serie_ec, por_bloque, por_codigo,
+        participacion_total, resumen,
+    )
+
+    df = cargar_ec()
+    print(serie_ec(df))
 """
-
 from __future__ import annotations
-import re
+
 from pathlib import Path
 import pandas as pd
 
+# ---------------------------------------------------------------------------
+# Rutas
+# ---------------------------------------------------------------------------
+RAIZ = Path(__file__).resolve().parent.parent
+RUTA_EC = RAIZ / "data" / "raw" / "empresas_ec_rioja.csv"
+RUTA_TOTAL = RAIZ / "data" / "raw" / "total_provincial_rioja.csv"
 
-# ===========================================================================
-# 1. Definición oficial — Ley 27.506 (mapeada a CIIU rev. 3)
-# ===========================================================================
+# ---------------------------------------------------------------------------
+# Metadatos
+# ---------------------------------------------------------------------------
+# Códigos CIIU incluidos en la definición AFIP-DGIP
+CIIU_EC: dict[int, str] = {
+    7210: "Consultores en equipo de informática",
+    7220: "Consultores en informática y suministros de programas",
+    7250: "Mantenimiento y reparación de maq. informática",
+    7290: "Actividades de informática n.c.p.",
+    7300: "Investigación y desarrollo",
+    7421: "Servicios de arquitectura e ingeniería",
+    7430: "Servicios de publicidad",
+    7499: "Servicios empresariales n.c.p.",
+}
 
-LEY_27_506: frozenset[str] = frozenset({
-    # --- a) Software y servicios informáticos y digitales ---
-    "6420",   # Telecomunicaciones
-    "7210",   # Consultores en equipo de informática
-    "7220",   # Consultores en informática y suministro de software
-    "7230",   # Procesamiento de datos
-    "7240",   # Bases de datos
-    "7250",   # Mantenimiento de maq. oficina e informática
-    "7290",   # Actividades de informática n.c.p.
+# Equivalencia AFIP → CIIU (para documentación)
+ACTIVIDADES_AFIP: dict[int, str] = {
+    7220: "620104",
+    7210: "620300",
+    7290: "620900",
+    7421: "711002",
+    7300: "7210xx",
+    7430: "731009",
+    7499: "741000 + 749001",
+    7250: "951100",
+}
 
-    # --- b) Producción y postproducción audiovisual ---
-    "2211",   # Edición de libros, folletos, partituras
-    "2212",   # Edición de periódicos, revistas
-    "2219",   # Edición n.c.p.
-    "2230",   # Reproducción de grabaciones
-    "9211",   # Producción y distribución de filmes
-    "9212",   # Exhibición de filmes
-    "9213",   # Radio y televisión
-    "9214",   # Servicios teatrales y musicales
-    "9219",   # Espectáculos artísticos y diversión
-    "9220",   # Agencias de noticias
+# Bloques temáticos
+BLOQUES: dict[str, set[int]] = {
+    "Software y SI": {7210, 7220, 7250, 7290},
+    "I+D": {7300},
+    "Ingeniería y geología (proxy)": {7421},
+    "Publicidad": {7430},
+    "Servicios profesionales (proxy)": {7499},
+}
 
-    # --- c) Biotecnología y bioeconomía ---
-    "2423",   # Farmacéutica, sustancias medicinales y botánicos
+# Orden de años disponibles
+ANIOS = [2019, 2020, 2021, 2022, 2024, 2025]
 
-    # --- d) Servicios geológicos, electrónica y comunicaciones ---
-    "3210",   # Componentes electrónicos
-    "3220",   # Transmisores de radio y TV
-    "3230",   # Receptores de radio y TV
+# ---------------------------------------------------------------------------
+# Carga
+# ---------------------------------------------------------------------------
+def cargar_ec(ruta: Path | None = None) -> pd.DataFrame:
+    """
+    Carga el dataset de empresas EC desde el CSV curado.
 
-    # --- e) Servicios profesionales de exportación ---
-    "7421",   # Arquitectura e ingeniería
-    "7422",   # Ensayos y análisis técnicos
-    "7430",   # Publicidad
+    Parameters
+    ----------
+    ruta : Path, opcional
+        Ruta al CSV. Por defecto `data/raw/empresas_ec_rioja.csv`.
 
-    # --- f) Nanotecnología y nanociencia ---
-    "7300",   # Investigación y desarrollo
-
-    # --- g) Industria aeroespacial y satelital ---
-    "3530",   # Fabricación y reparación de aeronaves
-
-    # --- h) Ingeniería para la industria nuclear ---
-    "2330",   # Elaboración de combustible nuclear
-
-    # --- i) Industria 4.0 (automatización, robótica, IoT) ---
-    "2911", "2912", "2913", "2914", "2915", "2919",
-    "2921", "2922", "2923", "2924", "2925", "2926", "2927", "2929",
-    "2930",
-    "3000",   # Maquinaria de oficina, contabilidad e informática
-    "3310", "3311", "3320", "3330",
-})
-
-DEFINICIONES: dict[str, frozenset[str]] = {"ley_27_506": LEY_27_506}
-
-ETIQUETAS: dict[str, str] = {"ley_27_506": "Ley 27.506 (definición oficial)"}
-
-
-# ===========================================================================
-# 2. Lectura del Excel provincial
-# ===========================================================================
-
-def _encontrar_hoja(xl: pd.ExcelFile, provincia: str) -> str:
-    objetivo = provincia.strip().lower()
-    for hoja in xl.sheet_names:
-        if hoja.strip().lower() == objetivo:
-            return hoja
-    for hoja in xl.sheet_names:
-        if objetivo in hoja.strip().lower():
-            return hoja
-    raise ValueError(f"Hoja '{provincia}' no encontrada. Hojas: {xl.sheet_names}")
+    Returns
+    -------
+    DataFrame con columnas: anio, ciiu, actividad, empresas.
+    """
+    ruta = ruta or RUTA_EC
+    if not ruta.exists():
+        raise FileNotFoundError(
+            f"No se encontró {ruta}.\n"
+            "Creá el CSV con las columnas: anio, ciiu, actividad, empresas."
+        )
+    df = pd.read_csv(ruta)
+    df["empresas"] = pd.to_numeric(df["empresas"], errors="coerce")
+    df["ciiu"] = df["ciiu"].astype(int)
+    df["anio"] = df["anio"].astype(int)
+    return df
 
 
-def _a_int(v):
-    if pd.isna(v):
-        return pd.NA
-    s = str(v).strip()
-    if s.lower() in {"s.d.", "sd", "", "nan", "-"}:
-        return pd.NA
-    try:
-        return int(float(s))
-    except ValueError:
-        return pd.NA
+# ---------------------------------------------------------------------------
+# Helpers internos
+# ---------------------------------------------------------------------------
+def _bloque(ciiu: int) -> str:
+    """Devuelve el nombre del bloque temático para un CIIU."""
+    for nombre, codigos in BLOQUES.items():
+        if ciiu in codigos:
+            return nombre
+    return "Otros"
 
 
-def parsear_hoja(ruta: Path, hoja: str) -> pd.DataFrame:
-    raw = pd.read_excel(ruta, sheet_name=hoja, header=None, engine="openpyxl")
+# ---------------------------------------------------------------------------
+# Agregaciones
+# ---------------------------------------------------------------------------
+def serie_ec(df: pd.DataFrame | None = None) -> pd.DataFrame:
+    """
+    Serie anual del total de empresas EC.
 
-    header_row = None
-    for i in range(min(20, len(raw))):
-        vals = raw.iloc[i].astype(str).str.strip().str.lower().tolist()
-        if "ramas" in vals and any("descrip" in v for v in vals):
-            header_row = i
-            break
-    if header_row is None:
-        raise ValueError(f"Encabezado no hallado en '{hoja}'")
-
-    df = raw.iloc[header_row + 1:].copy()
-    df.columns = [str(c).strip() for c in raw.iloc[header_row]]
-
-    col_rama, col_desc = df.columns[0], df.columns[1]
-    anios = [c for c in df.columns if re.fullmatch(r"\d{4}", c)]
-
-    df = df.rename(columns={col_rama: "rama", col_desc: "descripcion"})
-    df["rama"] = df["rama"].astype(str).str.strip()
-    df = df[df["rama"].str.fullmatch(r"\d{3,4}")].copy()
-
-    tidy = df.melt(
-        id_vars=["rama", "descripcion"],
-        value_vars=anios,
-        var_name="anio",
-        value_name="empresas",
+    Returns
+    -------
+    DataFrame con columnas: anio, total_ec.
+    """
+    if df is None:
+        df = cargar_ec()
+    return (
+        df.groupby("anio", as_index=False)["empresas"]
+        .sum(min_count=1)
+        .rename(columns={"empresas": "total_ec"})
     )
-    tidy["anio"] = tidy["anio"].astype(int)
-    tidy["empresas"] = tidy["empresas"].map(_a_int).astype("Int64")
-    return tidy.reset_index(drop=True)
 
 
-# ===========================================================================
-# 3. API pública
-# ===========================================================================
+def por_bloque(df: pd.DataFrame | None = None) -> pd.DataFrame:
+    """
+    Total por bloque temático y año.
 
-def cargar_provincia(ruta: Path, provincia: str = "La Rioja") -> pd.DataFrame:
-    with pd.ExcelFile(ruta, engine="openpyxl") as xl:
-        hoja = _encontrar_hoja(xl, provincia)
-    return parsear_hoja(ruta, hoja)
+    Returns
+    -------
+    DataFrame con columnas: anio, bloque, empresas.
+    """
+    if df is None:
+        df = cargar_ec()
+    df = df.copy()
+    df["bloque"] = df["ciiu"].apply(_bloque)
+    return (
+        df.groupby(["anio", "bloque"], as_index=False)["empresas"]
+        .sum(min_count=1)
+        .sort_values(["anio", "bloque"])
+    )
 
 
-def filtrar_ec(df: pd.DataFrame, definicion: str = "ley_27_506",
-               anios: list[int] | None = None) -> pd.DataFrame:
-    if definicion not in DEFINICIONES:
-        raise KeyError(f"Definición '{definicion}' inválida. Opciones: {list(DEFINICIONES)}")
-    out = df[df["rama"].isin(DEFINICIONES[definicion])].copy()
-    if anios is not None:
-        out = out[out["anio"].isin(anios)]
+def por_codigo(df: pd.DataFrame | None = None) -> pd.DataFrame:
+    """
+    Total por código CIIU y año (formato ancho).
+
+    Returns
+    -------
+    DataFrame indexado por ciiu, con una columna por año.
+    """
+    if df is None:
+        df = cargar_ec()
+    return df.pivot_table(
+        index="ciiu",
+        columns="anio",
+        values="empresas",
+        aggfunc="sum",
+    )
+
+
+def participacion_total(
+    df_ec: pd.DataFrame | None = None,
+    ruta_total: Path | None = None,
+) -> pd.DataFrame:
+    """
+    Participación EC sobre total provincial.
+
+    Requiere `data/raw/total_provincial_rioja.csv` con columnas
+    `anio,total_provincial`.
+
+    Returns
+    -------
+    DataFrame con columnas: anio, total_ec, total_provincial, participacion_pct.
+    """
+    if df_ec is None:
+        df_ec = cargar_ec()
+    ruta_total = ruta_total or RUTA_TOTAL
+    if not ruta_total.exists():
+        raise FileNotFoundError(
+            f"No se encontró {ruta_total}.\n"
+            "Creá el CSV con columnas: anio,total_provincial."
+        )
+    serie = serie_ec(df_ec)
+    total = pd.read_csv(ruta_total)
+    total["anio"] = total["anio"].astype(int)
+    out = serie.merge(total, on="anio", how="left")
+    out["participacion_pct"] = (
+        out["total_ec"] / out["total_provincial"] * 100
+    ).round(2)
     return out
 
 
-def serie_empresas(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df.groupby("anio", as_index=False)["empresas"]
-          .sum(min_count=1)
-          .rename(columns={"empresas": "total_empresas"})
+# ---------------------------------------------------------------------------
+# Resumen ejecutivo
+# ---------------------------------------------------------------------------
+def resumen(df: pd.DataFrame | None = None) -> dict:
+    """
+    Devuelve un diccionario con los indicadores clave para el dashboard.
+
+    Returns
+    -------
+    dict con:
+        anio_base, anio_ultimo
+        total_base, total_ultimo
+        crecimiento_pct
+        total_2024
+        bloques_2024 (dict)
+        serie (DataFrame)
+    """
+    if df is None:
+        df = cargar_ec()
+    s = serie_ec(df).dropna(subset=["total_ec"]).reset_index(drop=True)
+    if s.empty:
+        return {}
+
+    base = s.iloc[0]
+    ultimo = s.iloc[-1]
+    df24 = df[df["anio"] == 2024]
+    bloques_24 = (
+        df24.assign(bloque=df24["ciiu"].apply(_bloque))
+        .groupby("bloque")["empresas"].sum()
+        .to_dict()
     )
 
+    return {
+        "anio_base": int(base["anio"]),
+        "anio_ultimo": int(ultimo["anio"]),
+        "total_base": float(base["total_ec"]),
+        "total_ultimo": float(ultimo["total_ec"]),
+        "crecimiento_pct": round(
+            (ultimo["total_ec"] / base["total_ec"] - 1) * 100, 1
+        ),
+        "total_2024": float(
+            df[df["anio"] == 2024]["empresas"].sum(min_count=1)
+        ),
+        "bloques_2024": bloques_24,
+        "serie": s,
+    }
 
-def serie_ec(df: pd.DataFrame, definicion: str = "ley_27_506") -> pd.DataFrame:
-    sub = filtrar_ec(df, definicion)
-    return (
-        sub.groupby("anio", as_index=False)["empresas"]
-           .sum(min_count=1)
-           .rename(columns={"empresas": "empresas_ec"})
-    )
+# ---------------------------------------------------------------------------
+# Benchmark entre provincias (lee el Excel crudo de INDEC)
+# ---------------------------------------------------------------------------
+RUTA_EMPRESAS_RAW = RAIZ / "data" / "raw" / "provinciales_serie_empresas3_2.xlsx"
+
+PROVINCIAS_BENCHMARK = [
+    "La Rioja", "Catamarca", "Jujuy", "Salta",
+    "Santiago del Estero", "Tucumán", "Córdoba",
+    "Santa Fé", "CABA",
+]
 
 
-def detalle_ramas(df: pd.DataFrame, anio: int,
-                  definicion: str = "ley_27_506") -> pd.DataFrame:
-    sub = filtrar_ec(df, definicion, anios=[anio])
-    sub = (sub[["rama", "descripcion", "empresas"]]
-           .sort_values("empresas", ascending=False)
-           .reset_index(drop=True))
-    total = sub["empresas"].sum()
-    sub["pct"] = (sub["empresas"] / total * 100).round(2) if total and total > 0 else 0.0
-    sub["acumulado"] = sub["empresas"].cumsum()
-    return sub
+def _procesar_hoja_provincia(hoja: str, anio: str = "2024"):
+    """Lee una hoja del Excel de INDEC y suma EC + total para el año dado."""
+    try:
+        df = pd.read_excel(RUTA_EMPRESAS_RAW, sheet_name=hoja, header=None)
+    except Exception:
+        return None, None
 
+    # Detectar fila con los años
+    fila_anios = None
+    for i in range(min(15, len(df))):
+        if (df.iloc[i].astype(str) == "1996").any():
+            fila_anios = i
+            break
+    if fila_anios is None:
+        return None, None
 
-def listar_ramas_definicion(definicion: str = "ley_27_506") -> pd.DataFrame:
-    if definicion not in DEFINICIONES:
-        raise KeyError(f"Definición '{definicion}' inválida.")
-    return pd.DataFrame({"rama": sorted(DEFINICIONES[definicion]),
-                         "definicion": definicion})
+    # Detectar columna del año pedido
+    col_anio = None
+    for j, v in enumerate(df.iloc[fila_anios].tolist()):
+        if str(v).strip() == anio:
+            col_anio = j
+            break
+    if col_anio is None:
+        return None, None
+
+    ec, total = 0, 0
+    for i in range(fila_anios + 1, len(df)):
+        try:
+            cod = int(float(df.iloc[i, 0]))
+        except (ValueError, TypeError):
+            continue
+        try:
+            val = int(float(df.iloc[i, col_anio]))
+        except (ValueError, TypeError):
+            continue
+        total += val
+        if cod in CIIU_EC:
+            ec += val
+    return ec, total
 
 
 def benchmark_provincias(
-    ruta: Path,
-    anio: int,
-    definicion: str = "ley_27_506",
+    anio: str = "2024",
     provincias: list[str] | None = None,
 ) -> pd.DataFrame:
-    if provincias is None:
-        provincias = [
-            "La Rioja", "Catamarca", "Jujuy", "Salta",
-            "Santiago del Estero", "Tucumán",
-            "Córdoba", "Santa Fé", "CABA",
-        ]
+    """
+    Calcula intensidad empresarial EC (‰) por provincia.
+
+    Returns
+    -------
+    DataFrame con columnas: provincia, ec, total, intensidad_pm.
+    Ordenado de mayor a menor intensidad.
+    """
+    provincias = provincias or PROVINCIAS_BENCHMARK
     filas = []
-    with pd.ExcelFile(ruta, engine="openpyxl") as xl:
-        for prov in provincias:
-            try:
-                hoja = _encontrar_hoja(xl, prov)
-                df = parsear_hoja(ruta, hoja)
-            except Exception:
-                continue
-            ec_serie = serie_ec(df, definicion)
-            tot_serie = serie_empresas(df)
-            ec = ec_serie.loc[ec_serie["anio"] == anio, "empresas_ec"]
-            tot = tot_serie.loc[tot_serie["anio"] == anio, "total_empresas"]
-            filas.append({
-                "provincia": prov,
-                "anio": anio,
-                "empresas_total": tot.iloc[0] if not tot.empty else pd.NA,
-                "empresas_ec": ec.iloc[0] if not ec.empty else pd.NA,
-            })
-    out = pd.DataFrame(filas)
-    if not out.empty:
-        out["share_ec_pct"] = (out["empresas_ec"] / out["empresas_total"] * 100).round(2)
-        out = out.sort_values("empresas_ec", ascending=False).reset_index(drop=True)
-    return out
+    for prov in provincias:
+        ec, tot = _procesar_hoja_provincia(prov, anio)
+        if ec is None or tot == 0:
+            continue
+        filas.append({
+            "provincia": prov,
+            "ec": ec,
+            "total": tot,
+            "intensidad_pm": round(ec / tot * 1000, 2),
+        })
+    return pd.DataFrame(filas).sort_values("intensidad_pm", ascending=False).reset_index(drop=True)
 
 
-# ===========================================================================
-# 4. Exportadores
-# ===========================================================================
+# ---------------------------------------------------------------------------
+# Exportación a Excel
+# ---------------------------------------------------------------------------
+def exportar_excel_ec(
+    ruta_salida: Path | str = None,
+    df: pd.DataFrame | None = None,
+) -> Path:
+    """
+    Exporta el análisis EC a un Excel con 4 hojas:
+    serie, bloques, codigos, participacion.
 
-def exportar_excel_empresas(df: pd.DataFrame, anio_actual: int,
-                            ruta_salida: Path, provincia: str = "La Rioja",
-                            ruta_excel: Path | None = None) -> None:
+    Returns
+    -------
+    Path del archivo generado.
+    """
+    ruta_salida = Path(ruta_salida or (RAIZ / "data" / "processed" / "empresas_ec_rioja.xlsx"))
     ruta_salida.parent.mkdir(parents=True, exist_ok=True)
-    with pd.ExcelWriter(ruta_salida, engine="openpyxl") as w:
-        serie_empresas(df).to_excel(w, sheet_name="Serie_total", index=False)
-        serie_ec(df, "ley_27_506").to_excel(w, sheet_name="EC_por_anio", index=False)
-        detalle_ramas(df, anio_actual, "ley_27_506").to_excel(
-            w, sheet_name=f"Detalle_ley_{anio_actual}", index=False)
-        if ruta_excel is not None:
-            benchmark_provincias(ruta_excel, anio_actual, "ley_27_506").to_excel(
-                w, sheet_name=f"Benchmark_{anio_actual}", index=False)
-        listar_ramas_definicion("ley_27_506").to_excel(
-            w, sheet_name="Codigos_ley_27_506", index=False)
-    print(f"[OK] Excel empresas → {ruta_salida}")
 
+    if df is None:
+        df = cargar_ec()
 
-def exportar_excel_ec(df: pd.DataFrame, ruta_salida: Path,
-                      provincia: str = "La Rioja") -> None:
-    ruta_salida.parent.mkdir(parents=True, exist_ok=True)
-    with pd.ExcelWriter(ruta_salida, engine="openpyxl") as w:
-        sub = filtrar_ec(df, "ley_27_506")
-        pivot = (sub.pivot_table(index="anio", columns="rama",
-                                 values="empresas", aggfunc="sum").sort_index())
-        pivot["TOTAL"] = pivot.sum(axis=1, min_count=1)
-        pivot.to_excel(w, sheet_name="Serie_ley_27_506")
-        serie_ec(df, "ley_27_506").to_excel(
-            w, sheet_name="Totales_por_anio", index=False)
-        listar_ramas_definicion("ley_27_506").to_excel(
-            w, sheet_name="Codigos_ley_27_506", index=False)
-    print(f"[OK] Excel EC → {ruta_salida}")
+    serie = serie_ec(df)
+    bloques = por_bloque(df)
+    codigos = por_codigo(df)
+
+    try:
+        part = participacion_total(df)
+    except FileNotFoundError:
+        part = pd.DataFrame()
+
+    with pd.ExcelWriter(ruta_salida, engine="openpyxl") as writer:
+        serie.to_excel(writer, sheet_name="serie", index=False)
+        bloques.to_excel(writer, sheet_name="bloques", index=False)
+        codigos.to_excel(writer, sheet_name="codigos")
+        if not part.empty:
+            part.to_excel(writer, sheet_name="participacion", index=False)
+
+    print(f"✅ Excel EC exportado: {ruta_salida}")
+    return ruta_salida
+# ---------------------------------------------------------------------------
+# CLI rápida
+# ---------------------------------------------------------------------------
+if __name__ == "__main__":
+    df = cargar_ec()
+
+    print("=== Serie EC ===")
+    print(serie_ec(df).to_string(index=False))
+
+    print("\n=== Por bloque ===")
+    print(por_bloque(df).to_string(index=False))
+
+    print("\n=== Por código (ancho) ===")
+    print(por_codigo(df).to_string())
+
+    print("\n=== Resumen ===")
+    r = resumen(df)
+    for k, v in r.items():
+        if k != "serie":
+            print(f"  {k}: {v}")
