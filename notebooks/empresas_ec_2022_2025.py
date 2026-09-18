@@ -1,6 +1,6 @@
 """
-Análisis de empresas de Economía del Conocimiento (Ley 27.506) — La Rioja
-========================================================================
+Empresas EC — AFIP-DGIP — La Rioja — 2022, 2024, 2025
+======================================================
 Ejecutar desde la raíz del proyecto:
     python notebooks/empresas_ec_2022_2025.py
 """
@@ -9,6 +9,7 @@ import os
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 if Path.cwd().name == "notebooks":
@@ -16,83 +17,107 @@ if Path.cwd().name == "notebooks":
 sys.path.insert(0, str(Path.cwd()))
 
 from src.empresas_ec import (
-    cargar_provincia,
-    serie_empresas,
+    cargar_ec,
     serie_ec,
-    detalle_ramas,
+    por_bloque,
+    por_codigo,
+    participacion_total,
     benchmark_provincias,
-    filtrar_ec,
-    listar_ramas_definicion,
+    exportar_excel_ec,
+    CIIU_EC,
+    BLOQUES,
 )
 
-RUTA   = Path("data/raw/provinciales_serie_empresas3_2.xlsx")
-PROV   = "La Rioja"
-ANIOS  = [2022, 2024, 2025]
-OUT    = Path("data/processed/empresas_ec_rioja_2022_2025.xlsx")
+ANIOS = [2022, 2024, 2025]
+OUT = Path("data/processed/empresas_ec_rioja_2022_2025.xlsx")
 
 print("=" * 78)
-print(f"  Empresas EC — Ley 27.506 — {PROV} — 2022–2025")
+print("  Empresas EC — AFIP-DGIP — La Rioja — 2022/2024/2025")
 print("=" * 78)
 
-df = cargar_provincia(RUTA, PROV)
-anios_disponibles = sorted(df["anio"].dropna().unique())
+# --- Carga ----------------------------------------------------------------
+df = cargar_ec()
+anios_disponibles = sorted(df["anio"].unique().tolist())
 ANIOS = [a for a in ANIOS if a in anios_disponibles]
 print(f"Años a analizar: {ANIOS}\n")
 
-# 1. Total provincia
-print("--- 1. Total empresas provincia ---")
-tot = serie_empresas(df)
-tot = tot[tot["anio"].isin(ANIOS)].reset_index(drop=True)
-tot["var_abs"] = tot["total_empresas"].diff()
-tot["var_pct"] = (tot["total_empresas"].pct_change() * 100).round(2)
-print(tot.to_string(index=False))
+# --- 1. Total empresas provincia + EC + share -----------------------------
+print("--- 1. Total provincia vs EC ---")
+comp = participacion_total(df)
+comp = comp[comp["anio"].isin(ANIOS)].reset_index(drop=True)
+comp = comp.rename(columns={
+    "total_ec": "empresas_ec",
+    "total_provincial": "total_provincia",
+    "participacion_pct": "share_pct",
+})
+comp["var_ec_abs"] = comp["empresas_ec"].diff()
+comp["var_ec_pct"] = (comp["empresas_ec"].pct_change() * 100).round(2)
+comp["var_tot_abs"] = comp["total_provincia"].diff()
+comp["var_tot_pct"] = (comp["total_provincia"].pct_change() * 100).round(2)
+print(comp.to_string(index=False))
 
-# 2. Ley 27.506
-print("\n--- 2. Empresas Ley 27.506 ---")
-ley = serie_ec(df, "ley_27_506")
-ley = ley[ley["anio"].isin(ANIOS)].reset_index(drop=True)
-ley["var_abs"] = ley["empresas_ec"].diff()
-ley["var_pct"] = (ley["empresas_ec"].pct_change() * 100).round(2)
-ley["share_pct"] = (ley["empresas_ec"] / tot["total_empresas"].values * 100).round(2)
-print(ley.to_string(index=False))
-
-# 3. Detalle por rama
-print("\n--- 3. Detalle por rama (Ley 27.506) ---")
-sub = filtrar_ec(df, "ley_27_506")
-pivot = (sub[sub["anio"].isin(ANIOS)]
-         .pivot_table(index=["rama", "descripcion"], columns="anio",
-                      values="empresas", aggfunc="sum")
-         .fillna(0).astype(int))
+# --- 2. Detalle por bloque temático ---------------------------------------
+print("\n--- 2. Detalle por bloque ---")
+bloques = por_bloque(df)
+bl_pivot = (bloques[bloques["anio"].isin(ANIOS)]
+            .pivot_table(index="bloque", columns="anio",
+                         values="empresas", aggfunc="sum")
+            .fillna(0).astype(int))
 if len(ANIOS) >= 2:
     p, u = ANIOS[0], ANIOS[-1]
-    pivot["var_abs"] = pivot[u] - pivot[p]
-    pivot["var_pct"] = ((pivot[u] / pivot[p] - 1) * 100).round(1)
-    pivot = pivot.sort_values(u, ascending=False)
-print(pivot.to_string())
+    bl_pivot["var_abs"] = bl_pivot[u] - bl_pivot[p]
+    bl_pivot["var_pct"] = (
+        (bl_pivot[u] / bl_pivot[p].replace(0, np.nan) - 1) * 100
+    ).round(1)
+    bl_pivot = bl_pivot.sort_values(u, ascending=False)
+print(bl_pivot.to_string())
 
-# 4. Benchmark
-print("\n--- 4. Benchmark provincias (Ley 27.506) ---")
+# --- 3. Detalle por código CIIU -------------------------------------------
+print("\n--- 3. Detalle por CIIU ---")
+cod = por_codigo(df)
+cod_sel = cod[[c for c in cod.columns if c in ANIOS]].fillna(0).astype(int)
+if len(ANIOS) >= 2:
+    p, u = ANIOS[0], ANIOS[-1]
+    cod_sel["var_abs"] = cod_sel[u] - cod_sel[p]
+    cod_sel["var_pct"] = (
+        (cod_sel[u] / cod_sel[p].replace(0, np.nan) - 1) * 100
+    ).round(1)
+    cod_sel = cod_sel.sort_values(u, ascending=False)
+
+# Agregar descripción legible
+cod_sel = cod_sel.reset_index()
+cod_sel["descripcion"] = cod_sel["ciiu"].map(CIIU_EC)
+cod_sel = cod_sel.set_index(["ciiu", "descripcion"])
+print(cod_sel.to_string())
+
+# --- 4. Benchmark provincias (3 años) -------------------------------------
+print("\n--- 4. Benchmark provincias (intensidad EC ‰) ---")
 bench_frames = []
 for a in ANIOS:
-    b = benchmark_provincias(RUTA, a, "ley_27_506")
+    b = benchmark_provincias(str(a))
     b["anio"] = a
     bench_frames.append(b)
 bench_all = pd.concat(bench_frames, ignore_index=True)
+
 bench_pivot = (bench_all.pivot(index="provincia", columns="anio",
-                               values="empresas_ec").fillna(0).astype(int))
+                               values="intensidad_pm")
+               .fillna(0).round(2))
 if len(ANIOS) >= 2:
     p, u = ANIOS[0], ANIOS[-1]
-    bench_pivot["var_abs"] = bench_pivot[u] - bench_pivot[p]
-    bench_pivot["var_pct"] = ((bench_pivot[u] / bench_pivot[p] - 1) * 100).round(1)
+    bench_pivot["var_pp"] = (bench_pivot[u] - bench_pivot[p]).round(2)
     bench_pivot = bench_pivot.sort_values(u, ascending=False)
 print(bench_pivot.to_string())
 
-# 5. Exportar
+# --- 5. Exportar ----------------------------------------------------------
 OUT.parent.mkdir(parents=True, exist_ok=True)
 with pd.ExcelWriter(OUT, engine="openpyxl") as w:
-    tot.to_excel(w, sheet_name="Total_provincia", index=False)
-    ley.to_excel(w, sheet_name="Ley_27_506", index=False)
-    pivot.to_excel(w, sheet_name="Ley_27_506_por_rama")
+    comp.to_excel(w, sheet_name="EC_vs_Total", index=False)
+    bl_pivot.to_excel(w, sheet_name="Por_bloque")
+    cod_sel.to_excel(w, sheet_name="Por_CIIU")
     bench_pivot.to_excel(w, sheet_name="Benchmark_provincias")
-    listar_ramas_definicion("ley_27_506").to_excel(w, sheet_name="Codigos_ley", index=False)
+    pd.DataFrame({
+        "ciiu": list(CIIU_EC.keys()),
+        "descripcion": list(CIIU_EC.values()),
+    }).to_excel(w, sheet_name="CIIU_EC", index=False)
+
 print(f"\n[OK] {OUT}")
