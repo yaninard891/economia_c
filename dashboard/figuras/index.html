@@ -193,20 +193,20 @@
             <div class="label">Empresas EC activas (2024)</div>
             <div class="sub"><span>3,13%</span> del total provincial (3.255 empresas)<br>
                 <span class="neg">−17,6%</span> en 2025 (84 empresas)</div>
-            <div class="kpi-source">Fuente: SIPA-OEDE · Def. AFIP-DGIP</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE · Def. Actividades EC (AFIP/ARCA)</div>
         </div>
         <div class="kpi-card">
             <div class="number">506</div>
             <div class="label">Empleo EC promedio 2024</div>
             <div class="sub"><span>1,81%</span> del empleo provincial (28.008 puestos)<br>
                 <span>~5,0</span> empleados por empresa</div>
-            <div class="kpi-source">Fuente: SIPA-OEDE · Def. AFIP-DGIP</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE · Def. Actividades EC (AFIP/ARCA)</div>
         </div>
         <div class="kpi-card">
-            <div class="number">$1.641.175</div>
-            <div class="label">Salario promedio EC 2025</div>
-            <div class="sub"><span>+25,5%</span> sobre el promedio provincial</div>
-            <div class="kpi-source">Fuente: SIPA-OEDE</div>
+            <div class="number">+29,0%</div>
+            <div class="label">Prima salarial núcleo EC 2025</div>
+            <div class="sub"><span>+45,8%</span> en 2024 · el software paga más que el promedio provincial</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE · CIIU 7220, 7250, 7290</div>
         </div>
     </div>
 
@@ -315,11 +315,73 @@
 
     </div>
 
-    <!-- ============ EMPRESAS EC — DEFINICIÓN AFIP-DGIP ============ -->
+    <!-- ============ PRIMA SALARIAL + RESUMEN ============ -->
     <div class="chart-row">
 
         <div class="chart-box">
-            <h3>Empresas EC por bloque — Definición AFIP-DGIP (2019-2025)</h3>
+            <h3>Prima salarial EC — Núcleo software vs. Actividades EC (2022-2025)</h3>
+            <div id="chart-prima" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    El <strong>núcleo software</strong> paga entre
+                    <strong>+20%</strong> y <strong>+54%</strong> más que el
+                    promedio provincial en todo el período.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE. Prima = (salario EC / salario provincial − 1) × 100.
+                Núcleo software: CIIU 7220, 7250, 7290.
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h3>Prima salarial EC — Detalle por año</h3>
+            <div class="info-item">
+                <span class="key">Núcleo software 2022</span>
+                <span class="value">+53,7%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Núcleo software 2023</span>
+                <span class="value">+20,0%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Núcleo software 2024</span>
+                <span class="value">+45,8%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Núcleo software 2025</span>
+                <span class="value">+29,0%</span>
+            </div>
+            <div class="info-item"
+                 style="border-top:2px solid #4ECDC4; margin-top:8px; padding-top:12px;">
+                <span class="key" style="font-weight:700; color:#FFFFFF;">Actividades EC completo 2025</span>
+                <span class="value">+8,4%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Actividades EC completo 2024</span>
+                <span class="value">+21,4%</span>
+            </div>
+            <div class="highlight-box">
+                <div class="positive">
+                    El <strong>núcleo software</strong> concentra los salarios
+                    más altos del sector. La <strong>definición Actividades EC
+                    completa</strong> diluye la prima por el peso de las ramas
+                    proxy (7421 ingeniería, 7499 servicios), que pagan por
+                    debajo del promedio provincial.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE, serie de remuneraciones mensuales por CIIU 4 dígitos.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============ EMPRESAS EC — DEFINICIÓN ACTIVIDADES EC ============ -->
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Empresas EC por bloque — Definición Actividades EC (2019-2025)</h3>
             <div id="chart-empresas" class="chart-container"></div>
             <div class="highlight-box" style="margin-top:20px;">
                 <div class="positive">
@@ -329,8 +391,8 @@
                     empresas (dato preliminar).
                 </div>
                 <div class="nota">
-                    <strong>Definición AFIP-DGIP:</strong> actividades que
-                    generan el impuesto DGIP tecnológico, mapeadas a CIIU
+                    <strong>Definición Actividades EC (AFIP/ARCA):</strong>
+                    actividades de Economía del Conocimiento mapeadas a CIIU
                     Rev. 3 a 4 dígitos: 7210, 7220, 7250, 7290, 7300, 7421,
                     7430, 7499. Los bloques <em>Ingeniería y geología</em>
                     (7421) y <em>Servicios profesionales</em> (7499) son
@@ -342,7 +404,7 @@
             </div>
             <div class="chart-source">
                 Fuente: SIPA-OEDE (STEySS), <em>provinciales_serie_empresas3_2</em>.
-                Definición: AFIP-DGIP.
+                Definición: Actividades EC (AFIP/ARCA).
             </div>
         </div>
 
@@ -383,7 +445,7 @@
                 </div>
             </div>
             <div class="chart-source">
-                Fuente: SIPA-OEDE (STEySS). Definición: AFIP-DGIP.
+                Fuente: SIPA-OEDE (STEySS). Definición: Actividades EC (AFIP/ARCA).
                 Promedio anual de trimestres con dato.
             </div>
         </div>
@@ -402,7 +464,7 @@
                 </div>
             </div>
             <div class="chart-source">
-                Fuente: SIPA-OEDE (STEySS). Definición: AFIP-DGIP.
+                Fuente: SIPA-OEDE (STEySS). Definición: Actividades EC (AFIP/ARCA).
                 Promedio anual de trimestres con dato.
             </div>
         </div>
@@ -411,31 +473,81 @@
 
     <!-- ============ INTENSIDAD EMPRESARIAL EC ============ -->
     <div class="chart-row">
-        <div class="chart-box" style="grid-column: 1 / -1;">
+
+        <div class="chart-box">
             <h3>Intensidad empresarial EC — Empresas EC por 1.000 empresas totales (2024)</h3>
-            <div id="chart-intensidad" class="chart-container-tall"></div>
+            <div id="chart-intensidad" class="chart-container"></div>
             <div class="highlight-box" style="margin-top:20px;">
                 <div class="positive">
                     La Rioja registra una densidad de <strong>31,3‰</strong>,
                     por encima de Santa Fe (27,3‰) y Santiago del Estero
                     (25,6‰). En volumen absoluto es la tercera más baja de las
                     9 jurisdicciones, pero <strong>en términos relativos al
-                    tamaño de su economía ocupa el 7° lugar</strong>. El
-                    límite del sector no es la orientación productiva, sino
-                    el tamaño total del entramado empresarial provincial.
+                    tamaño de su economía ocupa el 7° lugar</strong>.
                 </div>
                 <div class="nota">
-                    Con la nueva definición AFIP-DGIP, La Rioja pasa de
-                    30,1‰ a <strong>31,3‰</strong>. Catamarca sube fuerte
-                    (35,2‰ → 43,2‰) por el peso del proxy 7421 (geología),
-                    y Santa Fe cae (43,0‰ → 27,3‰).
+                    Con la definición Actividades EC (AFIP/ARCA), La Rioja
+                    pasa de 30,1‰ a <strong>31,3‰</strong>. Catamarca sube
+                    fuerte (35,2‰ → 43,2‰) por el peso del proxy 7421
+                    (geología), y Santa Fe cae (43,0‰ → 27,3‰).
                 </div>
             </div>
             <div class="chart-source">
                 Fuente: SIPA-OEDE (STEySS), <em>provinciales_serie_empresas3_2</em>.
-                Definición: AFIP-DGIP. Intensidad = (empresas EC / empresas totales) × 1.000.
+                Definición: Actividades EC (AFIP/ARCA). Intensidad = (empresas EC / empresas totales) × 1.000.
             </div>
         </div>
+
+        <div class="info-card">
+            <h3>Ranking de intensidad EC (2024)</h3>
+            <div class="info-item">
+                <span class="key">1. CABA</span>
+                <span class="value">67,95‰</span>
+            </div>
+            <div class="info-item">
+                <span class="key">2. Catamarca</span>
+                <span class="value">43,18‰</span>
+            </div>
+            <div class="info-item">
+                <span class="key">3. Salta</span>
+                <span class="value">38,99‰</span>
+            </div>
+            <div class="info-item">
+                <span class="key">4. Tucumán</span>
+                <span class="value">35,74‰</span>
+            </div>
+            <div class="info-item">
+                <span class="key">5. Córdoba</span>
+                <span class="value">34,55‰</span>
+            </div>
+            <div class="info-item">
+                <span class="key">6. Jujuy</span>
+                <span class="value">33,12‰</span>
+            </div>
+            <div class="info-item"
+                 style="border-top:2px solid #4ECDC4; margin-top:5px; padding-top:10px;">
+                <span class="key" style="font-weight:700; color:#FFFFFF;">7. La Rioja</span>
+                <span class="value">31,34‰</span>
+            </div>
+            <div class="info-item">
+                <span class="key">8. Santa Fe</span>
+                <span class="value">27,29‰</span>
+            </div>
+            <div class="info-item">
+                <span class="key">9. Santiago del Estero</span>
+                <span class="value">25,63‰</span>
+            </div>
+            <div class="highlight-box">
+                <div class="alert">
+                    ⚠ La Rioja perdió −4,45 pp de intensidad entre 2022 y 2025,
+                    la peor caída de las 9 jurisdicciones comparadas.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE. Intensidad = (empresas EC / empresas totales) × 1.000.
+            </div>
+        </div>
+
     </div>
 
     <!-- ============ I+D / EXPORTACIONES / CONECTIVIDAD ============ -->
@@ -639,6 +751,12 @@
     Fuentes: DGIP La Rioja (IIBB), OEDE-MTEySS (SIPA),
     MINCyT, INDEC, ENACOM · Datos actualizados al Q1-2026
     según disponibilidad de cada fuente
+    <br><br>
+    <span style="font-size:10px; color:#5A8BA8;">
+    Prima salarial núcleo EC calculada sobre CIIU 7220 (consultores informáticos),
+    7250 (reparación informática) y 7290 (informática n.c.p.). Bajo la definición
+    completa de Actividades EC (8 CIIU), la prima es +8,4% en 2025.
+    </span>
 </div>
 
 <script>
@@ -799,7 +917,89 @@
 
 
     // ==========================================================
-    // EMPRESAS EC — DEFINICIÓN AFIP-DGIP (2019-2025)
+    // PRIMA SALARIAL EC — Núcleo software vs. Actividades EC
+    // ==========================================================
+    Highcharts.chart("chart-prima", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: {
+            categories: ["2022", "2023", "2024", "2025"],
+            labels: { style: { color: "#8EAFC4" } }
+        },
+        yAxis: {
+            title: {
+                text: "Prima salarial EC (% vs. provincial)",
+                style: { color: "#8EAFC4" }
+            },
+            labels: {
+                style: { color: "#8EAFC4" },
+                format: "{value:+.0f}%"
+            },
+            plotLines: [{
+                value: 0,
+                color: "#8EAFC4",
+                width: 1.5,
+                dashStyle: "Dash",
+                label: {
+                    text: "0%",
+                    style: { color: "#8EAFC4", fontSize: "10px" }
+                }
+            }]
+        },
+        legend: {
+            enabled: true,
+            align: "center",
+            verticalAlign: "top",
+            itemStyle: { color: "#8EAFC4" },
+            itemHoverStyle: { color: "#FFFFFF" }
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: "%",
+            pointFormat: '<span style="color:{point.color}">●</span> {series.name}: <b>{point.y:+.2f}%</b><br/>'
+        },
+        plotOptions: {
+            column: {
+                borderRadius: 4,
+                groupPadding: 0.15,
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:+.1f}%",
+                    style: {
+                        color: "#FFFFFF",
+                        textOutline: "none",
+                        fontWeight: "bold",
+                        fontSize: "10px"
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "Núcleo software",
+                data: [
+                    { y: 53.67, color: "#4ECDC4" },
+                    { y: 20.04, color: "#4ECDC4" },
+                    { y: 45.75, color: "#4ECDC4" },
+                    { y: 29.00, color: "#4ECDC4" }
+                ]
+            },
+            {
+                name: "Actividades EC completo",
+                data: [
+                    { y: -2.41, color: "#6CB4D9" },
+                    { y: -6.59, color: "#6CB4D9" },
+                    { y: 21.38, color: "#6CB4D9" },
+                    { y: 8.36, color: "#6CB4D9" }
+                ]
+            }
+        ]
+    });
+
+
+    // ==========================================================
+    // EMPRESAS EC — DEFINICIÓN ACTIVIDADES EC (2019-2025)
     // ==========================================================
     Highcharts.chart("chart-empresas", {
 
