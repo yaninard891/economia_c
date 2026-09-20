@@ -27,6 +27,8 @@ Notas metodológicas
 
 from __future__ import annotations
 
+import datetime
+import re
 from pathlib import Path
 from typing import Iterable
 
@@ -71,15 +73,34 @@ _MESES_ABREV = {
 # ---------------------------------------------------------------------------
 
 def _parsear_fechas_header(celdas) -> list:
-    """Acepta datetimes reales o strings tipo 'ene-22'."""
+    """Acepta datetimes reales o strings tipo 'ene-22', 'dic-24*', 'jun-25*'.
+
+    Los meses con SAC vienen en el Excel como strings con asterisco,
+    paréntesis o espacios ('dic-24*'). Se limpian antes de parsear.
+    """
     out = []
     for c in celdas:
-        f = pd.to_datetime(c, errors="coerce")
-        if pd.notna(f) and f.year >= 2000:
-            out.append(f)
+        # 1. Si ya es datetime/Timestamp, se usa directo
+        if isinstance(c, (pd.Timestamp, datetime.datetime, datetime.date)):
+            out.append(pd.Timestamp(c))
             continue
+
+        # 2. Si es string, limpiar asteriscos, paréntesis y espacios del final
         if isinstance(c, str):
-            partes = c.strip().lower().replace(".", "").split("-")
+            s = c.strip()
+            s = re.sub(r"[\s\*\(\)]+$", "", s)  # 'dic-24*' -> 'dic-24'
+            if not s:
+                out.append(pd.NaT)
+                continue
+
+            # 2a. Probar parseo directo (cubre '2024-12-01', '2024-12')
+            f = pd.to_datetime(s, errors="coerce")
+            if pd.notna(f) and f.year >= 2000:
+                out.append(pd.Timestamp(f))
+                continue
+
+            # 2b. Mes textual + año: 'dic-24' o 'dic-2024'
+            partes = s.lower().replace(".", "").split("-")
             if len(partes) == 2 and partes[0] in _MESES_ABREV:
                 try:
                     anio = int(partes[1])

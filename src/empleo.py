@@ -144,10 +144,17 @@ def _parse_periodo(p, tipo):
 
 
 def _nivel_codigo(c):
-    """Clasifica código CIIU en 'seccion' | 'division' | 'grupo' | None."""
+    """Clasifica código CIIU en 'seccion' | 'division' | 'grupo' | None.
+
+    Maneja códigos que vienen como float ("7210.0") desde pandas cuando
+    la columna tiene mezcla de enteros y strings ('s.d.').
+    """
     c = str(c).strip().upper()
     if c in ("", "NAN", "NONE", "TOTAL"):
         return None
+    # Normalizar "7210.0" -> "7210"
+    if c.endswith(".0"):
+        c = c[:-2]
     if len(c) == 1 and c.isalpha():
         return "seccion"
     if c.isdigit() and len(c) <= 2:
@@ -228,7 +235,8 @@ def _leer_hoja_sector_provincial(path, sheet, valor_nombre, tipo_fecha):
     Parser robusto de hojas provinciales (empleo o remuneraciones).
 
     Detecta automáticamente:
-      - fila de header (busca 'Rama de Actividad'/'Ramas de actividad'/'Sector')
+      - fila de header (busca 'Rama de Actividad'/'Ramas de actividad'/
+        'Ramas'/'Sector')
       - columnas de período (celdas que parsean a fecha)
       - columnas de código y rama (por longitud media de strings)
     """
@@ -239,7 +247,8 @@ def _leer_hoja_sector_provincial(path, sheet, valor_nombre, tipo_fecha):
     for i in range(min(12, len(raw))):
         for j in range(min(8, raw.shape[1])):
             v = str(raw.iloc[i, j]).strip().lower()
-            if v in ("ramas de actividad", "rama de actividad", "sector"):
+            if v in ("ramas de actividad", "rama de actividad",
+                     "sector", "ramas"):
                 hdr_row = i
                 break
         if hdr_row is not None:
@@ -510,7 +519,7 @@ def empleo_tic_benchmark(provincias, ampliado=False, fecha=None):
             d = empleo_tic_la_rioja(p, ampliado=ampliado)
             frames.append(d)
         except Exception as e:
-            print(f"⚠️ {p}: {e}")
+            print(f"[!] {p}: {e}")
     if not frames:
         return pd.DataFrame()
     df = pd.concat(frames, ignore_index=True)
