@@ -1,0 +1,347 @@
+---
+title: "Economía del Conocimiento en La Rioja"
+subtitle: "Análisis del período 2019-2025"
+author: "Lic. en Economía"
+date: today
+date-format: "MMMM YYYY"
+lang: es
+format:
+  docx:
+    toc: false
+    number-sections: true
+    reference-doc: reference.docx
+    fig-width: 6.5
+    fig-height: 3.8
+  html:
+    toc: true
+    toc-depth: 2
+    toc-location: left
+    number-sections: true
+    theme: cosmo
+    css: estilos_web.css
+    embed-resources: true
+    fig-width: 7.5
+    fig-height: 4
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{python}
+#| echo: false
+#| include: false
+import sys
+from pathlib import Path
+
+raiz = Path.cwd()
+if raiz.name == "informe":
+    raiz = raiz.parent
+if str(raiz) not in sys.path:
+    sys.path.insert(0, str(raiz))
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+FIG = Path("figuras")
+FIG.mkdir(exist_ok=True)
+
+_modulos_ok = {}
+
+try:
+    from src.empresas_ec import (
+        cargar_ec, serie_ec, por_bloque,
+        benchmark_provincias,
+        CIIU_EC, ACTIVIDADES_AFIP, BLOQUES,
+    )
+    _modulos_ok["empresas"] = True
+except Exception as e:
+    print(f"[warn] empresas_ec: {e}")
+    _modulos_ok["empresas"] = False
+
+try:
+    from src.recaudacion_ec import (
+        serie_recaudacion_ec, share_ec_iibb_serie,
+        RECAUDACION_EC,
+    )
+    _modulos_ok["recaudacion"] = True
+except Exception as e:
+    print(f"[warn] recaudacion_ec: {e}")
+    _modulos_ok["recaudacion"] = False
+
+try:
+    from src.visualizaciones_empresas import (
+        fig_empresas_serie,
+    )
+    _modulos_ok["vis_empresas"] = True
+except Exception as e:
+    print(f"[warn] visualizaciones_empresas: {e}")
+    _modulos_ok["vis_empresas"] = False
+```
+
+# Resumen ejecutivo {#sec-resumen}
+
+El sector de la Economía del Conocimiento (EC) en La Rioja presenta una dinámica dual: **crece en términos fiscales y salariales, pero se achica en cantidad de empresas y puestos de trabajo**. Entre 2019 y 2025, el sector consolidó un diferencial salarial creciente y se transformó en el único vector positivo dentro de la recaudación provincial de Ingresos Brutos. Al mismo tiempo, perdió masa crítica empresarial y empleo, ubicándose entre las jurisdicciones con peor desempeño relativo del país.
+
+Los seis hallazgos principales:
+
+1. **Recaudación EC: crecimiento ×32,9 en cuatro años.** La porción de Ingresos Brutos atribuible a actividades EC pasó de $58,99 M (2022) a $1.940,91 M (2025). Su peso sobre la base imponible provincial se triplicó: de 0,51% a 1,55%. Es el agregado que más rápido crece dentro del sistema tributario provincial.
+
+2. **Prima salarial: el núcleo informático paga +66,5% sobre el promedio provincial.** El diferencial se duplicó entre 2022 (+27,2%) y 2025 (+66,5%). La rama Informática n.c.p. (CIIU 7290) paga más del doble del promedio provincial (+100,5% en dic-2025).
+
+3. **Empresas EC: caída de −11,6% entre 2022 y 2025.** La cantidad de empresas del sector pasó de 95 (2022) a 84 (2025, preliminar), tras haber alcanzado 102 en 2024. La tendencia se revirtió después del pico.
+
+4. **Empleo EC: −23,7% desde el pico 2023.** El empleo del núcleo informático (CIIU 7220 + 7290) pasó de 78 puestos en 2023 a 59,5 en 2025. Su participación en el empleo formal provincial es de 0,22%.
+
+5. **Intensidad empresarial: la peor caída del país.** La Rioja perdió −4,45 pp de intensidad EC entre 2022 y 2025, el peor desempeño entre 9 jurisdicciones comparadas. Pasó de 33,07‰ a 28,62‰.
+
+6. **Elasticidad invertida.** Entre 2022 y 2024, las empresas EC crecieron +7,4% mientras el empleo del núcleo **cayó −6,5%**: cada empresa EC emplea menos trabajadores. El tamaño medio se redujo de 0,69 a 0,60 empleados por empresa.
+
+**Diagnóstico general.** El sector EC de La Rioja opera como un **enclave de altos salarios sobre una base empresarial frágil**. La recaudación y los salarios crecen, pero la cantidad de empresas y empleos retroceden. El 67,7% del conteo de empresas EC depende de dos códigos proxy (arquitectura/ingeniería y servicios empresariales) que pagan por debajo del promedio provincial. El núcleo informático real (CIIU 7220 y 7290) representa una fracción minoritaria del sector.
+
+# Análisis {#sec-analisis}
+
+## Definición y magnitud del sector
+
+El análisis adopta la definición de **Actividades EC (AFIP/ARCA)**, que identifica las actividades de Economía del Conocimiento a partir de los códigos CIIU rev. 3 equivalentes a las promovidas por la Ley 27.506 y su modificatoria 27.570. Incluye ocho códigos: 7210, 7220, 7250, 7290, 7300, 7421, 7430 y 7499.
+
+Dentro de esa definición amplia, este informe distingue el **núcleo informático** (CIIU 7210, 7220 y 7290), que constituye la definición canónica del análisis. En la práctica se calcula como la suma de 7220 y 7290, porque el código 7210 no tiene datos publicados en los archivos SIPA-OEDE de 4 dígitos.
+
+::: {.callout-note}
+**Advertencia metodológica.** Los códigos 7421 (arquitectura, ingeniería y geología) y 7499 (servicios empresariales n.c.p.) son **proxies**: el SIPA no permite aislar la actividad EC específica dentro de ellos. Bajo la definición amplia, el **67,7% del conteo EC depende de estos dos códigos**. El conteo es un **techo superior**, no exacto.
+:::
+
+En 2024, el sector EC de La Rioja registró **102 empresas** (3,13% del total provincial) y **61 puestos de trabajo del núcleo informático** en promedio anual. La densidad empresarial del sector es de **31,34‰**, ubicándose en el 7° puesto entre 9 jurisdicciones comparadas.
+
+## Dinámica empresarial 2019-2025
+
+```{python}
+#| echo: false
+#| fig-width: 6.5
+#| fig-height: 3.6
+_df_ec = None
+if _modulos_ok.get("empresas"):
+    try:
+        _df_ec = cargar_ec()
+        fig_empresas_serie(_df_ec, FIG / "F11_empresas_serie.png",
+                           anio_ini=2019, anio_fin=2025)
+    except Exception as e:
+        print(f"[warn] fig_empresas_serie: {e}")
+```
+![Empresas totales y de Actividades EC en La Rioja (2019-2025). La fuente no publica datos para 2023.](figuras/F11_empresas_serie.png){#fig-emp-serie fig-align="center"}
+
+| Año | Total EC | Share del total provincial |
+|:---:|---:|---:|
+| 2019 | 70 | 2,76% |
+| 2020 | 65 | 2,69% |
+| 2021 | 74 | 3,01% |
+| 2022 | 95 | 3,31% |
+| 2023 | *s/d* | — |
+| 2024 | 102 | 3,13% |
+| 2025 (prelim.) | 84 | 2,86% |
+
+La serie muestra tres fases:
+
+1. **2019-2021:** crecimiento moderado, de 70 a 74 empresas.
+2. **2022-2024:** salto y consolidación, hasta un pico de 102 empresas en 2024.
+3. **2025:** reversión. La cantidad cae a 84 empresas (−17,6% respecto al pico).
+
+La fuente no publica datos para 2023, lo que impide reconstruir la trayectoria exacta entre 2022 y 2024.
+
+### Composición por bloque
+
+| Bloque | 2019 | 2020 | 2021 | 2022 | 2024 | 2025 |
+|:---|---:|---:|---:|---:|---:|---:|
+| Software y SI | 6 | 11 | 17 | 25 | 28 | 25 |
+| Ingeniería y geología (proxy) | 29 | 22 | 25 | 26 | 31 | 28 |
+| Servicios profesionales (proxy) | 29 | 32 | 28 | 40 | 38 | 31 |
+| Publicidad | 6 | 0 | 4 | 4 | 5 | 0 |
+
+El **software** se estancó entre 2022 y 2025 (25 → 28 → 25). La **publicidad** colapsó a 0 en 2025. Los **proxies** (7421 y 7499) concentran el 67,7% del conteo total del sector.
+
+### Intensidad empresarial: comparación regional
+
+| Provincia | 2022 | 2024 | 2025 | Δ pp (22→25) |
+|:---|---:|---:|---:|---:|
+| CABA | 67,30 | 67,95 | 68,64 | +1,34 |
+| Catamarca | 39,18 | 43,18 | 44,69 | +5,51 |
+| Salta | 37,46 | 38,99 | 42,11 | +4,65 |
+| Tucumán | 34,93 | 35,74 | 34,88 | −0,05 |
+| Córdoba | 32,81 | 34,55 | 33,90 | +1,09 |
+| Jujuy | 31,32 | 33,12 | 32,22 | +0,90 |
+| **La Rioja** | **33,07** | **31,34** | **28,62** | **−4,45** |
+| Santa Fe | 27,06 | 27,29 | 27,18 | +0,12 |
+| Santiago del Estero | 24,31 | 25,63 | 22,24 | −2,07 |
+
+**Fuente:** SIPA-OEDE. Intensidad = (empresas EC / empresas totales) × 1.000.
+
+La Rioja perdió **−4,45 pp** de intensidad EC entre 2022 y 2025, el peor desempeño de las 9 jurisdicciones. En 2022 la provincia estaba en el 7° puesto; en 2025 cayó al mismo puesto pero con el mayor deterioro relativo del grupo.
+
+## Empleo EC
+
+El empleo EC se calcula con la definición de núcleo informático (CIIU 7210, 7220, 7290), consistente con el resto del análisis. La serie se construye como **stock promedio anual de puestos de trabajo**, calculado como el promedio de los cuatro trimestres de cada año.
+
+| Año | Empleo EC (núcleo) | Empleo total provincial | Participación |
+|:---:|---:|---:|---:|
+| 2019 | 11,5 | 26.894 | 0,043% |
+| 2020 | 23,75 | 25.399 | 0,094% |
+| 2021 | 29,0 | 26.245 | 0,110% |
+| 2022 | 65,5 | 30.125 | 0,217% |
+| 2023 | 78,0 | 32.701 | 0,239% |
+| 2024 | 61,25 | 28.008 | 0,219% |
+| 2025 | 59,5 | 27.047 | 0,220% |
+
+**Fuente:** SIPA-OEDE (STEySS), CIIU 7220 + 7290.
+
+El empleo del núcleo informático pasó de **11,5** (2019) a **59,5** puestos (2025), un aumento de **+417%**. El pico se registró en **2023** con 78 puestos (0,239% del empleo provincial). Desde entonces, el empleo cayó **−23,7%** en dos años. La participación en el empleo formal provincial pasó de 0,04% a 0,22%: se multiplicó por 5,5.
+
+### Elasticidad empresas-empleo
+
+| Año | Empresas EC (índice 2022=100) | Empleo EC (índice 2022=100) |
+|:---:|---:|---:|
+| 2022 | 100,0 | 100,0 |
+| 2023 | *s/d* | 119,1 |
+| 2024 | 107,4 | 93,5 |
+| 2025 | 88,4 | 90,8 |
+
+Entre 2022 y 2024, las empresas EC crecieron +7,4% mientras el empleo del núcleo **cayó −6,5%**. El tamaño medio pasó de **0,69 empleados por empresa** en 2022 a **0,60** en 2024 y **0,71** en 2025.
+
+El patrón de 2025 —caída fuerte de empresas (−17,6%) con caída moderada de empleo (−2,8%)— sugiere **cierre de firmas chicas y concentración en las grandes**. La elasticidad, que en 2024 indicaba un sector que expulsaba empleo, se revirtió parcialmente en 2025 por reducción del denominador.
+
+## Salarios y prima salarial EC
+
+### Salario por CIIU EC (dic-2025)
+
+| CIIU | Rama | Salario | Prima vs. provincial |
+|:---:|---|---:|---:|
+| 7290 | Informática n.c.p. | $4.220.278 | **+100,5%** |
+| 7220 | Consultores informáticos | $2.786.240 | +32,4% |
+| 7421 | Arquitectura/ingeniería (proxy) | $1.566.575 | −25,6% |
+| 7499 | Servicios empresariales (proxy) | $1.534.016 | −27,1% |
+| 7210, 7250, 7300, 7430 | — | sin datos | — |
+
+**Fuente:** SIPA-OEDE, remuneraciones mensuales por CIIU 4 dígitos. Salario provincial de referencia: $2.104.500 (dic-2025, incluye SAC).
+
+Informática n.c.p. paga **+100,5%** sobre el promedio provincial. Las ramas proxy (7421 y 7499) pagan **25-27% por debajo** del promedio. Esto explica por qué la prima del núcleo es sensiblemente mayor que la prima del EC completo.
+
+### Prima salarial por definición
+
+| Año | Núcleo informático | Núcleo amplio | EC completo |
+|:---:|---:|---:|---:|
+| 2019 | −0,16% | −31,47% | −16,72% |
+| 2020 | +46,16% | +46,16% | +18,90% |
+| 2021 | +6,16% | −18,35% | −28,51% |
+| 2022 | **+27,15%** | −4,62% | −15,39% |
+| 2023 | **+62,03%** | +19,78% | −15,09% |
+| 2024 | **+63,13%** | +63,13% | +10,22% |
+| 2025 | **+66,46%** | +66,46% | **+20,06%** |
+
+La prima del núcleo informático se duplicó entre 2022 (+27,2%) y 2025 (+66,5%). La prima del EC completo es 46 pp menor por el peso de las ramas proxy. La brecha núcleo vs. completo se amplió de 42,5 pp (2022) a 46,4 pp (2025).
+
+::: {.callout-important}
+**Hallazgo principal.** El núcleo informático paga **+66,5%** sobre el promedio provincial en 2025. El diferencial se amplía año a año y contrasta con la caída del salario real provincial. El sector EC opera como enclave de altos salarios dentro de la economía provincial.
+:::
+
+## Recaudación EC
+
+La **Recaudación EC** es la porción de Ingresos Brutos provincial correspondiente a las actividades de Economía del Conocimiento. No es un impuesto separado: se recauda a través del régimen general de II.BB. La serie se construye a partir del padrón de contribuyentes por régimen (Convenio Multilateral vs. Local) y la base imponible declarada.
+
+### Serie 2022-2025
+
+| Año | Contrib. Multilateral | Contrib. Locales | Recaudación EC | II.BB total | Share EC |
+|:---:|---:|---:|---:|---:|---:|
+| 2022 | 1.752 | 1.138 | $58,99 M | $11.588,96 M | **0,51%** |
+| 2023 | 1.911 | 1.060 | $243,01 M | $26.779,40 M | **0,91%** |
+| 2024 | 1.947 | 844 | $846,13 M | $83.422,68 M | **1,01%** |
+| 2025 | 2.075 | 840 | **$1.940,91 M** | **$125.549,36 M** | **1,55%** |
+
+**Fuente:** DGIP La Rioja + DNAP/CEPA. II.BB en millones de pesos corrientes.
+
+### Dinámica comparada
+
+Entre 2022 y 2025, la Recaudación EC creció **×32,9** ($58,99 M → $1.940,91 M), mientras el II.BB total lo hizo **×10,8** ($11.588,96 M → $125.549,36 M). El EC crece **3,0 veces más rápido** que la base total.
+
+![Recaudación EC vs. Ingresos Brutos totales. La Rioja 2022-2025. Fuente: DGIP La Rioja + DNAP/CEPA.](figuras/F20_recaudacion_ec_vs_iibb.png){#fig-rec-ec fig-align="center"}
+
+El share del EC sobre la base imponible provincial pasó de **0,51%** (2022) a **1,55%** (2025): se triplicó en cuatro años.
+
+![Peso de la Recaudación EC sobre Ingresos Brutos. La Rioja 2022-2025. Fuente: DGIP La Rioja + DNAP/CEPA.](figuras/F21_share_ec_iibb.png){#fig-share-ec fig-align="center"}
+
+### Migración de contribuyentes
+
+El padrón EC muestra una recomposición estructural: los contribuyentes **Locales** cayeron −26,2% (1.138 → 840), mientras los de **Convenio Multilateral** crecieron +18,4% (1.752 → 2.075). El share de Multilateral pasó de 60,6% (2022) a 71,2% (2025).
+
+![Contribuyentes EC por régimen de tributación. La Rioja 2022-2025. Fuente: DGIP La Rioja.](figuras/F23_contribuyentes_ec.png){#fig-contrib-ec fig-align="center"}
+
+La caída de contribuyentes Locales no implica desaparición de firmas, sino traspaso al régimen de Convenio Multilateral. Es un patrón esperable cuando las empresas del sector crecen y comienzan a operar en más de una jurisdicción.
+
+# Conclusiones y recomendaciones {#sec-conclusiones}
+
+## Conclusiones
+
+1. **Recaudación EC: único vector positivo del sistema tributario provincial.** La Recaudación EC crece 3 veces más rápido que el II.BB total (×32,9 vs. ×10,8 entre 2022 y 2025). Su share sobre la base imponible se triplicó (0,51% → 1,55%). Es el agregado más dinámico del sistema, aunque su escala todavía es modesta.
+
+2. **Prima salarial creciente sobre base empresarial frágil.** El núcleo informático paga +66,5% sobre el promedio provincial en 2025, contra +27,2% en 2022. La prima se duplicó. Pero la cantidad de empresas cayó −11,6% entre 2022 y 2025, y el empleo del núcleo retrocedió −23,7% desde el pico 2023. El diferencial salarial se sostiene sobre una base que se achica.
+
+3. **Elasticidad invertida: cada empresa EC emplea menos.** Entre 2022 y 2024, las empresas EC crecieron +7,4% mientras el empleo del núcleo cayó −6,5%. El tamaño medio se redujo de 0,69 a 0,60 empleados por empresa. En 2025 la caída de empresas (−17,6%) fue mucho más fuerte que la de empleo (−2,8%), lo que sugiere cierre de firmas chicas y concentración en las grandes.
+
+4. **Dependencia de proxies.** El 67,7% del conteo EC depende de los códigos 7421 (arquitectura/ingeniería/geología) y 7499 (servicios empresariales), que pagan 25-27% **por debajo** del promedio provincial. El núcleo informático real (7220 + 7290) representa una fracción minoritaria del conteo total de empresas.
+
+5. **Peor desempeño regional en intensidad empresarial.** La Rioja perdió −4,45 pp de intensidad EC entre 2022 y 2025, la peor caída de 9 jurisdicciones comparadas. La densidad del sector cayó de 33,07‰ a 28,62‰.
+
+## Recomendaciones de política
+
+1. **Escalar el sector EC como prioridad fiscal.** Si es el único vector positivo del sistema tributario, debería concentrar instrumentos de promoción. Duplicar su peso del 1,55% al 3% de II.BB amortiguaría considerablemente la caída de la recaudación general.
+
+2. **Reducir la dependencia de proxies.** Focalizar las políticas en el núcleo informático (7220 y 7290) en lugar de la definición amplia. Los proxies 7421 y 7499 no permiten aislar la actividad EC específica y diluyen la señal.
+
+3. **Recuperar masa crítica de empresas.** El estancamiento del software (25 → 28 → 25 en 2022-2025) y la caída de −11,6% en empresas EC totales requieren instrumentos específicos de creación y consolidación de firmas.
+
+4. **Recomponer el pipeline de innovación.** La caída de −50,1% en investigadores EJC respecto al pico 2013 compromete la sostenibilidad del sector en el mediano plazo.
+
+5. **Conseguir el dato 2026 de Recaudación EC.** La serie oficial se cierra cuando la DGIP publique el padrón actualizado. Debe solicitarse formalmente para completar el análisis fiscal.
+
+# Anexo metodológico {#sec-anexo}
+
+## Fuentes
+
+| Fuente | Serie | Cobertura |
+|---|---|---|
+| SIPA-OEDE (STEySS) | Empresas privadas por rama | 1996-2025 |
+| SIPA-OEDE (STEySS) | Empleo por rama a 4 dígitos CIIU | 1996-2025 |
+| SIPA-OEDE | Salario por rama a 4 dígitos CIIU | 1995-2025 |
+| SIPA-OEDE | Salario promedio provincial | 2010-2026 |
+| DGIP La Rioja | Ingresos Brutos por actividad | 2018-2025 |
+| DGIP La Rioja | Contribuyentes por régimen | 2022-2025 |
+| DNAP/CEPA | Recaudación provincial total y por tributo | 2019-2026 |
+
+## Definiciones clave
+
+**Actividades EC (AFIP/ARCA).** Ocho códigos CIIU rev. 3: 7210, 7220, 7250, 7290, 7300, 7421, 7430, 7499. Excluye 9220 (agencias de noticias).
+
+**Núcleo informático.** Subconjunto canónico: 7210 + 7220 + 7290. En la práctica se calcula como 7220 + 7290, porque el CIIU 7210 no tiene datos publicados en SIPA-OEDE.
+
+**Empleo EC.** Stock promedio anual de puestos del núcleo informático, promedio de los cuatro trimestres.
+
+**Recaudación EC.** Porción de II.BB provincial atribuible a Actividades EC. No es impuesto separado.
+
+**Intensidad empresarial EC.** Empresas EC por cada 1.000 empresas totales de la provincia (‰).
+
+**Elasticidad empleo-empresas.** Variación % del empleo EC dividido por la variación % de las empresas EC.
+
+**Prima salarial EC.** `(salario EC / salario provincial − 1) × 100`. Salario provincial del mismo mes, con SAC.
+
+## Limitaciones
+
+1. **Hueco 2023 en empresas.** SIPA-OEDE no publica datos para ese año.
+2. **2025 preliminar.** Las cifras pueden ser revisadas por OEDE.
+3. **Proxies 7421 y 7499.** Representan el 67,7% del conteo EC.
+4. **CIIU 7210 sin datos.** No tiene salario ni empleo publicados.
+5. **Salario promedio, no mediana.** Sensible a cambios en composición.
+6. **Recaudación EC 2026 sin publicar.** Debe solicitarse a DGIP.
+
+# Referencias {#sec-referencias}
+
+::: {#refs}
+:::
