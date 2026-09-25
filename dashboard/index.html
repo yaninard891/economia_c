@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Economía del Conocimiento en La Rioja | 2022-2025</title>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #0B1D35;
+            color: #FFFFFF;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0B1D35 0%, #1A3A5C 100%);
+            padding: 30px 40px;
+            border-bottom: 3px solid #4ECDC4;
+        }
+        .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
+        .header h2 { font-size: 16px; color: #8EAFC4; font-weight: 400; margin-top: 5px; }
+        .header .institucional { font-size: 12px; color: #5A8BA8; margin-top: 10px; }
+
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .kpi-card {
+            background: linear-gradient(135deg, #112840 0%, #1A3A5C 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid #4ECDC4;
+        }
+        .kpi-card .number { font-size: 32px; font-weight: 700; color: #4ECDC4; }
+        .kpi-card .label { font-size: 13px; color: #8EAFC4; margin-top: 5px; }
+        .kpi-card .sub { font-size: 12px; color: #5A8BA8; margin-top: 8px; }
+        .kpi-card .sub span { color: #4ECDC4; font-weight: 600; }
+        .kpi-card .sub span.neg { color: #FF6B6B; }
+        .kpi-card .kpi-source {
+            font-size: 10px;
+            color: #5A8BA8;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #1A3A5C;
+            font-style: italic;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .chart-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .chart-box {
+            background: #112840;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .chart-box h3 {
+            font-size: 15px;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #1A3A5C;
+            padding-bottom: 10px;
+        }
+        .chart-container { width: 100%; height: 320px; }
+        .chart-container-tall { width: 100%; height: 420px; }
+
+        .chart-source {
+            font-size: 10px;
+            color: #5A8BA8;
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #1A3A5C;
+            font-style: italic;
+            letter-spacing: 0.2px;
+        }
+
+        .info-card {
+            background: #112840;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .info-card h3 {
+            font-size: 15px;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #1A3A5C;
+            padding-bottom: 10px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #0B1D35;
+        }
+        .info-item .key { color: #8EAFC4; font-size: 13px; }
+        .info-item .value { color: #4ECDC4; font-weight: 600; font-size: 14px; text-align: right; }
+
+        .highlight-box {
+            background: #1A3A5C;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+        .highlight-box .alert { color: #FF6B6B; font-size: 12px; line-height: 1.5; }
+        .highlight-box .positive { color: #4ECDC4; font-size: 12px; line-height: 1.5; }
+        .highlight-box .nota {
+            color: #8EAFC4;
+            font-size: 11px;
+            line-height: 1.55;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #0B1D35;
+        }
+        .highlight-box .nota strong { color: #FFFFFF; }
+        .highlight-box .nota em { color: #A8D8EA; font-style: italic; }
+
+        .transform-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        .transform-item .arrow-up { color: #4ECDC4; font-size: 20px; }
+        .transform-item .arrow-down { color: #FF6B6B; font-size: 20px; }
+        .transform-item .detail { font-size: 13px; color: #8EAFC4; margin-top: 3px; }
+        .transform-item .pct { font-size: 18px; font-weight: 700; min-width: 20px; }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #5A8BA8;
+            font-size: 11px;
+            line-height: 1.6;
+            border-top: 1px solid #1A3A5C;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .chart-row-3 { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 800px) {
+            .chart-row { grid-template-columns: 1fr; }
+            .kpi-row { grid-template-columns: 1fr; }
+            .header { padding: 25px 20px; }
+            .header h1 { font-size: 22px; }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>ECONOMÍA DEL CONOCIMIENTO EN LA RIOJA</h1>
+    <h2>Período 2022-2025 · Coyuntura actualizada a junio 2026</h2>
+    <div class="institucional"></div>
+</div>
+
+<div class="container">
+
+    <div class="kpi-row">
+        <div class="kpi-card">
+            <div class="number">$40.925 M</div>
+            <div class="label">Ingresos del sector 2025</div>
+            <div class="sub"><span>+132,9%</span> crecimiento real acumulado vs. 2022</div>
+            <div class="kpi-source">Fuente: DGIP La Rioja (IIBB)</div>
+        </div>
+       <div class="kpi-card">
+    <div class="number">102</div>
+    <div class="label">Empresas EC activas (2024)</div>
+    <div class="sub"><span>3,40%</span> del total provincial (3.004 empresas)<br>
+        Una de cada 30 empresas pertenece al sector</div>
+    <div class="kpi-source">Fuente: SIPA-OEDE · Def. ARCA-DGIP</div>
+</div>
+        <div class="kpi-card">
+            <div class="number">521</div>
+            <div class="label">Empleo EC promedio 2025</div>
+            <div class="sub"><span>+46,4%</span> desde 2019<br>
+                <span>1,93%</span> del empleo provincial</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE · Def. ARCA-DGIP</div>
+        </div>
+        <div class="kpi-card">
+            <div class="number">63,8</div>
+            <div class="label">Empleo núcleo informático 2025</div>
+            <div class="sub">El segmento de mayor valor agregado<br>
+                informática, consultoría y mantenimiento</div>
+            <div class="kpi-source">Fuente: SIPA-OEDE · CIIU 7220+7250+7290</div>
+        </div>
+    </div>
+
+   
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Estructura del sector EC 2025 — Distribución por actividad</h3>
+            <div id="chart-donut" class="chart-container"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    Las actividades de Informática n.c.p. y Consultores en
+                    Informática y suministros de programas informáticos
+                    concentran el 77,1% del ingreso total del sector.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), 2025</div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Participación de Ingresos EC por actividad 2022 - 2025</h3>
+            <div style="padding: 10px;">
+
+                <div class="transform-item">
+                    <span class="arrow-up pct" style="color:#4ECDC4;">▲</span>
+                    <div>
+                        <div style="font-size:16px; font-weight:700;">Consultores informática</div>
+                        <div class="detail">
+                            6,1% → 33,6%
+                            <span style="color:#4ECDC4; font-weight:600;">(+27,5 pp)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transform-item">
+                    <span class="arrow-down pct" style="color:#FF6B6B;">▼</span>
+                    <div>
+                        <div style="font-size:16px; font-weight:700;">Publicidad</div>
+                        <div class="detail">
+                            31,5% → 13,8%
+                            <span style="color:#FF6B6B; font-weight:600;">(-17,7 pp)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transform-item">
+                    <span class="arrow-up pct" style="color:#4ECDC4;">●</span>
+                    <div>
+                        <div style="font-size:16px; font-weight:700;">
+                            Servicios de informática y consultores en informática
+                        </div>
+                        <div class="detail">
+                            49,8% (2022) → 77,1% (2025)
+                            <span style="color:#4ECDC4; font-weight:600;">(+27,3 pp)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top:20px;">
+                    <div class="positive">
+                        Los servicios informáticos desplazaron a la publicidad
+                        como motor del sector. La EC de La Rioja se especializa
+                        en actividades de mayor valor agregado.
+                    </div>
+                </div>
+
+                <div id="chart-transform" class="chart-container"
+                     style="height:160px; margin-top:10px;"></div>
+
+            </div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), 2022-2025</div>
+        </div>
+
+    </div>
+
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Ingresos reales del sector EC ($ millones, base=2022)</h3>
+            <div id="chart-ingresos" class="chart-container"></div>
+            <div class="highlight-box">
+                <div class="positive">
+                    Los ingresos declarados por el sector de la Economía
+                    del Conocimiento registraron un crecimiento real acumulado
+                    del 132,9% y la recaudación de 217% entre 2022 y 2025.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), deflactado por IPC NOA (INDEC)</div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Contribuyentes por régimen de tributación (2022-2025)</h3>
+            <div id="chart-contribuyentes" class="chart-container"></div>
+            <div class="highlight-box">
+                <div class="positive">
+                    Las firmas inscriptas bajo el régimen de Convenio
+                    Multilateral crecieron de 1.752 a 2.075 en el período,
+                    elevando su participación en el padrón del 60,6% al 71,2%.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), 2022-2025</div>
+        </div>
+
+    </div>
+
+   
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Empresas EC por bloque — Definición ARCA-DGIP (2019-2025)</h3>
+            <div id="chart-empresas" class="chart-container-tall"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    El total de empresas EC pasó de 70 (2019) a 102 (2024),
+                    un crecimiento de <strong>+45,7%</strong>. El bloque de
+                    software y servicios informáticos creció <strong>367%</strong>
+                    entre 2019 y 2024, pasando de 6 a 28 empresas.
+                </div>
+                <div class="nota">
+                    <strong>Definición ARCA-DGIP:</strong> actividades que
+                    generan el impuesto DGIP tecnológico, mapeadas a CIIU
+                    Rev. 3 a 4 dígitos: 7210, 7220, 7250, 7290, 7300, 7421,
+                    7430, 7499. Los bloques <em>Ingeniería y geología</em>
+                    (7421) y <em>Servicios profesionales</em> (7499) son
+                    proxies: el SIPA no permite aislar la actividad EC
+                    específica. El bloque de <em>Software y Servicios Informáticos</em> incluye 3 códigos CIIU: consultores en informática (7220), mantenimiento y reparación (7250) y actividades de informática n.c.p. (7290). Este conjunto se denomina <strong>Núcleo informático</strong>.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS), <em>provinciales_serie_empresas3_2</em>.
+                Definición: ARCA-DGIP.
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Intensidad empresarial EC — Empresas EC por 1.000 empresas totales (2024)</h3>
+            <div id="chart-intensidad" class="chart-container-tall"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    La Rioja registra una densidad de <strong>31,3‰</strong>,
+                    por encima de Santa Fe (27,3‰) y Santiago del Estero
+                    (25,6‰). Con solo 3.004 empresas totales en la provincia,
+                    La Rioja logra 102 empresas EC. Eso significa que una de
+                    cada 30 empresas de la provincia pertenece al sector de
+                    la Economía del Conocimiento.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS), <em>provinciales_serie_empresas3_2</em>.
+                Definición: ARCA-DGIP. Intensidad = (empresas EC / empresas totales) × 1.000.
+            </div>
+        </div>
+
+    </div>
+
+   
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Remuneración promedio CIIU EC vs. promedio provincial (promedio 2025)</h3>
+            <div id="chart-salarios" class="chart-container-tall"></div>
+            <div class="highlight-box">
+                <div class="positive">
+                    Un trabajador de <strong>Informática n.c.p.</strong> gana
+                    <strong>más del doble</strong> que el promedio provincial:
+                    <strong>$3.108.543</strong> contra $1.306.422 — unos
+                    <strong>$1,8 millones más</strong> por mes. Los
+                    <strong>Consultores informáticos</strong> también están por
+                    encima, con $1.726.147 (<strong>+$420.000</strong> sobre el
+                    promedio).
+                </div>
+                <div class="nota">
+                    <strong>Verde turquesa</strong>: núcleo informático (7220, 7290).
+                    <strong>Naranja</strong>: proxies 7421 y 7499 (incluyen
+                    actividades no-EC específicas). Los CIIU 7210, 7300 y 7430
+                    no publican dato provincial en 2025.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE, promedio de los 12 meses de 2025,
+                serie de remuneraciones por CIIU 4 dígitos. Valores nominales.
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Empleo EC y participación en el empleo total provincial (2019-2025)</h3>
+            <div id="chart-empleo-share" class="chart-container-tall"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    El empleo EC pasó de <strong>356</strong> puestos (2019)
+                    a <strong>521</strong> (2025), un crecimiento de
+                    <strong>+46,4%</strong>. Su participación en el empleo
+                    formal provincial subió de <strong>1,32%</strong> a
+                    <strong>1,93%</strong>. 
+                </div>
+                <div class="nota">
+                    Entre 2022 y 2024 (último año con datos completos de
+                    empresas), la elasticidad del sector fue de
+                    <strong>1,85</strong>: por cada 1% que crecen las
+                    empresas EC, el empleo crece 1,85%. Es un sector
+                    <strong>intensivo en empleo calificado</strong>.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS). Definición: ARCA-DGIP.
+                Promedio anual de trimestres con dato.
+            </div>
+        </div>
+
+    </div>
+
+   
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Empleo EC por CIIU — Serie 2022-2025</h3>
+            <div id="chart-empleo-ciiu" class="chart-container-tall" style="height:420px;"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    El <strong>núcleo informático</strong> alcanzó su pico en
+                    <strong>2023 (88,5 puestos)</strong>. El crecimiento del EC total
+                    (+17,2% entre 2022 y 2025) se apoya en los bloques de
+                    <strong>Servicios empresariales (+34,8%)</strong> y
+                    <strong>Arquitectura e ingeniería (+11,6%)</strong>.
+                </div>
+                <div class="nota">
+                    <strong>Fuente:</strong> SIPA-OEDE (STEySS),
+                    <em>provinciales_serie_empleo_trimestral_4dig_7</em>, hoja "La Rioja".
+                    Promedio de los 4 trimestres de cada año.
+                    Los códigos 7210 y 7300 no registran empleo. El 7430 no tuvo
+                    datos a partir de 2024.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS), 2022-2025.
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Empleo EC 2025 — Desglose por código CIIU</h3>
+            <div id="chart-empleo-desglose" class="chart-container-tall" style="height:420px;"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    El <strong>núcleo informático</strong> concentra las actividades
+                    de mayor valor agregado: informática n.c.p. (32,8), consultoría
+                    informática (26,8) y mantenimiento (4,2). Los bloques de
+                    <strong>Servicios empresariales</strong> (254,8) y
+                    <strong>Arquitectura e ingeniería</strong> (202,8) completan
+                    el sector.
+                </div>
+                <div class="nota">
+                    <strong>Fuente:</strong> SIPA-OEDE (STEySS), serie
+                    <em>provinciales_serie_empleo_trimestral_4dig_7</em>, hoja "La Rioja".
+                    Promedio de los 4 trimestres de 2025.
+                    <br><br>
+                    <strong>Sin datos en La Rioja:</strong> 7210, 7300 y 7430.
+                    <strong>Definición:</strong> ARCA-DGIP (8 códigos CIIU Rev. 3).
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS), promedio anual 2025.
+            </div>
+        </div>
+
+    </div>
+
+    
+    <div class="chart-row">
+
+        <div class="chart-box">
+            <h3>Empleo privado formal — Evolución y variación interanual (2022-2026)</h3>
+
+            <div id="chart-empleo-tendencia"
+                 style="width:100%; height:210px;"></div>
+
+            <div id="chart-empleo-ia"
+                 style="width:100%; height:170px; margin-top:8px;"></div>
+
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    El gráfico muestra tres fases: <strong>auge</strong> 2022-2023, <strong>caída</strong> 2024 Y <strong>meseta</strong> 2025-2026. El pico fue mayo 2023 con 34.329 puestos. En <strong>mayo 2026</strong> el stock fue de <strong>30.305 puestos</strong>, con una variación interanual de <strong>−1,7%</strong>.
+                </div>
+                <div class="nota">
+                    <strong>Gráfico superior:</strong> tendencia
+                    desestacionalizada (SEATS/X-13), elimina la estacionalidad
+                    para comparar meses entre sí.
+                    <strong>Gráfico inferior:</strong> variación i.a. mensual
+                    (mismo mes vs. mismo mes del año anterior). Barras
+                    <em style="color:#FF6B6B;">rojas</em> = caída,
+                    <em style="color:#4ECDC4;">verdes</em> = crecimiento.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA – Secretaría de Trabajo, Empleo y Seguridad Social (SerieWeb).
+                Serie original y desestacionalizada. Último dato: junio 2026 (preliminar).
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <h3>Empleo por sector — Promedio 2025 y variación interanual</h3>
+            <div id="chart-empleo-sector" class="chart-container-tall"></div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    En 2025, los sectores de <strong>Comercio (+0,9%)</strong>,
+                    <strong>Electricidad (+3,7%)</strong> y <strong>Minería (+8,3%)</strong>
+                    mostraron crecimiento. Industria y Servicios concentran la
+                    mayor cantidad de puestos del sector privado provincial.
+                </div>
+                <div class="nota">
+                    <strong>Fuente:</strong> STEySS – Observatorio de Empleo y
+                    Dinámica Empresarial, en base a SIPA. Serie
+                    <em>provinciales_serie_empleo_anual_3</em>, cuadro T5
+                    (promedios anuales). Valores en puestos.
+                    <strong>Variación i.a.:</strong> 2025 vs. 2024.
+                </div>
+            </div>
+            <div class="chart-source">
+                Fuente: SIPA-OEDE (STEySS), promedio anual 2025.
+                Variación i.a. = 2025 vs. 2024.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="chart-row-3">
+
+        <div class="info-card">
+            <h3>Conectividad digital (Q1-2026)</h3>
+            <div class="info-item">
+                <span class="key">Accesos fijos totales</span>
+                <span class="value">92.160</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Fibra óptica</span>
+                <span class="value">27.564</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Crecimiento Acum. FO</span>
+                <span class="value">+188,7%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Cobertura del Servicio</span>
+                <span class="value">24 acc. c/100 hab.</span>
+            </div>
+            <div class="info-item">
+                <span class="key">FO sobre total</span>
+                <span class="value">29,9%</span>
+            </div>
+            <div class="highlight-box" style="margin-top:20px;">
+                <div class="positive">
+                    La fibra óptica casi se triplicó en 4 años.
+                    Esta expansión representa el soporte físico indispensable
+                    para que las empresas tecnológicas puedan operar,
+                    exportar y potenciar el ecosistema digital de la provincia.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: ENACOM, Q1-2026</div>
+        </div>
+
+        <div class="info-card">
+            <h3>Ciencia y Tecnología — I+D</h3>
+            <div class="info-item">
+                <span class="key">Inversión I+D 2024</span>
+                <span class="value">$9.076 M</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Crecimiento vs. 2022</span>
+                <span class="value">+425%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Investigadores EJC 2024</span>
+                <span class="value">274</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Pico histórico (2013)</span>
+                <span class="value">549</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Personal técnico</span>
+                <span class="value">214</span>
+            </div>
+            <div class="highlight-box">
+                <div class="positive">
+                    La tasa se ubicó en 16 investigadores cada 10.000
+                    habitantes de la PEA en 2024. La provincia mantiene un
+                    ecosistema activo de I+D con potencial de crecimiento.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: MINCyT</div>
+        </div>
+
+        <div class="info-card">
+            <h3>Inserción exportadora (2024)</h3>
+            <div class="info-item">
+                <span class="key">Exportaciones totales</span>
+                <span class="value">USD 219 M</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Baja tecnología</span>
+                <span class="value">95,9%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Alta tecnología</span>
+                <span class="value">3,7%</span>
+            </div>
+            <div class="info-item">
+                <span class="key">Var. Interanual Total de exportaciones</span>
+                <span class="value">9,5%</span>
+            </div>
+            <div class="highlight-box" style="margin-top:40px;">
+                <div class="positive">
+                    Las exportaciones de alta tecnología ascendieron a
+                    USD 8 millones, representando el 3,7% de la canasta
+                    exportadora total y mostrando una leve mejora respecto
+                    al 3,2% de 2022.
+                </div>
+            </div>
+            <div class="chart-source">Fuente: INDEC, 2024</div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    Fuentes: DGIP La Rioja (IIBB), OEDE-MTEySS (SIPA),
+    MINCyT, INDEC, ENACOM · Datos actualizados al Q1-2026
+    según disponibilidad de cada fuente
+    <br><br>
+    <span style="font-size:10px; color:#5A8BA8;">
+    El núcleo informático se calcula sobre CIIU 7220 (consultores en informática y suministros de programas informáticos),
+    7250 (mantenimiento y reparación de maquinaria de oficina e informática) y 7290 (informática n.c.p.).
+    El núcleo amplio agrega 7210 (consultores en equipo de informática), 7300 (I+D) y 7430 (servicios de publicidad).
+    Actividades EC completo: núcleo amplio + 7421 (servicios de arquitectura e ingeniería) y 7499 (servicios de empresas n.c.p.).
+    </span>
+</div>
+
+<script>
+
+    Highcharts.setOptions({
+        chart: {
+            backgroundColor: "transparent",
+            style: { fontFamily: "Segoe UI, sans-serif" }
+        },
+        title: { style: { color: "#FFFFFF", fontSize: "14px" } },
+        subtitle: { style: { color: "#8EAFC4" } },
+        xAxis: {
+            labels: { style: { color: "#8EAFC4" } },
+            gridLineColor: "#1A3A5C",
+            lineColor: "#1A3A5C"
+        },
+        yAxis: {
+            labels: { style: { color: "#8EAFC4" } },
+            gridLineColor: "#1A3A5C",
+            title: { style: { color: "#8EAFC4" } }
+        },
+        legend: {
+            itemStyle: { color: "#8EAFC4" },
+            itemHoverStyle: { color: "#FFFFFF" }
+        },
+        tooltip: {
+            backgroundColor: "#1A3A5C",
+            style: { color: "#FFFFFF" },
+            borderColor: "#4ECDC4"
+        },
+        credits: { enabled: false }
+    });
+
+
+  
+    Highcharts.chart("chart-donut", {
+
+        chart: { type: "pie" },
+        title: { text: "" },
+        subtitle: {
+            text: "Top 2 IT concentran 77,1% del ingreso",
+            align: "center"
+        },
+        plotOptions: {
+            pie: {
+                innerSize: "55%",
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.name}: {point.percentage:.1f}%",
+                    style: {
+                        color: "#8EAFC4",
+                        fontSize: "11px",
+                        textOutline: "none"
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Participación",
+            data: [
+                { name: "Informática n.c.p.", y: 43.5, color: "#4ECDC4" },
+                { name: "Consultores informática", y: 33.6, color: "#2A9D8F" },
+                { name: "Publicidad", y: 13.8, color: "#6CB4D9" },
+                { name: "I+D Cs. médicas", y: 3.0, color: "#A8D8EA" },
+                { name: "Reparación equipos", y: 2.5, color: "#1A6B8A" },
+                { name: "Otros", y: 3.6, color: "#0D2B4B" }
+            ]
+        }]
+    });
+
+
+
+    Highcharts.chart("chart-ingresos", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: { categories: ["2022", "2023", "2024", "2025"] },
+        yAxis: { title: { text: "$ millones (base dic-2022)" } },
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    format: "${point.y:,.0f} M",
+                    style: {
+                        color: "#4ECDC4",
+                        textOutline: "none",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        },
+        legend: { enabled: false },
+        series: [{
+            name: "Ingreso real",
+            data: [1694, 2342, 3051, 3945],
+            color: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [[0, "#4ECDC4"], [1, "#1A6B8A"]]
+            }
+        }]
+    });
+
+
+ 
+    Highcharts.chart("chart-salarios", {
+
+        chart: { type: "bar" },
+        title: { text: "" },
+        xAxis: {
+            categories: [
+                "Informática n.c.p. (7290)",
+                "Consultores inform. (7220)",
+                "Arquitectura/ing. (7421) [proxy]",
+                "Servicios prof. (7499) [proxy]"
+            ],
+            labels: { style: { color: "#8EAFC4", fontSize: "11px" } }
+        },
+        yAxis: {
+            title: {
+                text: "Salario promedio 2025",
+                style: { color: "#8EAFC4" }
+            },
+            labels: {
+                style: { color: "#8EAFC4" },
+                format: "${value:,.0f}"
+            },
+            plotLines: [{
+                value: 1306422,
+                color: "#FF6B6B",
+                width: 2,
+                dashStyle: "Dash",
+                zIndex: 5,
+                label: {
+                    text: "Prom. prov. $1,31 M",
+                    align: "right",
+                    x: -8,
+                    y: -4,
+                    style: { color: "#FF6B6B", fontSize: "10px", fontWeight: "600" }
+                }
+            }]
+        },
+        legend: { enabled: false },
+        tooltip: {
+            formatter: function () {
+                const prom = 1306422;
+                const prima = (this.y / prom - 1) * 100;
+                const signo = prima >= 0 ? "+" : "";
+                return '<b>' + this.x + '</b><br/>' +
+                       'Salario: <b>$' + this.y.toLocaleString('es-AR') + '</b><br/>' +
+                       'vs. provincial: <b>' + signo + prima.toFixed(1) + '%</b>';
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 3,
+                dataLabels: {
+                    enabled: true,
+                    format: "${point.y:,.0f}",
+                    inside: false,
+                    style: {
+                        color: "#8EAFC4",
+                        textOutline: "none",
+                        fontSize: "11px",
+                        fontWeight: "600"
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Salario promedio 2025",
+            data: [
+                { y: 3108543, color: "#4ECDC4" },
+                { y: 1726147, color: "#4ECDC4" },
+                { y: 1016111, color: "#E8A33D" },
+                { y: 978907,  color: "#E8A33D" }
+            ]
+        }]
+    });
+
+
+
+    // ==========================================================
+    // EMPLEO EC POR CIIU — Serie 2022-2025
+    // Leyenda coincide con colores de las barras del núcleo
+    // ==========================================================
+    Highcharts.chart("chart-empleo-ciiu", {
+
+        chart: {
+            type: "bar",
+            height: 420,
+            marginLeft: 160
+        },
+        title: { text: "" },
+        xAxis: {
+            categories: [
+                "7499 Servicios empresariales",
+                "7421 Arquitectura e ingeniería",
+                "7290 Informática n.c.p.",
+                "7220 Consultores informática",
+                "7250 Mantenimiento"
+            ],
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "11px" }
+            },
+            lineColor: "#1A3A5C"
+        },
+        yAxis: {
+            title: {
+                text: "Puestos de trabajo (promedio anual)",
+                style: { color: "#8EAFC4", fontSize: "11px" }
+            },
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "10px" },
+                format: "{value:,.0f}"
+            },
+            gridLineColor: "#1A3A5C"
+        },
+        legend: {
+            enabled: true,
+            align: "center",
+            verticalAlign: "top",
+            itemStyle: { color: "#8EAFC4" },
+            itemHoverStyle: { color: "#FFFFFF" }
+        },
+        tooltip: {
+            shared: true,
+            formatter: function () {
+                let s = '<b>' + this.x + '</b>';
+                this.points.forEach(function (p) {
+                    s += '<br/><span style="color:' + p.color + '">●</span> ' +
+                         p.series.name + ': <b>' + p.y.toFixed(1) + '</b>';
+                });
+                return s;
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 2,
+                groupPadding: 0.1,
+                pointPadding: 0.05,
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.0f}",
+                    style: {
+                        color: "#FFFFFF",
+                        textOutline: "none",
+                        fontSize: "9px",
+                        fontWeight: "600"
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "2022",
+                color: "#A8E6E0",
+                data: [
+                    { y: 189.0, color: "#C4D4E0" },
+                    { y: 181.8, color: "#C4D4E0" },
+                    { y: 26.2 },
+                    { y: 39.2 },
+                    { y: 0.0 }
+                ]
+            },
+            {
+                name: "2023",
+                color: "#7FD9D2",
+                data: [
+                    { y: 220.2, color: "#A8C4D4" },
+                    { y: 192.2, color: "#A8C4D4" },
+                    { y: 32.5 },
+                    { y: 45.5 },
+                    { y: 10.5 }
+                ]
+            },
+            {
+                name: "2024",
+                color: "#4ECDC4",
+                data: [
+                    { y: 257.8, color: "#8EAFC4" },
+                    { y: 172.5, color: "#8EAFC4" },
+                    { y: 32.0 },
+                    { y: 29.2 },
+                    { y: 14.2 }
+                ]
+            },
+            {
+                name: "2025",
+                color: "#2A9D8F",
+                data: [
+                    { y: 254.8, color: "#6B8FA8" },
+                    { y: 202.8, color: "#6B8FA8" },
+                    { y: 32.8 },
+                    { y: 26.8 },
+                    { y: 4.2 }
+                ]
+            }
+        ],
+        subtitle: {
+            text: 'La leyenda muestra el tono de cada año en el <b style="color:#4ECDC4">núcleo informático</b> · Las barras <b style="color:#8EAFC4">gris azulado</b> son proxies',
+            align: "left",
+            style: { color: "#5A8BA8", fontSize: "10px" }
+        }
+    });
+
+
+    // ==========================================================
+    // EMPLEO EC 2025 — Desglose por código CIIU
+    // ==========================================================
+    Highcharts.chart("chart-empleo-desglose", {
+
+        chart: {
+            type: "bar",
+            height: 420,
+            marginLeft: 200
+        },
+        title: { text: "" },
+        xAxis: {
+            categories: [
+                "7499 Servicios empresariales",
+                "7421 Arquitectura e ingeniería",
+                "7290 Informática n.c.p.",
+                "7220 Consultores informática",
+                "7250 Mantenimiento"
+            ],
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "11px" }
+            },
+            lineColor: "#1A3A5C"
+        },
+        yAxis: {
+            title: {
+                text: "Puestos de trabajo (promedio 2025)",
+                style: { color: "#8EAFC4", fontSize: "11px" }
+            },
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "10px" },
+                format: "{value:,.0f}"
+            },
+            gridLineColor: "#1A3A5C"
+        },
+        legend: { enabled: false },
+        tooltip: {
+            formatter: function () {
+                const total = 521.4;
+                const tipo = this.point.tipo;
+                const pct = (this.y / total * 100).toFixed(1);
+                const color = tipo === "Núcleo informático" ? "#4ECDC4" : "#8EAFC4";
+                return '<b>' + this.x + '</b><br/>' +
+                       'Tipo: <b style="color:' + color + '">' + tipo + '</b><br/>' +
+                       'Puestos 2025: <b>' + this.y.toFixed(1) + '</b><br/>' +
+                       '% del EC total: <b>' + pct + '%</b>';
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 4,
+                dataLabels: {
+                    enabled: true,
+                    inside: false,
+                    align: "right",
+                    x: 8,
+                    style: {
+                        color: "#FFFFFF",
+                        textOutline: "none",
+                        fontWeight: "600",
+                        fontSize: "11px"
+                    },
+                    formatter: function () {
+                        return this.y.toFixed(1);
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Empleo 2025",
+            data: [
+                { y: 254.8, color: "#8EAFC4", tipo: "Proxy" },
+                { y: 202.8, color: "#8EAFC4", tipo: "Proxy" },
+                { y: 32.8,  color: "#4ECDC4", tipo: "Núcleo informático" },
+                { y: 26.8,  color: "#4ECDC4", tipo: "Núcleo informático" },
+                { y: 4.2,   color: "#4ECDC4", tipo: "Núcleo informático" }
+            ]
+        }],
+        subtitle: {
+            text: 'Turquesa: núcleo informático (63,8 puestos) · Gris azulado: proxies (457,6 puestos)',
+            align: "left",
+            style: { color: "#5A8BA8", fontSize: "10px" }
+        }
+    });
+
+
+    
+    Highcharts.chart("chart-empresas", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: {
+            categories: ["2019", "2020", "2021", "2022", "2024", "2025"],
+            labels: { style: { color: "#8EAFC4" } }
+        },
+        yAxis: {
+            title: { text: "Cantidad de empresas" },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                    textOutline: "none"
+                },
+                formatter: function () {
+                    return this.total === null ? "" : this.total;
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: "normal",
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        color: "#1A1A1A",
+                        textOutline: "none",
+                        fontWeight: "bold",
+                        fontSize: "10px"
+                    },
+                    formatter: function () {
+                        return this.y === null || this.y === 0 ? "" : this.y;
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "Software y SI",
+                data: [6, 11, 17, 25, 28, 25],
+                color: "#4ECDC4"
+            },
+            {
+                name: "Ingeniería y geología (proxy)",
+                data: [29, 22, 25, 26, 31, 28],
+                color: "#2A9D8F"
+            },
+            {
+                name: "Servicios profesionales (proxy)",
+                data: [29, 32, 28, 40, 38, 31],
+                color: "#6CB4D9"
+            },
+            {
+                name: "Publicidad",
+                data: [6, 0, 4, 4, 5, 0],
+                color: "#1A6B8A"
+            }
+        ],
+        subtitle: {
+            text: "2023: sin datos de empresas en la fuente (SIPA-OEDE). 2025: preliminar.",
+            align: "left"
+        }
+    });
+
+
+
+    Highcharts.chart("chart-empleo-share", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: {
+            categories: ["2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+        },
+        yAxis: [
+            {
+                title: { text: "Empleo EC (puestos)", style: { color: "#4ECDC4" } },
+                labels: { style: { color: "#4ECDC4" } },
+                gridLineColor: "#1A3A5C"
+            },
+            {
+                title: { text: "Participación EC (%)", style: { color: "#FF6B6B" } },
+                labels: { style: { color: "#FF6B6B" }, format: "{value}%" },
+                opposite: true,
+                gridLineWidth: 0,
+                min: 0,
+                max: 2.5
+            }
+        ],
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.0f}",
+                    style: {
+                        color: "#4ECDC4",
+                        textOutline: "none",
+                        fontWeight: "bold",
+                        fontSize: "10px"
+                    }
+                }
+            }
+        },
+        legend: { enabled: true },
+        tooltip: { shared: true },
+        series: [
+            {
+                name: "Empleo EC",
+                type: "column",
+                yAxis: 0,
+                data: [356, 298, 336, 445, 513, 506, 521],
+                color: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                    stops: [[0, "#4ECDC4"], [1, "#1A6B8A"]]
+                }
+            },
+            {
+                name: "Participación EC (%)",
+                type: "spline",
+                yAxis: 1,
+                data: [1.32, 1.17, 1.28, 1.48, 1.57, 1.81, 1.93],
+                color: "#FF6B6B",
+                marker: { enabled: true, radius: 5 },
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.2f}%",
+                    style: {
+                        color: "#FF6B6B",
+                        textOutline: "none",
+                        fontSize: "10px",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        ]
+    });
+
+
+ 
+    Highcharts.chart("chart-intensidad", {
+
+        chart: { type: "bar" },
+        title: { text: "" },
+        xAxis: {
+            categories: [
+                "Santiago del Estero",
+                "Santa Fe",
+                "La Rioja",
+                "Jujuy",
+                "Córdoba",
+                "Tucumán",
+                "Salta",
+                "Catamarca",
+                "CABA"
+            ],
+            labels: { style: { color: "#8EAFC4", fontSize: "10px" } }
+        },
+        yAxis: {
+            title: {
+                text: "Empresas EC por cada 1.000 empresas totales",
+                style: { color: "#8EAFC4", fontSize: "10px" }
+            },
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "10px" },
+                format: "{value}‰"
+            }
+        },
+        legend: { enabled: false },
+        tooltip: {
+            formatter: function () {
+                return `<b>${this.x}</b><br/>${this.y.toFixed(2)}‰`;
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 3,
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y:.1f}‰",
+                    style: {
+                        color: "#FFFFFF",
+                        textOutline: "none",
+                        fontWeight: "bold",
+                        fontSize: "10px"
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Intensidad EC",
+            data: [
+                { y: 25.63, color: "#8EAFC4" },
+                { y: 27.29, color: "#8EAFC4" },
+                { y: 31.34, color: "#4ECDC4" },
+                { y: 33.12, color: "#8EAFC4" },
+                { y: 34.55, color: "#8EAFC4" },
+                { y: 35.74, color: "#8EAFC4" },
+                { y: 38.99, color: "#8EAFC4" },
+                { y: 43.18, color: "#8EAFC4" },
+                { y: 67.95, color: "#8EAFC4" }
+            ]
+        }]
+    });
+
+
+  
+    Highcharts.chart("chart-contribuyentes", {
+
+        chart: { type: "column" },
+        title: { text: "" },
+        xAxis: { categories: ["2022", "2023", "2024", "2025"] },
+        yAxis: {
+            title: { text: "Contribuyentes" },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                    textOutline: "none"
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: "normal",
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        color: "#1A1A1A",
+                        textOutline: "none",
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "Locales",
+                data: [1138, 1060, 844, 840],
+                color: "#A8D8EA"
+            },
+            {
+                name: "Multilateral",
+                data: [1752, 1911, 1947, 2075],
+                color: "#6CB4D9"
+            }
+        ]
+    });
+
+
+  
+    Highcharts.chart("chart-empleo-tendencia", {
+
+        chart: {
+            type: "area",
+            height: 210,
+            marginBottom: 30,
+            zoomType: "x"
+        },
+        title: {
+            text: "Tendencia del empleo formal (puestos)",
+            align: "left",
+            style: {
+                color: "#4ECDC4",
+                fontSize: "12px",
+                fontWeight: "600"
+            },
+            margin: 8
+        },
+        xAxis: {
+            categories: ["Ene-22","Feb-22","Mar-22","Abr-22","May-22","Jun-22","Jul-22","Ago-22","Sep-22","Oct-22","Nov-22","Dic-22","Ene-23","Feb-23","Mar-23","Abr-23","May-23","Jun-23","Jul-23","Ago-23","Sep-23","Oct-23","Nov-23","Dic-23","Ene-24","Feb-24","Mar-24","Abr-24","May-24","Jun-24","Jul-24","Ago-24","Sep-24","Oct-24","Nov-24","Dic-24","Ene-25","Feb-25","Mar-25","Abr-25","May-25","Jun-25","Jul-25","Ago-25","Sep-25","Oct-25","Nov-25","Dic-25","Ene-26","Feb-26","Mar-26","Abr-26","May-26","Jun-26"],
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "9px" },
+                rotation: -45,
+                step: 6,
+                y: 18
+            },
+            tickLength: 0,
+            lineColor: "#1A3A5C"
+        },
+        yAxis: {
+            title: { text: null },
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "10px" },
+                format: "{value:,.0f}"
+            },
+            gridLineColor: "#1A3A5C",
+            min: 27000,
+            max: 35000
+        },
+        legend: { enabled: false },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                    stops: [
+                        [0, "rgba(78,205,196,0.35)"],
+                        [1, "rgba(78,205,196,0.02)"]
+                    ]
+                },
+                marker: {
+                    enabled: false,
+                    radius: 3,
+                    states: { hover: { enabled: true } }
+                },
+                lineWidth: 2.5,
+                color: "#4ECDC4",
+                threshold: null
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                       this.y.toLocaleString('es-AR') + ' puestos';
+            }
+        },
+        series: [{
+            name: "Tendencia desestacionalizada",
+            data: [29012, 29674, 30483, 30654, 29974, 30652, 30953, 31177, 31269, 31767, 31811, 31998, 32556, 32547, 32813, 32835, 33134, 33875, 34015, 33606, 33372, 33057, 32823, 32453, 32733, 30871, 29254, 29640, 29501, 29245, 29084, 29441, 29927, 29631, 29788, 29692, 29402, 29280, 28509, 29554, 29627, 29246, 29178, 29014, 28821, 28612, 28439, 28458, 28892, 30134, 29238, 29300, 29188, 28890]
+        }]
+    });
+
+
+    Highcharts.chart("chart-empleo-ia", {
+
+        chart: {
+            type: "column",
+            height: 170,
+            marginBottom: 45
+        },
+        title: {
+            text: "Variación interanual (%)",
+            align: "left",
+            style: {
+                color: "#8EAFC4",
+                fontSize: "12px",
+                fontWeight: "600"
+            },
+            margin: 8
+        },
+        xAxis: {
+            categories: ["Ene-22","Feb-22","Mar-22","Abr-22","May-22","Jun-22","Jul-22","Ago-22","Sep-22","Oct-22","Nov-22","Dic-22","Ene-23","Feb-23","Mar-23","Abr-23","May-23","Jun-23","Jul-23","Ago-23","Sep-23","Oct-23","Nov-23","Dic-23","Ene-24","Feb-24","Mar-24","Abr-24","May-24","Jun-24","Jul-24","Ago-24","Sep-24","Oct-24","Nov-24","Dic-24","Ene-25","Feb-25","Mar-25","Abr-25","May-25","Jun-25","Jul-25","Ago-25","Sep-25","Oct-25","Nov-25","Dic-25","Ene-26","Feb-26","Mar-26","Abr-26","May-26","Jun-26"],
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "9px" },
+                rotation: -45,
+                step: 3,
+                y: 18
+            },
+            tickLength: 0,
+            lineColor: "#1A3A5C"
+        },
+        yAxis: {
+            title: { text: null },
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "10px" },
+                format: "{value:+.0f}%"
+            },
+            gridLineColor: "#1A3A5C",
+            plotLines: [{
+                value: 0,
+                color: "#8EAFC4",
+                width: 1,
+                zIndex: 3
+            }],
+            min: -18,
+            max: 15
+        },
+        legend: { enabled: false },
+        plotOptions: {
+            column: {
+                borderWidth: 0,
+                groupPadding: 0.05,
+                pointPadding: 0.05
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                const signo = this.y >= 0 ? '+' : '';
+                return '<b>' + this.x + '</b><br/>' +
+                       signo + this.y.toFixed(2) + '%';
+            }
+        },
+        series: [{
+            name: "Var. i.a.",
+            data: [4.83, 8.64, 11.51, 10.0, 8.04, 7.7, 10.56, 12.6, 11.89, 12.48, 11.73, 11.71, 12.88, 9.5, 7.67, 6.65, 10.66, 10.87, 9.63, 8.0, 6.24, 4.63, 3.16, 1.0, 0.66, -1.7, -10.98, -9.4, -10.64, -14.55, -14.08, -12.45, -10.4, -10.23, -9.34, -8.2, -10.02, -8.61, -3.24, 0.03, 0.51, 0.24, 0.35, -1.84, -3.25, -3.48, -5.02, -4.12, -1.85, 2.95, 3.0, -0.76, -1.72, -0.84],
+            zones: [
+                { value: 0, color: "#FF6B6B" },
+                { color: "#4ECDC4" }
+            ]
+        }]
+    });
+
+
+
+    Highcharts.chart("chart-empleo-sector", {
+
+        chart: {
+            type: "bar",
+            height: 420,
+            marginLeft: 110
+        },
+        title: { text: "" },
+        xAxis: {
+            categories: [
+                "Industria",
+                "Servicios",
+                "Comercio",
+                "Agricultura",
+                "Construcción",
+                "Electricidad",
+                "Minería"
+            ],
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "12px", fontWeight: "500" }
+            },
+            lineColor: "#1A3A5C"
+        },
+        yAxis: {
+            title: {
+                text: "Puestos de trabajo (promedio 2025)",
+                style: { color: "#8EAFC4", fontSize: "11px" }
+            },
+            labels: {
+                style: { color: "#8EAFC4", fontSize: "10px" },
+                format: "{value:,.0f}"
+            },
+            gridLineColor: "#1A3A5C"
+        },
+        legend: { enabled: false },
+        tooltip: {
+            formatter: function () {
+                const pct = this.point.var_pct;
+                const signo = pct >= 0 ? "+" : "";
+                const puestos_abs = this.point.puestos_abs;
+                const abs_str = puestos_abs >= 0 ? "+" + puestos_abs : puestos_abs;
+                const color = pct >= 0 ? "#4ECDC4" : "#FF6B6B";
+                return '<b>' + this.x + '</b><br/>' +
+                       '2025: <b>' + this.y.toLocaleString('es-AR') + '</b> puestos<br/>' +
+                       'Variación i.a.: <b style="color:' + color + '">' +
+                       signo + pct.toFixed(1) + '%</b><br/>' +
+                       'Cambio absoluto: <b style="color:' + color + '">' +
+                       abs_str + '</b> puestos';
+            }
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 4,
+                dataLabels: {
+                    enabled: true,
+                    inside: false,
+                    align: "right",
+                    x: 8,
+                    style: {
+                        color: "#FFFFFF",
+                        textOutline: "none",
+                        fontWeight: "600",
+                        fontSize: "11px"
+                    },
+                    formatter: function () {
+                        const pct = this.point.var_pct;
+                        const signo = pct >= 0 ? "+" : "";
+                        const flecha = pct >= 0 ? "▲" : "▼";
+                        return this.y.toLocaleString('es-AR') + '  ' +
+                               flecha + ' ' + signo + pct.toFixed(1) + '%';
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Empleo 2025",
+            data: [
+                { y: 8550, color: "#E8A33D", var_pct: -5.6, puestos_abs: -510 },
+                { y: 8730, color: "#E8A33D", var_pct: -2.8, puestos_abs: -250 },
+                { y: 6720, color: "#4ECDC4", var_pct: 0.9, puestos_abs: 60 },
+                { y: 4950, color: "#E8A33D", var_pct: -5.4, puestos_abs: -280 },
+                { y: 1150, color: "#FF6B6B", var_pct: -14.8, puestos_abs: -200 },
+                { y: 850, color: "#4ECDC4", var_pct: 3.7, puestos_abs: 30 },
+                { y: 130, color: "#4ECDC4", var_pct: 8.3, puestos_abs: 10 }
+            ]
+        }],
+        subtitle: {
+            text: 'Verde: creció vs. 2024 · Amarillo: cayó moderado · Rojo: cayó fuerte',
+            align: "left",
+            style: { color: "#5A8BA8", fontSize: "10px" }
+        }
+    });
+
+
+    Highcharts.chart("chart-transform", {
+
+        chart: { type: "bar", height: 160 },
+        title: { text: "" },
+        xAxis: {
+            categories: ["Consultores inform.", "Publicidad"],
+            labels: { style: { fontSize: "11px" } }
+        },
+        yAxis: {
+            title: { text: "" },
+            labels: { format: "{value}%" }
+        },
+        legend: { enabled: true },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true,
+                    format: "{point.y}%",
+                    style: {
+                        color: "#FFFFFF",
+                        textOutline: "none"
+                    }
+                }
+            }
+        },
+        series: [
+            {
+                name: "2022",
+                data: [6.1, 31.5],
+                color: "#1A6B8A"
+            },
+            {
+                name: "2025",
+                data: [33.6, 13.8],
+                color: "#4ECDC4"
+            }
+        ]
+    });
+
+</script>
+
+</body>
+</html>
