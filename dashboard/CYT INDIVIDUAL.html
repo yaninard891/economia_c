@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecosistema Científico-Tecnológico | La Rioja</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0d1b2a;
+    --card:#1b263b;
+    --card2:#22304a;
+    --accent:#00c9a7;
+    --accent2:#4cc9f0;
+    --text:#e8eef5;
+    --muted:#8ea3b8;
+    --danger:#e63946;
+    --warn:#f4a261;
+    --border:#2c3e50;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    padding:24px;
+    line-height:1.5;
+  }
+  .wrap{max-width:1400px;margin:0 auto}
+
+  header.top{
+    border-bottom:2px solid var(--accent);
+    padding-bottom:16px;
+    margin-bottom:28px;
+  }
+  header.top h1{
+    font-size:1.9rem;
+    font-weight:700;
+    letter-spacing:-.5px;
+  }
+  header.top h1 span{color:var(--accent)}
+  header.top p{
+    color:var(--muted);
+    font-size:.95rem;
+    margin-top:6px;
+  }
+
+  /* KPIs */
+  .kpis{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+    margin-bottom:32px;
+  }
+  .kpi{
+    background:linear-gradient(145deg,var(--card),var(--card2));
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px 20px;
+    position:relative;
+    overflow:hidden;
+    transition:transform .2s, border-color .2s;
+  }
+  .kpi:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .kpi::before{
+    content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--accent);
+  }
+  .kpi .label{
+    font-size:.78rem;text-transform:uppercase;letter-spacing:1px;
+    color:var(--muted);font-weight:600;
+  }
+  .kpi .value{
+    font-size:2rem;font-weight:700;margin:6px 0 2px;
+    color:var(--accent);
+  }
+  .kpi .sub{font-size:.78rem;color:var(--muted)}
+
+  /* Secciones */
+  section{margin-bottom:36px}
+  section h2{
+    font-size:1.15rem;
+    font-weight:600;
+    margin-bottom:16px;
+    padding-left:12px;
+    border-left:3px solid var(--accent);
+    color:var(--text);
+  }
+
+  /* Grids */
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+
+  .chart-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px;
+  }
+  .chart-card h3{
+    font-size:.95rem;font-weight:600;margin-bottom:14px;color:var(--text);
+  }
+  .chart-card .canvas-box{position:relative;height:300px}
+  .chart-card.tall .canvas-box{height:360px}
+
+  .note{
+    font-size:.78rem;color:var(--muted);margin-top:10px;
+    padding-top:10px;border-top:1px dashed var(--border);
+  }
+
+  /* Áreas cards */
+  .area{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:4px solid var(--accent);
+    border-radius:10px;
+    padding:16px 18px;
+    transition:border-color .2s, transform .2s;
+  }
+  .area:hover{transform:translateY(-3px);border-left-color:var(--accent2)}
+  .area h4{font-size:.95rem;margin-bottom:6px;color:var(--accent2)}
+  .area p{font-size:.82rem;color:var(--muted)}
+
+  /* Infra tabla */
+  .infra-table{
+    width:100%;border-collapse:collapse;font-size:.85rem;
+    background:var(--card);border-radius:12px;overflow:hidden;
+  }
+  .infra-table th{
+    background:var(--card2);color:var(--accent);
+    text-align:left;padding:12px 14px;font-weight:600;
+    font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;
+  }
+  .infra-table td{
+    padding:11px 14px;border-top:1px solid var(--border);
+    color:var(--text);vertical-align:top;
+  }
+  .infra-table tr:hover td{background:var(--card2)}
+  .infra-table .inst{font-weight:600;color:var(--accent2);white-space:nowrap}
+
+  /* Footer */
+  footer{
+    margin-top:40px;padding-top:20px;border-top:1px solid var(--border);
+    font-size:.78rem;color:var(--muted);text-align:center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>Ecosistema Científico-Tecnológico y <span>Comunidad Universitaria</span> de La Rioja</h1>
+    <p>Informe diagnóstico · Entramado de I+D, infraestructura, matrícula y capacidades estratégicas</p>
+  </header>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="label">Personal en I+D (EJC)</div>
+      <div class="value">489</div>
+      <div class="sub">MINCyT · Equivalente Jornada Completa</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Investigadores y Becarios</div>
+      <div class="value">268</div>
+      <div class="sub">Relevados oficialmente por MINCyT</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Comunidad CyT ampliada</div>
+      <div class="value">~845</div>
+      <div class="sub">Docentes-investigadores y especialistas</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Matrícula universitaria</div>
+      <div class="value">31.070</div>
+      <div class="sub">Total provincial de grado</div>
+    </div>
+  </div>
+
+  <!-- RRHH en I+D -->
+  <section>
+    <h2>Recursos Humanos en I+D por Institución</h2>
+    <div class="grid-2">
+      <div class="chart-card tall">
+        <h3>Personal dedicado a I+D (CIECTI-CFI 2022)</h3>
+        <div class="canvas-box"><canvas id="chPersonal"></canvas></div>
+        <div class="note">UNLaR y UNdeC concentran el 82% del personal en I+D relevado.</div>
+      </div>
+      <div class="chart-card tall">
+        <h3>Representación femenina entre investigadores</h3>
+        <div class="canvas-box"><canvas id="chGenero"></canvas></div>
+        <div class="note">CENTEC (75%) y Fundación Barceló (70%) lideran; UTN registra el menor valor (12%).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comunidad universitaria -->
+  <section>
+    <h2>Comunidad Universitaria</h2>
+    <div class="grid-3">
+      <div class="chart-card">
+        <h3>Matrícula activa por universidad</h3>
+        <div class="canvas-box"><canvas id="chMatricula"></canvas></div>
+        <div class="note">UNLaR representa el 90,5% del alumnado provincial.</div>
+      </div>
+      <div class="chart-card">
+        <h3>Oferta académica (carreras de grado)</h3>
+        <div class="canvas-box"><canvas id="chCarreras"></canvas></div>
+        <div class="note">Total provincial: 139 carreras de grado.</div>
+      </div>
+      <div class="chart-card">
+        <h3>Cuerpo docente por universidad</h3>
+        <div class="canvas-box"><canvas id="chDocentes"></canvas></div>
+        <div class="note">UNLaR reúne el 79% del cuerpo docente universitario.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flujo académico -->
+  <section>
+    <h2>Flujo Académico Anual</h2>
+    <div class="grid-2">
+      <div class="chart-card">
+        <h3>Ingresantes vs. Graduados por año</h3>
+        <div class="canvas-box"><canvas id="chFlujo"></canvas></div>
+        <div class="note">Fuerte concentración de ingresantes en Ciencias de la Salud e Informática.</div>
+      </div>
+      <div class="chart-card">
+        <h3>Distribución territorial del ecosistema</h3>
+        <div class="canvas-box"><canvas id="chTerritorio"></canvas></div>
+        <div class="note">Capital y Chilecito concentran los principales nodos científicos.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas de especialización -->
+  <section>
+    <h2>Áreas de Especialización Estratégica</h2>
+    <div class="grid-3">
+      <div class="area">
+        <h4>💧 Recursos Hídricos y Regiones Áridas</h4>
+        <p>UNLaR, IAMRA-UNdeC e INTA estudian acuíferos, estrés hídrico de cultivos de oasis y riego inteligente.</p>
+      </div>
+      <div class="area">
+        <h4>🫒 Agroindustria y Sanidad Vegetal</h4>
+        <p>Cadena olivícola, vitivinícola (Torrontés) y nogalera. CENTEC y CRILAR abordan el Síndrome de Rama Seca.</p>
+      </div>
+      <div class="area">
+        <h4>🧬 Biotecnología y Bioinsumos</h4>
+        <p>Agrogenética y UNdeC con bioterios y micropropagación in vitro de pistacho, cereza y almendro.</p>
+      </div>
+      <div class="area">
+        <h4>⚡ Energías Renovables y Minería</h4>
+        <p>UTN, SEGEMAR y Parque Eólico Arauco: integración eólica-solar y prospección de litio, cobre y tierras raras.</p>
+      </div>
+      <div class="area">
+        <h4>🩺 Salud y Epidemiología Regional</h4>
+        <p>Estudios de Chagas y Dengue, nutrición y compuestos bioactivos (Fundación Barceló, UNLaR y CRILAR).</p>
+      </div>
+      <div class="area">
+        <h4>🏗️ Polo CyT (en obra)</h4>
+        <p>Edificio provincial de 4.200 m² que unificará INTA, INTI, CRILAR, SENASA y universidades.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Infraestructura -->
+  <section>
+    <h2>Infraestructura e Instrumental Científico Clave</h2>
+    <table class="infra-table">
+      <thead>
+        <tr>
+          <th>Institución</th>
+          <th>Complejos y Laboratorios</th>
+          <th>Instrumental y Servicios</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="inst">CRILAR (CONICET)</td>
+          <td>7 laboratorios compartidos, Química y Microscopía Avanzada</td>
+          <td>Microscopio Electrónico de Barrido (MEB), datación, bioinsumos agrícolas</td>
+        </tr>
+        <tr>
+          <td class="inst">UNdeC (Chilecito)</td>
+          <td>Lab. de Alta Complejidad (LAC) y Biología Molecular</td>
+          <td>PCR/secuenciación, análisis físico-químico de suelos y aguas, 2 campos experimentales</td>
+        </tr>
+        <tr>
+          <td class="inst">IREPCySA</td>
+          <td>Química Orgánica/Inorgánica, Suelos, Microbiología y Destilación</td>
+          <td>Certificación ISO 9001/14001, monitoreo de cuencas, destilación de aceites esenciales</td>
+        </tr>
+        <tr>
+          <td class="inst">Agrogenética SAPEM</td>
+          <td>Complejo de Biotecnología Vegetal (1.000 m²) y campos experimentales</td>
+          <td>Salas limpias de cultivo in vitro, enraizamiento, espectrometría de suelos</td>
+        </tr>
+        <tr>
+          <td class="inst">INTI (Capital)</td>
+          <td>Predio de 2.800 m²: Alimentos, Efluentes, ESMETA, Industria 4.0</td>
+          <td>Ensayos de certificación, robótica, prototipado 3D, retroringeniería</td>
+        </tr>
+        <tr>
+          <td class="inst">CENTEC (Aimogasta)</td>
+          <td>Lab. físico-químico y microbiológico, Unidad Demostrativa Olivícola</td>
+          <td>Panel de cata homologado por el COI, control de calidad en aceites y conservas</td>
+        </tr>
+        <tr>
+          <td class="inst">UNLaR (Capital y Sedes)</td>
+          <td>Hospital de Clínicas "Virgen María de Fátima", Planta de Medicamentos y UDPs</td>
+          <td>Ensayos clínicos, control farmacológico, parque tecnológico (almazara, bodega)</td>
+        </tr>
+        <tr>
+          <td class="inst">Polo CyT (en obra)</td>
+          <td>Edificio provincial centralizado de 4.200 m² (Programa Construir Ciencia)</td>
+          <td>Unificación de INTA, INTI, CRILAR, SENASA y universidades</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    Fuente: Informe Diagnóstico del Ecosistema Científico-Tecnológico · Plan CTI 2035 · Relevamiento CIECTI-CFI 2022 · MINCyT
+  </footer>
+
+</div>
+
+<script>
+/* ===== Configuración global Chart.js ===== */
+Chart.defaults.color = '#8ea3b8';
+Chart.defaults.font.family = "'Segoe UI', Roboto, sans-serif";
+Chart.defaults.font.size = 12;
+
+const AC = '#00c9a7';
+const AC2 = '#4cc9f0';
+const WARN = '#f4a261';
+const DANGER = '#e63946';
+
+const grid = { color:'rgba(44,62,80,.5)', drawBorder:false };
+const noGrid = { display:false };
+
+/* ===== 1. Personal I+D por institución ===== */
+new Chart(document.getElementById('chPersonal'), {
+  type: 'bar',
+  data: {
+    labels: ['UNLaR','UNdeC','UTN FRLaR','CRILAR','INTA','CENTEC','Barceló','INTI'],
+    datasets: [{
+      label:'Personas en I+D',
+      data:[312,212,72,52,35,20,17,9],
+      backgroundColor:[AC,AC2,'#7b9e87','#9d8189',WARN,'#b8b8ff','#ffc6ff','#a3c4f3'],
+      borderRadius:6,
+      barThickness:26
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ grid, ticks:{color:'#8ea3b8'} },
+      y:{ grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600'}} }
+    }
+  }
+});
+
+/* ===== 2. Representación femenina ===== */
+new Chart(document.getElementById('chGenero'), {
+  type:'bar',
+  data:{
+    labels:['CENTEC','Barceló','UNdeC','UNLaR','CRILAR','INTI','INTA','UTN'],
+    datasets:[{
+      label:'% mujeres investigadoras',
+      data:[75,70,52,51,44,33,23,12],
+      backgroundColor:(ctx)=>{
+        const v = ctx.raw;
+        return v>=50 ? AC : (v>=30 ? WARN : DANGER);
+      },
+      borderRadius:6,
+      barThickness:22
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{ callbacks:{ label:(c)=>` ${c.raw}% mujeres` } }
+    },
+    scales:{
+      x:{ grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600'}} },
+      y:{ grid, beginAtZero:true, max:100, ticks:{ callback:v=>v+'%' } }
+    }
+  }
+});
+
+/* ===== 3. Matrícula ===== */
+new Chart(document.getElementById('chMatricula'), {
+  type:'doughnut',
+  data:{
+    labels:['UNLaR','UNdeC','UTN FRLaR'],
+    datasets:[{
+      data:[28118,2388,564],
+      backgroundColor:[AC,AC2,WARN],
+      borderColor:'#1b263b',
+      borderWidth:3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'62%',
+    plugins:{
+      legend:{ position:'bottom', labels:{padding:14, usePointStyle:true} },
+      tooltip:{ callbacks:{ label:(c)=>{
+        const t=c.dataset.data.reduce((a,b)=>a+b,0);
+        return ` ${c.label}: ${c.raw.toLocaleString('es-AR')} (${(c.raw/t*100).toFixed(1)}%)`;
+      }}}
+    }
+  }
+});
+
+/* ===== 4. Carreras ===== */
+new Chart(document.getElementById('chCarreras'), {
+  type:'bar',
+  data:{
+    labels:['UNLaR','Siglo 21','UNdeC','UTN','Barceló'],
+    datasets:[{
+      label:'Carreras de grado',
+      data:[74,34,18,7,6],
+      backgroundColor:[AC,AC2,'#9d8189',WARN,'#ffc6ff'],
+      borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ grid:noGrid },
+      y:{ grid, beginAtZero:true }
+    }
+  }
+});
+
+/* ===== 5. Docentes ===== */
+new Chart(document.getElementById('chDocentes'), {
+  type:'bar',
+  data:{
+    labels:['UNLaR','UNdeC','Barceló','UTN'],
+    datasets:[{
+      label:'Docentes',
+      data:[2831,443,200,122],
+      backgroundColor:[AC,AC2,'#b8b8ff',WARN],
+      borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ grid:noGrid },
+      y:{ grid, beginAtZero:true }
+    }
+  }
+});
+
+/* ===== 6. Flujo ingresantes vs graduados ===== */
+new Chart(document.getElementById('chFlujo'), {
+  type:'bar',
+  data:{
+    labels:['UNLaR','UNdeC','UTN FRLaR'],
+    datasets:[
+      {
+        label:'Ingresantes / año',
+        data:[11800,1050,175],
+        backgroundColor:AC,
+        borderRadius:6
+      },
+      {
+        label:'Graduados / año',
+        data:[775,105,32],
+        backgroundColor:AC2,
+        borderRadius:6
+      }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ position:'bottom', labels:{padding:14, usePointStyle:true} }
+    },
+    scales:{
+      x:{ grid:noGrid },
+      y:{ grid, beginAtZero:true, type:'logarithmic',
+          ticks:{ callback:v=>Number(v).toLocaleString('es-AR') } }
+    }
+  }
+});
+
+/* ===== 7. Distribución territorial ===== */
+new Chart(document.getElementById('chTerritorio'), {
+  type:'polarArea',
+  data:{
+    labels:['Capital (UNLaR, UTN, INTI)','Chilecito (UNdeC, INTA)','Anillaco (CRILAR)','Aimogasta (CENTEC)','Chamical (INTA)'],
+    datasets:[{
+      data:[60,25,8,4,3],
+      backgroundColor:[
+        'rgba(0,201,167,.75)',
+        'rgba(76,201,240,.75)',
+        'rgba(244,162,97,.75)',
+        'rgba(157,129,137,.75)',
+        'rgba(184,184,255,.75)'
+      ],
+      borderColor:'#1b263b',
+      borderWidth:2
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ position:'bottom', labels:{padding:12, usePointStyle:true, font:{size:11}} },
+      tooltip:{ callbacks:{ label:(c)=>` ${c.label}: ${c.raw}%` } }
+    },
+    scales:{ r:{ grid:{color:'rgba(44,62,80,.5)'}, ticks:{ backdropColor:'transparent', color:'#8ea3b8' } } }
+  }
+});
+</script>
+</body>
+</html>

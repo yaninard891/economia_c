@@ -1,0 +1,385 @@
+---
+title: "Economía del Conocimiento en La Rioja"
+subtitle: "Informe 2022–2025 — Documento de acompañamiento del dashboard sectorial"
+author: 
+  - name: "[Nombre y Apellido]"
+    affiliation: "Licenciada en Economía — Especialista en datos, innovación y desarrollo tecnológico"
+    email: "[email]"
+date: "`r Sys.Date()`"
+date-format: "MMMM YYYY"
+format:
+  docx:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    highlight-style: github
+    fig-cap-location: bottom
+  pdf:
+    toc: true
+    number-sections: true
+    fig-cap-location: bottom
+    geometry:
+      - margin=2.5cm
+    linestretch: 1.15
+lang: es
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+#| include: false
+library(knitr)
+library(readxl)
+library(ggplot2)
+ruta_fig <- "figuras"
+opts_chunk$set(dev = "png", dpi = 150, out.width = "90%", fig.align = "center")
+```
+
+# Resumen ejecutivo {.unnumbered}
+
+El presente informe acompaña al **dashboard sectorial de la Economía del Conocimiento (EC) de La Rioja** y sintetiza los principales hallazgos del período **2022–2025**. La definición de universo adoptada es la de **ARCA-DGIP** (8 códigos CIIU Rev. 3), consistente con los criterios nacionales y replicables a nivel federal.
+
+## Indicadores clave 2025
+
+| Indicador | Valor | Fuente |
+|-----------|-------|--------|
+| **Ingresos brutos del sector** | **$40.955 millones** | DGIP La Rioja |
+| **Empresas EC activas** | **102** (2024) | DGIP La Rioja |
+| **Empleo EC total (definición amplia)** | **521 puestos** | SIPA-OEDE |
+| **Empleo núcleo informático** | **63,8 puestos** | SIPA-OEDE |
+
+## Cinco hallazgos centrales
+
+1. **Crecimiento consolidado del sector.** Los ingresos brutos alcanzaron los **$40.955 millones** en 2025, multiplicando por **20,3** los ingresos de 2022. La recaudación DGIP del sector se multiplicó por **32,9** en el mismo período.
+
+2. **Mutación hacia servicios informáticos.** Las actividades de informática y consultoría pasaron de explicar el **49,8%** de los ingresos en 2022 al **77,1%** en 2025, evidenciando una sofisticación de la canasta de servicios.
+
+3. **Núcleo informático consolidado.** Los códigos del núcleo informático concentran **63,8 puestos medibles** en 2025. El código 7290 (Informática n.c.p.) creció **+25,2%** entre 2022 y 2025.
+
+4. **Salarios premium verificados.** El código 7290 registra un salario mensual de **$3.108.543**, un **+138%** sobre el promedio provincial.
+
+5. **Masa crítica empresarial.** La Rioja cuenta con **102 empresas EC** (2024) y una intensidad empresarial de **31,34 ‰**, ubicándose 7ª de 9 jurisdicciones relevadas.
+
+---
+
+# 1. Ingresos y contribuyentes
+
+## 1.1 Ingresos brutos del sector EC
+
+Los ingresos brutos del sector de la Economía del Conocimiento en La Rioja mostraron una **trayectoria de expansión sostenida** entre 2022 y 2025. Medidos en **valores corrientes**, los ingresos del sector pasaron de **$2.013 millones** en 2022 a **$40.955 millones** en 2025, multiplicándose por **20,3** en apenas cuatro años.
+
+```{r fig-ingresos, fig.cap = "Ingresos brutos del sector EC en La Rioja — valores corrientes (millones de $, 2022–2025)."}
+knitr::include_graphics(file.path(ruta_fig, "F42_ingresos_nominales.png"))
+```
+
+| Año | Ingresos brutos (millones de $ corrientes) | Variación interanual |
+|-----|---------------------------------------------|----------------------|
+| 2022 | $2.013 | — |
+| 2023 | $6.367 | +216,3% |
+| 2024 | $19.959 | +213,5% |
+| 2025 | **$40.955** | **+105,2%** |
+
+**Crecimiento acumulado 2022–2025**: **×20,3**.
+
+## 1.2 Recaudación DGIP
+
+La recaudación del Impuesto sobre los Ingresos Brutos correspondiente al universo EC —monitoreada a través de los registros de la **Dirección General de Ingresos Provinciales (DGIP)** de La Rioja— muestra un crecimiento igualmente exponencial:
+
+| Año | Recaudación EC (miles de $ corrientes) | Variación interanual |
+|-----|----------------------------------------|----------------------|
+| 2022 | $58.987 | — |
+| 2023 | $243.014 | +312% |
+| 2024 | $846.135 | +248% |
+| 2025 | **$1.940.914** | **+129%** |
+
+**Crecimiento acumulado 2022–2025**: **×32,9**.
+
+## 1.3 Contribuyentes y formalización
+
+Los contribuyentes inscriptos bajo el régimen de **Convenio Multilateral** —empresas con actividad en más de una jurisdicción— pasaron de **1.752** a **2.075** firmas, elevando su participación en el padrón del sector del **60,6% al 71,2%**.
+
+```{r fig-contribuyentes, fig.cap = "Evolución de contribuyentes EC (2022–2025)."}
+knitr::include_graphics(file.path(ruta_fig, "F23_contribuyentes_ec.png"))
+```
+
+**Lectura**: la creciente participación de Convenio Multilateral indica una mayor inserción del sector EC riojano en **mercados extrarregionales**, consolidando su rol exportador de servicios.
+
+## 1.4 Contexto macroeconómico
+
+El desempeño del sector EC contrasta con el contexto provincial: mientras el **VAB de La Rioja cayó un 25,7% en 2025**, los ingresos del sector EC **siguieron creciendo**. Esto posiciona a la Economía del Conocimiento como uno de los **pocos sectores con capacidad de crecimiento autónomo** en un entorno adverso, reforzando su potencial como motor de diversificación económica.
+
+---
+
+# 2. Estructura del sector
+
+## 2.1 Composición del ingreso EC
+
+La distribución del ingreso EC por actividad en 2025 muestra una **alta concentración** en dos ramas informáticas, que en conjunto explican el **77,1%** del total.
+
+```{r fig-estructura, fig.cap = "Estructura del ingreso EC por actividad, 2025."}
+knitr::include_graphics(file.path(ruta_fig, "F30_estructura_ec.png"))
+```
+
+| Actividad (CIIU) | Participación 2025 |
+|-------------------|---------------------|
+| Informática n.c.p. (7290) | 43,5% |
+| Consultores en informática (7220) | 33,6% |
+| Publicidad (7430) | 13,8% |
+| I+D Ciencias médicas (7300) | 3,0% |
+| Reparación de equipos (7250) | 2,5% |
+| Otras actividades | 3,6% |
+
+## 2.2 Transformación estructural 2022–2025
+
+La comparación intertemporal evidencia una **mutación significativa** en la matriz de ingresos: las actividades informáticas ganaron **+27,3 pp** de participación, mientras la publicidad perdió **–17,7 pp**.
+
+```{r fig-transformacion, fig.cap = "Transformación de la estructura EC, 2022 vs. 2025."}
+knitr::include_graphics(file.path(ruta_fig, "F31_transformacion.png"))
+```
+
+| Actividad | 2022 | 2025 | Variación |
+|-----------|------|------|-----------|
+| Consultores en informática (7220) | 6,1% | 33,6% | **+27,5 pp** ↑ |
+| Informática n.c.p. (7290) | 43,7% | 43,5% | +0,0 pp — |
+| **Servicios informáticos TOTAL** | **49,8%** | **77,1%** | **+27,3 pp** ↑ |
+| Publicidad (7430) | 31,5% | 13,8% | –17,7 pp ↓ |
+| Otras actividades | 18,7% | 9,1% | –9,6 pp ↓ |
+
+**Implicancia económica**: la expansión del sector está impulsada cada vez más por **servicios de software y consultoría tecnológica**, y cada vez menos por publicidad. Esto se traduce en mayor **retorno por trabajador** y una **inserción cualitativamente superior** en cadenas de valor.
+
+---
+
+# 3. Tejido empresarial
+
+## 3.1 Empresas EC por bloque
+
+```{r fig-empresas, fig.cap = "Empresas EC por bloque — Definición ARCA-DGIP (2022, 2024, 2025)."}
+knitr::include_graphics(file.path(ruta_fig, "F35_empresas_bloques.png"))
+```
+
+| Año | Empresas EC | Total provincial | Share |
+|-----|-------------|------------------|-------|
+| 2022 | 95 | 2.873 | 3,31% |
+| 2024 | **102** | 3.255 | **3,40%** |
+| 2025 | 84 | 2.935 | 2,86% |
+
+El tejido empresarial EC alcanzó su **pico en 2024** (102 empresas), con una contracción en 2025. La composición por bloque muestra que las actividades **proxy** (arquitectura, ingeniería y servicios empresariales) representan la mayor proporción del total, mientras el núcleo de Software y Sistemas de Información mantiene una tendencia creciente dentro del sector.
+
+## 3.2 Intensidad empresarial — comparación federal
+
+La **intensidad empresarial EC** mide cuántas empresas del sector existen **por cada 1.000 empresas** del total provincial. Este indicador relativo permite comparar jurisdicciones de distintos tamaños.
+
+```{r fig-intensidad, fig.cap = "Intensidad empresarial EC por provincia (‰), 2024."}
+knitr::include_graphics(file.path(ruta_fig, "F37_intensidad.png"))
+```
+
+| Provincia | Intensidad (‰) |
+|-----------|---------------|
+| CABA | 67,95 |
+| Catamarca | 43,18 |
+| Salta | 38,99 |
+| Tucumán | 35,74 |
+| Córdoba | 34,55 |
+| Jujuy | 33,12 |
+| **La Rioja** | **31,34** |
+| Santa Fe | 27,29 |
+| Santiago del Estero | 25,63 |
+
+La Rioja ocupa el **7º lugar** entre 9 jurisdicciones analizadas. **Supera** a Santa Fe (27,29 ‰) y Santiago del Estero (25,63 ‰). Existe un margen concreto de mejora respecto a las provincias líderes.
+
+---
+
+# 4. Salarios
+
+## 4.1 Remuneración por código CIIU
+
+Los salarios del sector de la Economía del Conocimiento son **consistentemente superiores al promedio** del mercado laboral formal de La Rioja, en particular en el núcleo informático. El código **7290 (Informática n.c.p.)** registra el salario más alto del sector, con **$3.108.543 mensuales**, equivalente a un **+138%** sobre el promedio provincial.
+
+```{r fig-salarios, fig.cap = "Remuneración promedio por rama EC vs. promedio provincial (2025)."}
+knitr::include_graphics(file.path(ruta_fig, "F33_salarios_ciiu.png"))
+```
+
+| CIIU | Rama | Salario mensual | Prima vs. provincial |
+|------|------|-----------------|----------------------|
+| 7290 | Informática n.c.p. | **$3.108.543** | **+138%** |
+| 7220 | Consultores informáticos | $1.726.147 | +32% |
+| 7421 | Arquitectura e ingeniería (proxy) | $1.016.111 | –22% |
+| 7499 | Servicios empresariales (proxy) | $978.907 | –25% |
+| — | **Promedio provincial** | **$1.306.422** | — |
+
+## 4.2 Lectura
+
+La diferencia salarial entre el núcleo informático y las ramas proxy confirma la **demanda de talento tecnológico especializado** y la **capacidad del sector para remunerar por encima del estándar provincial** en sus actividades más puras. El código 7290 paga **más del doble** del promedio provincial.
+
+---
+
+# 5. Empleo del sector
+
+## 5.1 Advertencia metodológica
+
+El empleo EC se calcula con la definición **ARCA-DGIP** (8 códigos CIIU), desagregando en dos niveles:
+
+- **Núcleo informático** (CIIU 7220 + 7210 + 7290 + 7300 + 7430 + 7250): actividades tecnológicas de mayor densidad de conocimiento.
+- **Proxies** (CIIU 7421 + 7499): arquitectura, ingeniería y servicios empresariales.
+
+**El total EC (521 puestos en 2025) debe leerse como techo superior**: el 87,8% depende de códigos proxy. **El núcleo informático (63,8 puestos medibles) es la medida canónica** para análisis de empleo tecnológico.
+
+## 5.2 Participación del núcleo informático
+
+```{r fig-share, fig.cap = "Participación del núcleo informático en el empleo EC (2025)."}
+knitr::include_graphics(file.path(ruta_fig, "F36_empleo_share.png"))
+```
+
+## 5.3 Empleo EC por código CIIU (2025)
+
+```{r fig-desglose, fig.cap = "Desglose del empleo EC por código CIIU (2025)."}
+knitr::include_graphics(file.path(ruta_fig, "F41_empleo_ec_2025_por_ciiu.png"))
+```
+
+| CIIU | Rama | Puestos | Tipo |
+|------|------|---------|------|
+| 7220 | Consultores informática | 26,8 | Núcleo |
+| 7250 | Mantenimiento/reparación | 4,2 | Núcleo |
+| 7290 | Informática n.c.p. | 32,8 | Núcleo |
+| 7421 | Arquitectura e ingeniería | 202,8 | Proxy |
+| 7499 | Servicios empresariales | 254,8 | Proxy |
+| **Total EC** | | **521,2** | |
+| **Núcleo informático** | | **63,8** | |
+| **Proxies** | | **457,5** | |
+
+## 5.4 Serie histórica 2022–2025
+
+```{r fig-serie, fig.cap = "Evolución del empleo EC por código CIIU, 2022–2025."}
+knitr::include_graphics(file.path(ruta_fig, "empleo_ec_2022_2025_por_ciiu.png"))
+```
+
+| Año | Total EC (amplia) | Núcleo informático | Proxies |
+|-----|-------------------|---------------------|---------|
+| 2022 | 445,0 | 74,2 | 370,8 |
+| 2023 | 512,8 | 100,2 | 412,5 |
+| 2024 | 505,8 | 75,5 | 430,2 |
+| 2025 | 521,2 | 63,8 | 457,5 |
+| **Δ% 22→25** | **+17,1%** | **−14,1%** | **+23,4%** |
+
+**Hallazgo crítico**: el núcleo informático **pico en 2023** (100,2 puestos) y **cayó −36,3% en dos años**. El crecimiento total del empleo EC estuvo impulsado por los **proxies**, no por el núcleo tecnológico.
+
+## 5.5 Empleo formal provincial
+
+```{r fig-empleo-formal, fig.cap = "Empleo privado formal en La Rioja — evolución mensual."}
+knitr::include_graphics(file.path(ruta_fig, "F38_empleo_tendencia.png"))
+```
+
+Tres fases claras: **auge 2022-2023**, **caída 2024**, **meseta 2025-2026**.
+
+## 5.6 Empleo por sector
+
+```{r fig-empleo-sector, fig.cap = "Empleo por sector en La Rioja."}
+knitr::include_graphics(file.path(ruta_fig, "F40_empleo_sector.png"))
+```
+
+---
+
+# 6. Conclusiones y recomendaciones
+
+## 6.1 Síntesis
+
+1. **El sector EC riojano consolidó su crecimiento**: los ingresos brutos alcanzaron los $40.955 millones en 2025 (×20,3 vs. 2022) y la recaudación DGIP se multiplicó ×32,9.
+2. **Mutación estructural hacia servicios informáticos**: las actividades de informática y consultoría pasaron del 49,8% al 77,1% del ingreso sectorial.
+3. **El núcleo informático requiere atención**: el empleo del núcleo cayó −36,3% desde el pico de 2023. El crecimiento total del empleo EC depende hoy de los proxies.
+4. **Salarios premium verificados**: el código 7290 paga +138% sobre el promedio provincial.
+5. **Masa crítica empresarial en consolidación**: 102 empresas EC (2024), con volatilidad entre 2022 (95) y 2025 (84). La intensidad empresarial (31,34 ‰) ubica a La Rioja 7ª de 9 jurisdicciones.
+6. **Potencial de escalamiento**: la capacidad de crecimiento autónomo del sector en un contexto provincial adverso refuerza su rol como motor de diversificación económica.
+
+## 6.2 Recomendaciones
+
+1. **Fortalecer el núcleo informático** con incentivos específicos para los códigos 7220, 7250, 7290, 7210, 7300 y 7430, que concentran el empleo tecnológico de mayor calidad y las primas salariales más altas.
+2. **Consolidar la masa crítica empresarial** acompañando a las empresas EC activas con líneas de financiamiento, capacitación y vinculación con cadenas globales de valor.
+3. **Escalar la posición federal** tomando como referencia las provincias líderes en intensidad empresarial (CABA, Catamarca).
+4. **Aprovechar la recaudación creciente** destinando parte del incremento de ingresos DGIP a infraestructura tecnológica, formación de talento local y programas de retención.
+5. **Institucionalizar el monitoreo continuo** con seguimiento trimestral de los indicadores EC para detectar tempranamente cambios de tendencia.
+
+---
+
+# Anexo. Arquitectura metodológica {.unnumbered}
+
+El sector de la Economía del Conocimiento **no tiene un código de actividad propio unificado** ni en el sistema tributario ni en el sistema de empleo registrado argentino. Para medir su empleo es necesario construir una **definición operativa** a partir del cruce de dos nomencladores distintos:
+
+- **ARCA (ex AFIP)**: clasifica a las empresas según su actividad económica para fines tributarios. En La Rioja, la **Dirección General de Ingresos Provinciales (DGIP)** define qué actividades generan el denominado "impuesto tecnológico" dentro del régimen de Ingresos Brutos (IIBB).
+- **SIPA-OEDE**: el Sistema Integrado Previsional Argentino registra los puestos de trabajo en relación de dependencia, clasificados por **CIIU Rev. 3 a 4 dígitos**. Esta información es procesada y publicada por el **Observatorio de Empleo y Dinámica Empresarial (OEDE)** de la Secretaría de Trabajo, Empleo y Seguridad Social (STEySS).
+
+La definición operativa se construye identificando qué códigos CIIU del SIPA corresponden a las actividades que la DGIP de La Rioja clasifica como pertenecientes a la Economía del Conocimiento. El resultado es la **Definición ARCA-DGIP**, que incluye **8 códigos CIIU Rev. 3** a 4 dígitos: **7210, 7220, 7250, 7290, 7300, 7421, 7430 y 7499**.
+
+La fuente estadística utilizada es la serie `provinciales_serie_empleo_trimestral_4dig_7` (hoja "La Rioja", SIPA-OEDE), que desagrega el empleo a 4 dígitos del CIIU. Se calcula el **promedio simple de los 4 trimestres de cada año**. La unidad de medida es **puestos de trabajo registrados**, es decir, relaciones laborales declaradas ante ARCA.
+
+> *Fuente: https://www.argentina.gob.ar/trabajo/estadisticas/oede-estadisticas-provinciales*
+
+## Anexo A.1. Equivalente de códigos "Definición ARCA-DGIP"
+
+| DGIP (CAILAR) | Actividad DGIP | CIIU Rev. 3 | Actividad CIIU |
+|---------------|----------------|-------------|----------------|
+| 620104 | Servicios de consultores en informática y suministros de programas de informática | **7220** | Servicios de consultores en informática y suministros de programas de informática |
+| 620300 | Servicios de consultores en tecnología de la información | **7210** | Servicios de consultores en equipo de informática |
+| 620900 | Servicios de informática n.c.p. | **7290** | Actividades de informática n.c.p. |
+| 711002 | Servicios geológicos y de prospección | **7421** | Servicios de arquitectura e ingeniería y actividades conexas de asesoramiento técnico |
+| 721020 | Investigación y desarrollo experimental en el campo de las ciencias médicas | **7300** | Investigación y desarrollo |
+| 721030 | Investigación y desarrollo experimental en el campo de las ciencias agropecuarias | **7300** | Investigación y desarrollo |
+| 721090 | Investigación y desarrollo experimental en el campo de las ciencias exactas y naturales n.c.p. | **7300** | Investigación y desarrollo |
+| 731009 | Servicios de publicidad n.c.p. | **7430** | Servicio de Publicidad |
+| 741000 | Servicios de diseño especializado | **7499** | Servicios empresariales |
+| 749001 | Servicios de traducción e interpretación | **7499** | Servicios empresariales |
+| 951100 | Reparación y mantenimiento de equipos informáticos | **7250** | Mantenimiento y reparación de maquinaria de oficina, contabilidad e informática |
+
+## Anexo A.2. Núcleo informático vs. definición amplia
+
+Dentro de la Definición ARCA-DGIP se distinguen **dos subconjuntos** con comportamiento diferenciado:
+
+- **Núcleo informático** (CIIU **7220 + 7210 + 7290 + 7300 + 7430 + 7250**): el subconjunto más puro de la EC. Contiene las actividades exclusivamente tecnológicas y de mayor densidad de conocimiento, con los salarios más altos del sector. Es el grupo de referencia para el análisis de calidad del empleo.
+
+- **Definición amplia ARCA-DGIP** (los 8 códigos CIIU): usada para el conteo total de puestos y empresas. Incorpora las **ramas proxy** (7421 y 7499) que, si bien incluyen actividades EC, también engloban más servicios que no forman parte del sector y no permiten aislarlos del resto.
+
+> **Dato clave**: los **521 puestos** del informe corresponden a la **Definición amplia ARCA-DGIP** (los 8 códigos).
+
+## Anexo A.3. Ramas proxy
+
+El SIPA clasifica el empleo a nivel de CIIU 4 dígitos, pero **no ofrece mayor desagregación**. Esto genera una limitación estructural: ciertos códigos CIIU agrupan actividades que son genuinamente parte de la EC junto con otras que no lo son, y resulta imposible separar ambos grupos con los datos disponibles. Es por ello que se los utiliza como **proxy** — es decir, como un reemplazo, aproximación o indicador indirecto.
+
+Los **dos códigos proxy** incluidos en la Definición ARCA-DGIP son:
+
+- **CIIU 7421 — Servicios de arquitectura e ingeniería y actividades conexas de asesoramiento técnico**: dentro de este código conviven ingenieros de software e ingenieros de sistemas (genuinamente EC) con arquitectos, geólogos, topógrafos y otros profesionales que no pertenecen al sector. En La Rioja, el peso minero y geológico de la economía provincial hace que esta rama sea particularmente heterogénea.
+
+- **CIIU 7499 — Servicios empresariales n.c.p.**: incluye consultores de negocios tecnológicos y empresas de servicios digitales junto con una amplia variedad de servicios empresariales genéricos que no tienen relación con la EC.
+
+## Anexo A.4. Nota metodológica sobre disponibilidad de datos
+
+Si bien el núcleo informático se define formalmente con **6 códigos CIIU** (7210, 7220, 7250, 7290, 7300 y 7430), SIPA-OEDE **no publica serie de empleo para todos ellos** en La Rioja:
+
+| CIIU | Rama | Disponibilidad 2022–2025 |
+|------|------|--------------------------|
+| 7210 | Consultores en equipo de informática | Sin dato publicado |
+| 7220 | Consultores en informática | Serie completa |
+| 7250 | Mantenimiento y reparación | 2023–2025 |
+| 7290 | Informática n.c.p. | Serie completa |
+| 7300 | Investigación y desarrollo | Sin dato publicado |
+| 7430 | Servicios de publicidad | 2022–2023 |
+
+Por lo tanto, el conteo efectivo del núcleo informático para 2025 es de **63,8 puestos** correspondientes a los 3 códigos con serie disponible (7220 + 7250 + 7290).
+
+## Anexo A.5. Glosario técnico
+
+| Término | Definición |
+|---------|------------|
+| **ARCA (ex AFIP)** | Agencia de Recaudación y Control Aduanero. Organismo nacional que administra la recaudación tributaria y clasifica a las empresas según su actividad económica para fines fiscales. |
+| **SIPA** | Sistema Integrado Previsional Argentino. Registro nacional de trabajadores en relación de dependencia. Base de datos a partir de la cual se construyen las estadísticas de empleo registrado. |
+| **OEDE** | Observatorio de Empleo y Dinámica Empresarial. Dependiente de la Secretaría de Trabajo, Empleo y Seguridad Social (STEySS). Procesa y publica las estadísticas de empleo del SIPA. |
+| **DGIP** | Dirección General de Ingresos Provinciales de La Rioja. Define qué actividades generan el impuesto tecnológico dentro del régimen de Ingresos Brutos provincial. |
+| **CIIU Rev. 3** | Clasificación Industrial Internacional Uniforme de todas las Actividades Económicas, Revisión 3. Nomenclador internacional que organiza las actividades económicas en códigos de 4 dígitos. |
+| **IIBB** | Ingresos Brutos. Impuesto provincial que grava los ingresos generados por el ejercicio de actividades económicas. |
+| **Rama proxy** | Código CIIU que agrupa actividades de la Economía del Conocimiento junto con otras actividades no-EC, sin posibilidad de desagregación adicional con los datos disponibles. |
+| **Núcleo informático** | Subconjunto de la Definición ARCA-DGIP integrado por los CIIU **7220** (Consultores informáticos), **7210** (Consultores en equipo informático), **7290** (Informática n.c.p.), **7300** (I+D), **7430** (Publicidad) y **7250** (Reparación informática). Constituye el grupo de actividades más puras del sector EC. |
+| **Definición amplia ARCA-DGIP** | Universo completo de 8 códigos CIIU que integran la EC según ARCA-DGIP: 7210, 7220, 7250, 7290, 7300, 7421, 7430 y 7499. Usada para el conteo total de puestos y empresas del sector. |
+
+---
+
+*Fuente: SIPA-OEDE (STEySS), DGIP La Rioja, definición ARCA-DGIP. Procesamiento y análisis: [Nombre y Apellido], Licenciada en Economía — Especialista en datos, innovación y desarrollo tecnológico. Documento de acompañamiento del dashboard sectorial.*

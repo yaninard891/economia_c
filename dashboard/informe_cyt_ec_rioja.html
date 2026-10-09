@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciencia, Tecnología y Economía del Conocimiento — La Rioja</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+  :root{
+    --bg:#0d1b2a;
+    --card:#1b263b;
+    --card2:#22304a;
+    --accent:#00c9a7;
+    --accent2:#4cc9f0;
+    --text:#e8eef5;
+    --muted:#8ea3b8;
+    --warn:#f4a261;
+    --danger:#e63946;
+    --border:#2c3e50;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+  header.hero{
+    border-bottom:2px solid var(--accent);
+    padding:56px 24px 40px;
+    text-align:center;
+  }
+  header.hero .tag{
+    display:inline-block;
+    background:rgba(0,201,167,.12);
+    color:var(--accent);
+    padding:6px 16px;
+    border-radius:20px;
+    font-size:.72rem;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-weight:600;
+    margin-bottom:18px;
+  }
+  header.hero h1{
+    font-size:2.3rem;
+    font-weight:700;
+    letter-spacing:-.5px;
+    line-height:1.15;
+    margin-bottom:14px;
+  }
+  header.hero h1 span{color:var(--accent)}
+  header.hero p{
+    color:var(--muted);
+    font-size:1rem;
+    max-width:760px;
+    margin:0 auto;
+  }
+
+  section{padding:50px 0}
+  section h2{
+    font-size:1.4rem;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:8px;
+    padding-left:14px;
+    border-left:4px solid var(--accent);
+  }
+  section .subtitulo{
+    color:var(--muted);
+    font-size:.92rem;
+    margin-bottom:30px;
+    padding-left:18px;
+  }
+
+  h3.sub{
+    font-size:1.05rem;
+    font-weight:600;
+    letter-spacing:.3px;
+    margin:20px 0 16px;
+  }
+  h3.sub.turquesa{color:var(--accent)}
+  h3.sub.celeste{color:var(--accent2)}
+  h3.sub.naranja{color:var(--warn)}
+  h3.sub.mt{margin-top:44px}
+
+  .kpis{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+    gap:16px;
+    margin-bottom:32px;
+  }
+  .kpi{
+    background:linear-gradient(145deg, var(--card), var(--card2));
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px 18px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    transition:transform .2s, border-color .2s;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .kpi:hover{transform:translateY(-4px);border-color:var(--accent);}
+  .kpi::before{
+    content:'';
+    position:absolute;
+    left:0;top:0;bottom:0;width:4px;
+    background:var(--accent);
+  }
+  .kpi.alt::before{background:var(--accent2)}
+  .kpi.alt2::before{background:var(--warn)}
+  .kpi .valor{
+    font-size:2rem;
+    font-weight:800;
+    color:var(--accent);
+    line-height:1.1;
+  }
+  .kpi.alt .valor{color:var(--accent2)}
+  .kpi.alt2 .valor{color:var(--warn)}
+  .kpi .etiqueta{
+    font-size:.72rem;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    font-weight:600;
+    margin-top:8px;
+    display:block;
+    line-height:1.4;
+  }
+  .kpi .fecha{
+    font-size:.7rem;
+    color:var(--accent);
+    font-weight:600;
+    margin-top:4px;
+    display:block;
+    opacity:.75;
+  }
+  .kpi.alt .fecha{color:var(--accent2)}
+  .kpi.alt2 .fecha{color:var(--warn)}
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(400px, 1fr));
+    gap:20px;
+    margin-top:24px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px;
+  }
+  .card h3{
+    font-size:.95rem;
+    font-weight:600;
+    color:var(--text);
+    margin-bottom:16px;
+  }
+  .card .canvas-box{position:relative;height:300px}
+  .card .canvas-box.tall{height:400px}
+  .note{
+    font-size:.78rem;
+    color:var(--muted);
+    margin-top:12px;
+    padding-top:10px;
+    border-top:1px dashed var(--border);
+    line-height:1.5;
+  }
+  .note strong{color:var(--accent)}
+
+  .univ-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    gap:18px;
+    margin-top:24px;
+  }
+  .univ{
+    background:linear-gradient(145deg, var(--card), var(--card2));
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px;
+    position:relative;
+    overflow:hidden;
+    transition:transform .2s, border-color .2s;
+  }
+  .univ::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;height:4px;
+    background:var(--accent);
+  }
+  .univ:nth-child(2)::before{background:var(--accent2)}
+  .univ:nth-child(3)::before{background:var(--warn)}
+  .univ:hover{transform:translateY(-4px);border-color:var(--accent);}
+  .univ h4{
+    font-size:1.05rem;
+    font-weight:700;
+    color:var(--accent);
+    margin-bottom:14px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+  }
+  .univ:nth-child(2) h4{color:var(--accent2)}
+  .univ:nth-child(3) h4{color:var(--warn)}
+  .univ .dato{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:6px 0;
+    font-size:.85rem;
+  }
+  .univ .dato .num{font-weight:700;color:var(--text);font-size:.95rem;}
+  .univ .dato .lbl{color:var(--muted);font-size:.8rem;}
+  .univ .dato .pct{color:var(--accent);font-weight:600;font-size:.78rem;margin-left:6px;}
+  .univ:nth-child(2) .dato .pct{color:var(--accent2)}
+  .univ:nth-child(3) .dato .pct{color:var(--warn)}
+
+  footer{
+    background:linear-gradient(135deg, var(--card), var(--card2));
+    border-top:2px solid var(--accent);
+    padding:36px 24px;
+    text-align:center;
+    font-size:.8rem;
+    color:var(--muted);
+    line-height:1.8;
+  }
+  footer strong{color:var(--accent);font-weight:600}
+
+  @media (max-width:768px){
+    header.hero h1{font-size:1.6rem}
+    .kpi .valor{font-size:1.5rem}
+    section h2{font-size:1.15rem}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="tag">Informe diagnóstico · 2022–2025</span>
+  <h1>Ciencia, Tecnología y <span>Economía del Conocimiento</span> en La Rioja</h1>
+  <p>Sistema científico-tecnológico provincial y sector de la Economía del Conocimiento: recursos humanos, capacidades institucionales, empleo, empresas y salarios.</p>
+</header>
+
+<!-- ===== KPIs PRINCIPALES ===== -->
+<section>
+  <div class="wrap">
+    <h2>Indicadores clave del ecosistema</h2>
+    <p class="subtitulo">Síntesis del sistema CyT y de la Economía del Conocimiento provincial</p>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="valor">489</span>
+        <span class="etiqueta">Personal en I+D (EJC)</span>
+        <span class="fecha">2022</span>
+      </div>
+      <div class="kpi">
+        <span class="valor">268</span>
+        <span class="etiqueta">Investigadores y becarios</span>
+        <span class="fecha">2022</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">31.070</span>
+        <span class="etiqueta">Matrícula universitaria</span>
+        <span class="fecha">2024</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">102</span>
+        <span class="etiqueta">Empresas EC</span>
+        <span class="fecha">2024</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">521</span>
+        <span class="etiqueta">Empleo EC</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">$40.955</span>
+        <span class="etiqueta">Facturación EC (M$)</span>
+        <span class="fecha">2025</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 1. CIENCIA Y TECNOLOGÍA ===== -->
+<section>
+  <div class="wrap">
+    <h2>1. Ciencia y Tecnología</h2>
+    <p class="subtitulo">Recursos humanos, instituciones y comunidad universitaria del sistema provincial de I+D</p>
+
+    <h3 class="sub turquesa">1.1 · Recursos Humanos en I+D</h3>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="valor">489</span>
+        <span class="etiqueta">Personal en I+D (EJC)</span>
+        <span class="fecha">2022</span>
+      </div>
+      <div class="kpi">
+        <span class="valor">268</span>
+        <span class="etiqueta">Investigadores y becarios</span>
+        <span class="fecha">2022</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">1,11</span>
+        <span class="etiqueta">Personal I+D por 1.000 hab.</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">~845</span>
+        <span class="etiqueta">Comunidad CyT ampliada</span>
+        <span class="fecha">est.</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Género en I+D</h3>
+        <div class="canvas-box"><canvas id="chGenero2"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Personal por categoría (headcount total: 737)</h3>
+        <div class="canvas-box"><canvas id="chCategorias"></canvas></div>
+      </div>
+    </div>
+
+    <h3 class="sub celeste mt">1.2 · Institutos de investigación</h3>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="valor">13</span>
+        <span class="etiqueta">Instituciones nucleares</span>
+        <span class="fecha">2022</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">5</span>
+        <span class="etiqueta">Universidades</span>
+        <span class="fecha">2022</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Tipos de instituciones del ecosistema CyT</h3>
+        <div class="canvas-box"><canvas id="chTipoInstituciones"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Personal en I+D por institución</h3>
+        <div class="canvas-box"><canvas id="chInstituciones"></canvas></div>
+      </div>
+    </div>
+
+    <h3 class="sub naranja mt">1.3 · Estudiantes</h3>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="valor">31.070</span>
+        <span class="etiqueta">Matriculados</span>
+        <span class="fecha">2024</span>
+      </div>
+      <div class="kpi">
+        <span class="valor">139</span>
+        <span class="etiqueta">Carreras de grado</span>
+        <span class="fecha">2024</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">3.596</span>
+        <span class="etiqueta">Docentes</span>
+        <span class="fecha">2024</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">13.025</span>
+        <span class="etiqueta">Inscriptos/año</span>
+        <span class="fecha">2024</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">~900</span>
+        <span class="etiqueta">Graduados/año</span>
+        <span class="fecha">2024</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">5</span>
+        <span class="etiqueta">Universidades</span>
+        <span class="fecha">2024</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Matrícula por universidad</h3>
+        <div class="canvas-box"><canvas id="chMatricula"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Flujo académico anual (UNLaR + UNdeC + UTN)</h3>
+        <div class="canvas-box"><canvas id="chFlujo"></canvas></div>
+      </div>
+    </div>
+
+    <div class="univ-grid" style="margin-top:24px">
+      <div class="univ">
+        <h4>UNLaR</h4>
+        <div class="dato"><span class="lbl">Matrícula</span><span class="num">28.118<span class="pct">(90,5%)</span></span></div>
+        <div class="dato"><span class="lbl">Carreras</span><span class="num">74<span class="pct">(53,2%)</span></span></div>
+        <div class="dato"><span class="lbl">Docentes</span><span class="num">2.831<span class="pct">(78,7%)</span></span></div>
+        <div class="dato"><span class="lbl">Inscriptos</span><span class="num">11.800<span class="pct">(90,6%)</span></span></div>
+        <div class="dato"><span class="lbl">Graduados</span><span class="num">775<span class="pct">(85,0%)</span></span></div>
+      </div>
+      <div class="univ">
+        <h4>UNdeC</h4>
+        <div class="dato"><span class="lbl">Matrícula</span><span class="num">2.388<span class="pct">(7,7%)</span></span></div>
+        <div class="dato"><span class="lbl">Carreras</span><span class="num">18<span class="pct">(12,9%)</span></span></div>
+        <div class="dato"><span class="lbl">Docentes</span><span class="num">443<span class="pct">(12,3%)</span></span></div>
+        <div class="dato"><span class="lbl">Inscriptos</span><span class="num">1.050<span class="pct">(8,1%)</span></span></div>
+        <div class="dato"><span class="lbl">Graduados</span><span class="num">105<span class="pct">(11,5%)</span></span></div>
+      </div>
+      <div class="univ">
+        <h4>UTN FRLaR</h4>
+        <div class="dato"><span class="lbl">Matrícula</span><span class="num">564<span class="pct">(1,8%)</span></span></div>
+        <div class="dato"><span class="lbl">Carreras</span><span class="num">7<span class="pct">(5,0%)</span></span></div>
+        <div class="dato"><span class="lbl">Docentes</span><span class="num">122<span class="pct">(3,4%)</span></span></div>
+        <div class="dato"><span class="lbl">Inscriptos</span><span class="num">175<span class="pct">(1,3%)</span></span></div>
+        <div class="dato"><span class="lbl">Graduados</span><span class="num">32<span class="pct">(3,5%)</span></span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== 2. ECONOMÍA DEL CONOCIMIENTO ===== -->
+<section>
+  <div class="wrap">
+    <h2>2. Economía del Conocimiento</h2>
+    <p class="subtitulo">Definición ARCA-DGIP (8 códigos CIIU Rev. 3): empresas, facturación, empleo y salarios</p>
+
+    <h3 class="sub turquesa">2.1 · Empresas</h3>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="valor">2.935</span>
+        <span class="etiqueta">Total empresas provinciales</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">102</span>
+        <span class="etiqueta">Empresas EC</span>
+        <span class="fecha">2024 · pico</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">2,86%</span>
+        <span class="etiqueta">Participación del total de empresas de la provincia</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">1,13%</span>
+        <span class="etiqueta">Participación de empresas de Economía del Conocimiento de La Rioja en Nación</span>
+        <span class="fecha">2024</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Empresas EC vs. total provincial</h3>
+        <div class="canvas-box"><canvas id="chEmpresas"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Empresas EC por bloque — Definición ARCA-DGIP (2019-2025)</h3>
+        <div class="canvas-box tall"><canvas id="chBloques"></canvas></div>
+      </div>
+    </div>
+
+    <h3 class="sub celeste mt">2.2 · Facturación</h3>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="valor">$40.955</span>
+        <span class="etiqueta">Facturación EC (millones $ corrientes)</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">+132,9%</span>
+        <span class="etiqueta">Crecimiento real 2022-2025</span>
+        <span class="fecha">términos reales</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">1,55%</span>
+        <span class="etiqueta">Contribución al IIBB provincial</span>
+        <span class="fecha">2025</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Facturación EC — valores corrientes (millones $)</h3>
+        <div class="canvas-box"><canvas id="chFacturacion"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Facturación EC por actividad (2025)</h3>
+        <div class="canvas-box"><canvas id="chFacturacionActividad"></canvas></div>
+      </div>
+    </div>
+
+    <h3 class="sub naranja mt">2.3 · Empleo</h3>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="valor">521</span>
+        <span class="etiqueta">Empleo EC total</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi">
+        <span class="valor">63,8</span>
+        <span class="etiqueta">Núcleo informático (CIIU 7220+7250+7290)</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">1,93%</span>
+        <span class="etiqueta">Proporción respecto al total de empleo provincial</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">+3,0%</span>
+        <span class="etiqueta">Crecimiento interanual (2024-2025)</span>
+        <span class="fecha">empleo EC</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">+46,4%</span>
+        <span class="etiqueta">Crecimiento 2019-2025</span>
+        <span class="fecha">empleo EC</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">0,18%</span>
+        <span class="etiqueta">Participación del empleo de EC de La Rioja en el total de empleo EC nacional</span>
+        <span class="fecha">2025</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Empleo EC y participación en el empleo total provincial (2019-2025)</h3>
+        <div class="canvas-box tall"><canvas id="chEmpleoTotal"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Empleo EC 2025 — Desglose por código CIIU (de mayor a menor)</h3>
+        <div class="canvas-box tall"><canvas id="chDesglose"></canvas></div>
+      </div>
+    </div>
+
+    <h3 class="sub turquesa mt">2.4 · Salarios</h3>
+
+    <div class="kpis">
+      <div class="kpi">
+        <span class="valor">$3.108.543</span>
+        <span class="etiqueta">Salario promedio empleo en informática</span>
+        <span class="fecha">2025</span>
+      </div>
+      <div class="kpi alt">
+        <span class="valor">$1.707.427</span>
+        <span class="etiqueta">Salario promedio de EC 2025</span>
+        <span class="fecha">promedio simple</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">+1,0%</span>
+        <span class="etiqueta">Variación interanual real (núcleo informático)</span>
+        <span class="fecha">dic 2024-25</span>
+      </div>
+      <div class="kpi alt2">
+        <span class="valor">+30,7%</span>
+        <span class="etiqueta">Diferencial respecto al promedio de la economía riojana</span>
+        <span class="fecha">2025</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Remuneración promedio CIIU EC vs. promedio provincial (promedio 2025)</h3>
+        <div class="canvas-box tall"><canvas id="chSalarios"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>Variación real interanual 2025</h3>
+        <div class="canvas-box tall"><canvas id="chVariacionReal"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== 3. EMPLEO PROVINCIAL ===== -->
+<section>
+  <div class="wrap">
+    <h2>3. Empleo Provincial</h2>
+    <p class="subtitulo">Empleo privado formal y composición sectorial — La Rioja</p>
+
+    <div class="grid-2">
+
+      <!-- Gráfico izquierdo: 2 subgráficos apilados -->
+      <div class="card">
+        <h3>Empleo privado formal — Evolución y variación interanual (2022-2026)</h3>
+
+        <div style="font-size:.82rem;color:var(--accent);font-weight:600;margin-bottom:8px;letter-spacing:.3px;">
+          Tendencia del empleo formal (puestos)
+        </div>
+        <div class="canvas-box" style="height:180px;">
+          <canvas id="chEmpleoFormalLine"></canvas>
+        </div>
+
+        <div style="font-size:.82rem;color:var(--danger);font-weight:600;margin:18px 0 8px;letter-spacing:.3px;">
+          Variación interanual (%)
+        </div>
+        <div class="canvas-box" style="height:140px;">
+          <canvas id="chEmpleoFormalVar"></canvas>
+        </div>
+
+        <div class="note">
+          El gráfico muestra <strong>tres fases:</strong> auge 2022-2023, caída 2024 y meseta 2025-2026. El pico fue mayo 2023 con <strong>34.329 puestos</strong>. En mayo 2026 el stock fue de <strong>30.305 puestos</strong>, con una variación interanual de <strong>-1,7%</strong>.
+          <br><br>
+          <strong>Gráfico superior:</strong> tendencia desestacionalizada (SEATS/X-13), elimina la estacionalidad para comparar meses entre sí. <strong>Gráfico inferior:</strong> variación i.a. mensual (mismo mes vs. mismo mes del año anterior). Barras <span style="color:var(--danger);">rojas</span> = caída, <span style="color:var(--accent);">verdes</span> = crecimiento.
+        </div>
+      </div>
+
+      <!-- Gráfico derecho: sector -->
+      <div class="card">
+        <h3>Empleo por sector — Promedio 2025 y variación interanual</h3>
+
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:12px;">
+          <span style="color:var(--accent);">Verde:</span> creció vs. 2024 ·
+          <span style="color:var(--warn);">Amarillo:</span> cayó moderado ·
+          <span style="color:var(--danger);">Rojo:</span> cayó fuerte
+        </div>
+
+        <div class="canvas-box tall"><canvas id="chEmpleoSector"></canvas></div>
+
+        <div class="note">
+          En 2025, los sectores de <strong>Comercio (+0,9%)</strong>, <strong>Electricidad (+3,7%)</strong> y <strong>Minería (+8,3%)</strong> mostraron crecimiento. <strong>Industria</strong> y <strong>Servicios</strong> concentran la mayor cantidad de puestos del sector privado provincial.
+          <br><br>
+          <strong>Fuente:</strong> STEySS — Observatorio de Empleo y Dinámica Empresarial, en base a SIPA. Serie provinciales_serie_empleo_anual_3, cuadro 15 (promedios anuales). Valores en puestos. <strong>Variación i.a.:</strong> 2025 vs. 2024.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Fuentes:</strong> SIPA-OEDE (STEySS) · DGIP La Rioja · MINCyT · Relevamiento CIECTI-CFI 2022 · INDEC · SPU
+  <br><br>
+  Informe diagnóstico · La Rioja 2022–2025
+</footer>
+
+<script>
+/* ===== Configuración global ===== */
+Chart.register(ChartDataLabels);
+Chart.defaults.color = '#8ea3b8';
+Chart.defaults.font.family = "'Segoe UI', Roboto, sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.plugins.datalabels = { display: false };
+
+const AC = '#00c9a7';
+const AC2 = '#4cc9f0';
+const WARN = '#f4a261';
+const DANGER = '#e63946';
+const grid = { color:'rgba(44,62,80,.5)', drawBorder:false };
+const noGrid = { display:false };
+
+/* ===== 1.1 · Género en I+D ===== */
+new Chart(document.getElementById('chGenero2'), {
+  type:'bar',
+  data:{
+    labels:['Investigadores','Becarios','Total'],
+    datasets:[
+      {label:'Mujeres', data:[47, 64, 49], backgroundColor:AC, borderRadius:6, barThickness:34},
+      {label:'Varones', data:[53, 36, 51], backgroundColor:AC2, borderRadius:6, barThickness:34}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom', labels:{padding:14, usePointStyle:true}},
+      datalabels:{display:true, color:'#0d1b2a', font:{weight:'700', size:12}, formatter:(v)=> v + '%'},
+      tooltip:{callbacks:{label:(c)=>` ${c.dataset.label}: ${c.raw}%`}}
+    },
+    scales:{
+      x:{grid:noGrid, stacked:true, ticks:{color:'#e8eef5', font:{weight:'600'}}},
+      y:{grid:grid, stacked:true, beginAtZero:true, max:100, ticks:{callback:v=>v+'%'}}
+    }
+  }
+});
+
+/* ===== 1.1 · Personal por categoría ===== */
+new Chart(document.getElementById('chCategorias'), {
+  type:'doughnut',
+  data:{
+    labels:['Investigadores','Becarios','Técnicos','Apoyo y gestión'],
+    datasets:[{
+      data:[578, 62, 53, 44],
+      backgroundColor:[AC, AC2, WARN, '#9d8189'],
+      borderColor:'#1b263b', borderWidth:3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'60%',
+    plugins:{
+      legend:{position:'bottom', labels:{padding:14, usePointStyle:true}},
+      datalabels:{display:true, color:'#0d1b2a', font:{weight:'700', size:12},
+        formatter:(v, ctx)=>{
+          const t = ctx.dataset.data.reduce((a,b)=>a+b,0);
+          return v + '\n(' + ((v/t)*100).toFixed(0) + '%)';
+        }
+      },
+      tooltip:{callbacks:{label:(c)=>{
+        const t=c.dataset.data.reduce((a,b)=>a+b,0);
+        return ` ${c.label}: ${c.raw} (${(c.raw/t*100).toFixed(1)}%)`;
+      }}}
+    }
+  }
+});
+
+/* ===== 1.2 · Tipos de instituciones ===== */
+new Chart(document.getElementById('chTipoInstituciones'), {
+  type:'doughnut',
+  data:{
+    labels:['Universidades','Organismos nacionales','Empresas tecnológicas','Institutos provinciales'],
+    datasets:[{
+      data:[5, 4, 2, 2],
+      backgroundColor:[AC, AC2, WARN, '#9d8189'],
+      borderColor:'#1b263b', borderWidth:3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'62%',
+    plugins:{
+      legend:{position:'bottom', labels:{padding:14, usePointStyle:true}},
+      datalabels:{display:true, color:'#0d1b2a', font:{weight:'700', size:12},
+        formatter:(v, ctx)=>{
+          const t = ctx.dataset.data.reduce((a,b)=>a+b,0);
+          return v + '\n(' + ((v/t)*100).toFixed(0) + '%)';
+        }
+      },
+      tooltip:{callbacks:{label:(c)=>{
+        const t=c.dataset.data.reduce((a,b)=>a+b,0);
+        return ` ${c.label}: ${c.raw} instituciones (${(c.raw/t*100).toFixed(0)}%)`;
+      }}}
+    }
+  }
+});
+
+/* ===== 1.2 · Personal en I+D por institución ===== */
+new Chart(document.getElementById('chInstituciones'), {
+  type:'bar',
+  data:{
+    labels:['UNLaR','UNdeC','UTN FRLaR','CRILAR','INTA','CENTEC','Barceló','INTI'],
+    datasets:[{
+      data:[312, 212, 72, 52, 35, 20, 17, 9],
+      backgroundColor:[AC, AC2, '#7b9e87', '#9d8189', WARN, '#b8b8ff', '#ffc6ff', '#a3c4f3'],
+      borderRadius:6, barThickness:22
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{
+      legend:{display:false},
+      datalabels:{display:true, anchor:'end', align:'end', color:'#e8eef5', font:{weight:'700', size:11}, formatter:(v)=> v}
+    },
+    scales:{
+      x:{grid:grid, beginAtZero:true},
+      y:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600'}}}
+    }
+  }
+});
+
+/* ===== 1.3 · Matrícula por universidad ===== */
+new Chart(document.getElementById('chMatricula'), {
+  type:'doughnut',
+  data:{
+    labels:['UNLaR','UNdeC','UTN FRLaR'],
+    datasets:[{
+      data:[28118, 2388, 564],
+      backgroundColor:[AC, AC2, WARN],
+      borderColor:'#1b263b', borderWidth:3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'62%',
+    plugins:{
+      legend:{position:'bottom', labels:{padding:14, usePointStyle:true}},
+      datalabels:{display:true, color:'#0d1b2a', font:{weight:'700', size:12},
+        formatter:(v, ctx)=>{
+          const t = ctx.dataset.data.reduce((a,b)=>a+b,0);
+          const pct = (v/t*100).toFixed(1);
+          if (v/t < 0.05) return pct + '%';
+          return v.toLocaleString('es-AR') + '\n(' + pct + '%)';
+        }
+      },
+      tooltip:{callbacks:{label:(c)=>{
+        const t=c.dataset.data.reduce((a,b)=>a+b,0);
+        return ` ${c.label}: ${c.raw.toLocaleString('es-AR')} (${(c.raw/t*100).toFixed(1)}%)`;
+      }}}
+    }
+  }
+});
+
+/* ===== 1.3 · Flujo académico ===== */
+new Chart(document.getElementById('chFlujo'), {
+  type:'bar',
+  data:{
+    labels:['UNLaR','UNdeC','UTN FRLaR'],
+    datasets:[
+      {label:'Inscriptos/año', data:[11800, 1050, 175], backgroundColor:AC, borderRadius:6},
+      {label:'Graduados/año', data:[775, 105, 32], backgroundColor:AC2, borderRadius:6}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom', labels:{padding:14, usePointStyle:true}},
+      datalabels:{display:true, anchor:'end', align:'top', color:'#e8eef5', font:{weight:'700', size:10}, formatter:(v)=> v.toLocaleString('es-AR')}
+    },
+    scales:{
+      x:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600'}}},
+      y:{grid:grid, beginAtZero:true, type:'logarithmic',
+          ticks:{callback:v=>Number(v).toLocaleString('es-AR')}}
+    }
+  }
+});
+
+/* ===== 2.1 · Empresas EC vs provincial ===== */
+new Chart(document.getElementById('chEmpresas'), {
+  type:'bar',
+  data:{
+    labels:['2022','2024','2025'],
+    datasets:[
+      {label:'Total provincial', data:[2873, 3255, 2935], backgroundColor:AC2, borderRadius:6},
+      {label:'Empresas EC', data:[95, 102, 84], backgroundColor:AC, borderRadius:6}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom', labels:{padding:14, usePointStyle:true}},
+      datalabels:{display:true, anchor:'end', align:'top', color:'#e8eef5', font:{weight:'700', size:10}, formatter:(v)=> v.toLocaleString('es-AR')}
+    },
+    scales:{
+      x:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600'}}},
+      y:{grid:grid, beginAtZero:true, type:'logarithmic'}
+    }
+  }
+});
+
+/* ===== 2.1 · Empresas EC por bloque (2019-2025) ===== */
+new Chart(document.getElementById('chBloques'), {
+  type:'bar',
+  data:{
+    labels:['2019','2020','2021','2022','2024','2025'],
+    datasets:[
+      {label:'Publicidad', data:[6, 0, 4, 4, 5, 0], backgroundColor:'#1e3a5f', borderRadius:4},
+      {label:'Servicios profesionales (proxy)', data:[29, 32, 28, 40, 38, 31], backgroundColor:'#5b9bd5', borderRadius:4},
+      {label:'Ingeniería y geología (proxy)', data:[29, 22, 25, 26, 31, 28], backgroundColor:'#2bb3a3', borderRadius:4},
+      {label:'Software y SI', data:[6, 11, 17, 25, 28, 25], backgroundColor:'#1e6f5c', borderRadius:4}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom', labels:{padding:12, usePointStyle:true, font:{size:10}}},
+      datalabels:{
+        display:(ctx)=> ctx.datasetIndex === 3 && ctx.dataset.data[ctx.dataIndex] > 0,
+        anchor:'end', align:'top', offset:6,
+        color:'#e8eef5',
+        font:{weight:'700', size:13},
+        formatter:(v, ctx)=>{
+          const totales = [70, 65, 74, 95, 102, 84];
+          return totales[ctx.dataIndex];
+        }
+      }
+    },
+    scales:{
+      x:{grid:noGrid, stacked:true, ticks:{color:'#e8eef5', font:{weight:'600'}}},
+      y:{grid:grid, stacked:true, beginAtZero:true, suggestedMax:115}
+    }
+  }
+});
+
+/* ===== 2.2 · Facturación EC ===== */
+new Chart(document.getElementById('chFacturacion'), {
+  type:'bar',
+  data:{
+    labels:['2022','2023','2024','2025'],
+    datasets:[{
+      data:[2013, 6367, 19959, 40955],
+      backgroundColor:['#1e3a5f', '#1e3a5f', '#1e3a5f', AC],
+      borderRadius:6, barThickness:50
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      datalabels:{display:true, anchor:'end', align:'top', color:'#e8eef5', font:{weight:'700', size:11}, formatter:(v)=> '$' + v.toLocaleString('es-AR')},
+      tooltip:{callbacks:{label:(c)=>` $${c.raw.toLocaleString('es-AR')} M`}}
+    },
+    scales:{
+      x:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600'}}},
+      y:{grid:grid, beginAtZero:true, ticks:{callback:v=>'$'+v.toLocaleString('es-AR')}}
+    }
+  }
+});
+
+/* ===== 2.2 · Facturación por actividad ===== */
+new Chart(document.getElementById('chFacturacionActividad'), {
+  type:'doughnut',
+  data:{
+    labels:['Informática n.c.p. (7290)','Consultores (7220)','Publicidad (7430)','Otras'],
+    datasets:[{
+      data:[43.5, 33.6, 13.8, 9.1],
+      backgroundColor:[AC, AC2, WARN, '#9d8189'],
+      borderColor:'#1b263b', borderWidth:3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'60%',
+    plugins:{
+      legend:{position:'bottom', labels:{padding:14, usePointStyle:true}},
+      datalabels:{display:true, color:'#0d1b2a', font:{weight:'700', size:12}, formatter:(v)=> v + '%'},
+      tooltip:{callbacks:{label:(c)=>` ${c.label}: ${c.raw}%`}}
+    }
+  }
+});
+
+/* ===== 2.3 · Empleo EC y participación provincial (2019-2025) ===== */
+new Chart(document.getElementById('chEmpleoTotal'), {
+  type:'bar',
+  data:{
+    labels:['2019','2020','2021','2022','2023','2024','2025'],
+    datasets:[
+      {
+        type:'bar',
+        label:'Empleo EC (puestos)',
+        data:[356, 298, 336, 445, 513, 506, 521],
+        backgroundColor:AC,
+        borderRadius:6,
+        yAxisID:'y',
+        order:2,
+        datalabels:{
+          display:true,
+          anchor:'end',
+          align:'top',
+          color:'#e8eef5',
+          font:{weight:'700', size:11},
+          formatter:(v)=> v
+        }
+      },
+      {
+        type:'line',
+        label:'Participación EC (%)',
+        data:[1.32, 1.11, 1.25, 1.49, 1.57, 1.81, 1.93],
+        borderColor:DANGER,
+        backgroundColor:DANGER,
+        borderWidth:3,
+        tension:.3,
+        pointRadius:5,
+        pointBackgroundColor:DANGER,
+        yAxisID:'y1',
+        order:1,
+        datalabels:{
+          display:true,
+          align:'top',
+          offset:8,
+          color:DANGER,
+          font:{weight:'700', size:10},
+          formatter:(v)=> v.toFixed(2) + '%'
+        }
+      }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom', labels:{padding:14, usePointStyle:true}},
+      tooltip:{
+        callbacks:{
+          label:(c)=>{
+            if (c.datasetIndex === 0) return ` Empleo EC: ${c.raw} puestos`;
+            return ` Participación: ${c.raw}%`;
+          }
+        }
+      }
+    },
+    scales:{
+      x:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600'}}},
+      y:{
+        position:'left',
+        grid:grid,
+        beginAtZero:true,
+        max:600,
+        title:{display:true, text:'Empleo EC (puestos)', color:'#8ea3b8'},
+        ticks:{color:'#8ea3b8'}
+      },
+      y1:{
+        position:'right',
+        grid:noGrid,
+        beginAtZero:true,
+        max:2.5,
+        title:{display:true, text:'Participación EC (%)', color:DANGER},
+        ticks:{color:DANGER, callback:v=>v+'%'}
+      }
+    }
+  }
+});
+
+/* ===== 2.3 · Desglose 2025 por CIIU (mayor a menor) ===== */
+new Chart(document.getElementById('chDesglose'), {
+  type:'bar',
+  data:{
+    labels:['7499 Serv. Empresariales','7421 Arquitectura/Ing.','7290 Informática n.c.p.','7220 Consultores Inform.','7250 Mantenimiento'],
+    datasets:[{
+      data:[254.8, 202.8, 32.8, 26.8, 4.2],
+      backgroundColor:[AC2, AC2, AC, AC, AC],
+      borderRadius:6,
+      barThickness:30
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{
+      legend:{display:false},
+      datalabels:{
+        display:true,
+        anchor:'end',
+        align:'end',
+        color:'#e8eef5',
+        font:{weight:'700', size:11},
+        formatter:(v)=> v
+      },
+      tooltip:{callbacks:{label:(c)=>` ${c.raw} puestos`}}
+    },
+    scales:{
+      x:{grid:grid, beginAtZero:true},
+      y:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600', size:10}}}
+    }
+  }
+});
+
+/* ===== 2.4 · Remuneración promedio CIIU EC vs. provincial ===== */
+new Chart(document.getElementById('chSalarios'), {
+  type:'bar',
+  data:{
+    labels:[
+      '7290 · Informática n.c.p.',
+      '7220 · Consultores informáticos',
+      'Promedio provincial',
+      '7421 · Arquitectura/ingeniería',
+      '7499 · Servicios empresariales'
+    ],
+    datasets:[{
+      data:[3108543, 1726147, 1306422, 1016111, 978907],
+      backgroundColor:[AC, AC, WARN, AC2, AC2],
+      borderRadius:6,
+      barThickness:32
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{
+      legend:{display:false},
+      datalabels:{
+        display:true,
+        anchor:'end',
+        align:'end',
+        color:'#e8eef5',
+        font:{weight:'700', size:10},
+        formatter:(v)=> '$' + v.toLocaleString('es-AR')
+      },
+      tooltip:{
+        callbacks:{
+          label:(c)=> {
+            const salario = c.raw;
+            const prom = 1306422;
+            const dif = ((salario/prom - 1) * 100).toFixed(1);
+            if (c.dataIndex === 2) return ` $${salario.toLocaleString('es-AR')}`;
+            return ` $${salario.toLocaleString('es-AR')} (${dif > 0 ? '+' : ''}${dif}% vs. promedio)`;
+          }
+        }
+      }
+    },
+    scales:{
+      x:{grid:grid, ticks:{callback:v=>'$'+(v/1000000).toFixed(1)+'M'}},
+      y:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600', size:10}}}
+    }
+  }
+});
+
+/* ===== 2.4 · Variación real ===== */
+new Chart(document.getElementById('chVariacionReal'), {
+  type:'bar',
+  data:{
+    labels:['7220 Consult.','7290 Inform.','7421 Arq.','7499 Serv.'],
+    datasets:[{
+      data:[7.21, -4.14, 8.30, -12.71],
+      backgroundColor:[AC, DANGER, AC, DANGER],
+      borderRadius:6, barThickness:34
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      datalabels:{
+        display:true,
+        anchor:(ctx)=> ctx.raw >= 0 ? 'end' : 'start',
+        align:(ctx)=> ctx.raw >= 0 ? 'top' : 'bottom',
+        color:'#e8eef5',
+        font:{weight:'700', size:11},
+        formatter:(v)=> (v>0?'+':'') + v.toFixed(2) + '%'
+      },
+      tooltip:{callbacks:{label:(c)=>` ${c.raw>0?'+':''}${c.raw.toFixed(2)}% real`}}
+    },
+    scales:{
+      x:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600', size:10}}},
+      y:{grid:grid, ticks:{callback:v=>v+'%'}}
+    }
+  }
+});
+
+/* ===== 3 · Empleo por sector (promedio 2025) ===== */
+new Chart(document.getElementById('chEmpleoSector'), {
+  type:'bar',
+  data:{
+    labels:['Industria','Servicios','Comercio','Agricultura','Construcción','Electricidad','Minería'],
+    datasets:[{
+      data:[8550, 8730, 6720, 4950, 1150, 850, 130],
+      backgroundColor:[WARN, WARN, AC, WARN, DANGER, AC, AC],
+      borderRadius:6,
+      barThickness:26
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{
+      legend:{display:false},
+      datalabels:{
+        display:true,
+        anchor:'end',
+        align:'end',
+        color:'#e8eef5',
+        font:{weight:'700', size:11},
+        formatter:(v, ctx)=>{
+          const variaciones = [-5.6, -2.8, 0.9, -5.4, -14.8, 3.7, 8.3];
+          const v2 = variaciones[ctx.dataIndex];
+          const flecha = v2 > 0 ? '▲' : '▼';
+          return v.toLocaleString('es-AR') + '  ' + flecha + ' ' + (v2>0?'+':'') + v2.toFixed(1) + '%';
+        }
+      },
+      tooltip:{callbacks:{label:(c)=>{
+        const variaciones = [-5.6, -2.8, 0.9, -5.4, -14.8, 3.7, 8.3];
+        const v2 = variaciones[c.dataIndex];
+        return ` ${c.raw.toLocaleString('es-AR')} puestos (${v2>0?'+':''}${v2}% i.a.)`;
+      }}}
+    },
+    scales:{
+      x:{grid:grid, beginAtZero:true, title:{display:true, text:'Puestos de trabajo (promedio 2025)', color:'#8ea3b8'}},
+      y:{grid:noGrid, ticks:{color:'#e8eef5', font:{weight:'600', size:11}}}
+    }
+  }
+});
+
+/* ===== 3 · Empleo privado formal — Tendencia (arriba) ===== */
+new Chart(document.getElementById('chEmpleoFormalLine'), {
+  type:'line',
+  data:{
+    labels:[
+      'Ene-22','Abr-22','Jul-22','Oct-22',
+      'Ene-23','Abr-23','Jul-23','Oct-23',
+      'Ene-24','Abr-24','Jul-24','Oct-24',
+      'Ene-25','Abr-25','Jul-25','Oct-25',
+      'Ene-26','Abr-26'
+    ],
+    datasets:[{
+      label:'Empleo privado formal',
+      data:[28500, 29200, 30000, 30500, 31500, 33800, 33200, 31800, 32000, 29200, 29000, 29500, 29800, 30100, 30000, 29700, 29900, 30305],
+      borderColor:AC,
+      backgroundColor:'rgba(0,201,167,.15)',
+      borderWidth:2.5,
+      tension:.35,
+      fill:true,
+      pointRadius:0,
+      pointHoverRadius:5,
+      pointHoverBackgroundColor:AC
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      datalabels:{display:false},
+      tooltip:{
+        callbacks:{
+          label:(c)=> ` ${c.raw.toLocaleString('es-AR')} puestos`
+        }
+      }
+    },
+    scales:{
+      x:{
+        grid:noGrid,
+        ticks:{color:'#8ea3b8', font:{size:8}, maxRotation:45, minRotation:45, autoSkip:true, maxTicksLimit:10}
+      },
+      y:{
+        grid:grid,
+        min:25000,
+        max:36000,
+        ticks:{color:'#8ea3b8', font:{size:9}, callback:v=>v.toLocaleString('es-AR'), maxTicksLimit:5}
+      }
+    }
+  }
+});
+
+/* ===== 3 · Empleo privado formal — Variación i.a. (abajo) ===== */
+new Chart(document.getElementById('chEmpleoFormalVar'), {
+  type:'bar',
+  data:{
+    labels:[
+      'Ene-22','Abr-22','Jul-22','Oct-22',
+      'Ene-23','Abr-23','Jul-23','Oct-23',
+      'Ene-24','Abr-24','Jul-24','Oct-24',
+      'Ene-25','Abr-25','Jul-25','Oct-25',
+      'Ene-26','Abr-26'
+    ],
+    datasets:[{
+      label:'Variación i.a.',
+      data:[8.5, 8.2, 7.8, 7.5, 6.8, 4.2, 3.5, 2.1, 0.5, -4.8, -8.2, -10.5, -8.5, -5.2, -2.8, -1.5, 0.3, -1.7],
+      backgroundColor:(ctx)=>{
+        return ctx.raw >= 0 ? AC : DANGER;
+      },
+      borderRadius:3,
+      barThickness:'flex',
+      maxBarThickness:12
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      datalabels:{display:false},
+      tooltip:{
+        callbacks:{
+          label:(c)=> ` ${c.raw>0?'+':''}${c.raw.toFixed(1)}% i.a.`
+        }
+      }
+    },
+    scales:{
+      x:{
+        grid:noGrid,
+        ticks:{color:'#8ea3b8', font:{size:8}, maxRotation:45, minRotation:45, autoSkip:true, maxTicksLimit:10}
+      },
+      y:{
+        grid:grid,
+        min:-15,
+        max:15,
+        ticks:{color:'#8ea3b8', font:{size:9}, callback:v=>v+'%', maxTicksLimit:5}
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
