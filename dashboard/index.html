@@ -285,16 +285,18 @@
     <div class="chart-row">
 
         <div class="chart-box">
-            <h3>Ingresos reales del sector EC ($ millones, base=2022)</h3>
+            <h3>Ingresos del sector EC ($ millones corrientes)</h3>
             <div id="chart-ingresos" class="chart-container"></div>
             <div class="highlight-box">
                 <div class="positive">
                     Los ingresos declarados por el sector de la Economía
-                    del Conocimiento registraron un crecimiento real acumulado
-                    del 132,9% y la recaudación de 217% entre 2022 y 2025.
+                    del Conocimiento alcanzaron los <strong>$40.955 millones</strong>
+                    en 2025. Registraron un crecimiento real acumulado
+                    del <strong>132,9%</strong> y la recaudación de <strong>217%</strong>
+                    entre 2022 y 2025 (base 2022).
                 </div>
             </div>
-            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), deflactado por IPC NOA (INDEC)</div>
+            <div class="chart-source">Fuente: DGIP La Rioja (IIBB), valores corrientes 2022-2025</div>
         </div>
 
         <div class="chart-box">
@@ -487,7 +489,7 @@
 
             <div class="highlight-box" style="margin-top:20px;">
                 <div class="positive">
-                    El gráfico muestra tres fases: <strong>auge</strong> 2022-2023, <strong>caída</strong> 2024 Y <strong>meseta</strong> 2025-2026. El pico fue mayo 2023 con 34.329 puestos. En <strong>mayo 2026</strong> el stock fue de <strong>30.305 puestos</strong>, con una variación interanual de <strong>−1,7%</strong>.
+                    El gráfico muestra tres fases: <strong>auge</strong> 2022-2023, <strong>caída</strong> 2024 y <strong>meseta</strong> 2025-2026. El pico de la tendencia desestacionalizada fue <strong>julio 2023 con 34.015 puestos</strong>. En <strong>junio 2026</strong> el stock fue de <strong>28.890 puestos</strong>, con una variación interanual de <strong>−1,2%</strong>.
                 </div>
                 <div class="nota">
                     <strong>Gráfico superior:</strong> tendencia
@@ -719,7 +721,22 @@
         chart: { type: "column" },
         title: { text: "" },
         xAxis: { categories: ["2022", "2023", "2024", "2025"] },
-        yAxis: { title: { text: "$ millones (base dic-2022)" } },
+        yAxis: {
+            title: {
+                text: "$ millones corrientes",
+                style: { color: "#8EAFC4" }
+            },
+            labels: {
+                style: { color: "#8EAFC4" },
+                format: "${value:,.0f}"
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                       'Ingresos: <b>$' + this.y.toLocaleString('es-AR') + ' M</b>';
+            }
+        },
         plotOptions: {
             column: {
                 dataLabels: {
@@ -728,15 +745,16 @@
                     style: {
                         color: "#4ECDC4",
                         textOutline: "none",
-                        fontWeight: "bold"
+                        fontWeight: "bold",
+                        fontSize: "11px"
                     }
                 }
             }
         },
         legend: { enabled: false },
         series: [{
-            name: "Ingreso real",
-            data: [1694, 2342, 3051, 3945],
+            name: "Ingresos corrientes",
+            data: [2013, 6367, 19959, 40955],
             color: {
                 linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
                 stops: [[0, "#4ECDC4"], [1, "#1A6B8A"]]
